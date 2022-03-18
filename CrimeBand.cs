@@ -8,7 +8,7 @@ namespace CourseProj
 {
     internal class CrimeBand
     {
-        public static List<CrimeBand>? allBands;
+        //public static List<CrimeBand>? allBands;
         public List<Criminal> members;
 
         public string BandName { get; set; }
@@ -17,7 +17,7 @@ namespace CourseProj
         {
             BandName = bandName;
             this.members = members;
-            allBands.Add(this);
+            InterpolCardIndex.allBands.Add(this);
         }
 
         public string ShowMembers()

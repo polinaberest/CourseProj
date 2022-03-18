@@ -58,6 +58,8 @@ namespace CourseProj
             LastAffair = lastAffair;
             if (isInBand)
             {
+                //тут функція перевірки на адекватність, обрізки(валідація) bandname
+                
                 band = SearchBand(bandName);
             }
             
@@ -66,16 +68,16 @@ namespace CourseProj
         //логіка пошуку банди, в якій є цей злочинець
         private CrimeBand SearchBand(string bandName)
         {
-            foreach (CrimeBand band in CrimeBand.allBands)
+            foreach (CrimeBand band in InterpolCardIndex.allBands)
             {
                 if (band.BandName == bandName)
-                { 
+                {
                     return band;
                 }
             }
-            
+
             CrimeBand newBand = new CrimeBand(bandName, new List<Criminal> { this });
-            return newBand; 
+            return newBand;
         }
 
         public override string ToString()
@@ -86,19 +88,19 @@ namespace CourseProj
         public string Name
         {
             get { return name; }
-            set { name = value.Substring(0, 1).ToUpper() + value.Substring(1).ToLower(); }
+            set { name = (value.Substring(0, 1).ToUpper() + value.Substring(1).ToLower()).Trim(); }
         }
 
         public string Surname
         {
             get { return surname; }
-            set { surname = value.Substring(0, 1).ToUpper() + value.Substring(1).ToLower(); }
+            set { surname = (value.Substring(0, 1).ToUpper() + value.Substring(1).ToLower()).Trim(); }
         }
 
         public string Nickname
         {
             get { return nickname; }
-            set { nickname = value.Substring(0, 1).ToUpper() + value.Substring(1).ToLower(); }
+            set { nickname = (value.Substring(0, 1).ToUpper() + value.Substring(1).ToLower()).Trim(); }
         }
 
         public int Height
