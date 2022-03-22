@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
 namespace CourseProj
 {
@@ -19,25 +20,26 @@ namespace CourseProj
         private string dateOfBirth;
         private string placeOfBirth;
         private string lastAccomodation;
-        private string[] languages;
+        private string languages;
         private string criminalJob;
         private string lastAffair;
         //private bool isInBand = false;
-        //private string? bandName;
+        private string? bandName;
         private CrimeBand band;
 
         public Criminal(
-            string name, 
-            string surname, 
-            string nickname, 
-            int height, 
-            string eyeColor, 
-            string hairColor, 
+            string name,
+            string surname,
+            string nickname,
+            int height,
+            string eyeColor,
+            string hairColor,
+            string specialFeatures,
             string citizenship, 
             string dateOfBirth,
             string placeOfBirth,
             string lastAccomodation,
-            string[] languages,
+            string languages,
             string criminalJob,
             string lastAffair,
             bool isInBand,
@@ -49,6 +51,7 @@ namespace CourseProj
             Height = height;
             EyeColor = eyeColor;
             HairColor = hairColor;
+            SpecialFeatures = specialFeatures;
             Citizenship = citizenship;
             DateOfBirth = dateOfBirth;
             PlaceOfBirth = placeOfBirth;
@@ -59,8 +62,8 @@ namespace CourseProj
             if (isInBand)
             {
                 //тут функція перевірки на адекватність, обрізки(валідація) bandname
-                
-                band = SearchBand(bandName);
+                BandName = AdoptBandName(bandName);
+                band = SearchBand(BandName);
             }
             
         }
@@ -68,16 +71,33 @@ namespace CourseProj
         //логіка пошуку банди, в якій є цей злочинець
         private CrimeBand SearchBand(string bandName)
         {
-            foreach (CrimeBand band in InterpolCardIndex.allBands)
-            {
-                if (band.BandName == bandName)
+            if(InterpolCardIndex.allBands != null)
+            { 
+                foreach (CrimeBand band in InterpolCardIndex.allBands)
                 {
-                    return band;
+                    if (band.BandName == bandName)
+                    {
+                        return band;
+                    }
                 }
             }
 
             CrimeBand newBand = new CrimeBand(bandName, new List<Criminal> { this });
             return newBand;
+        }
+
+        private string AdoptBandName(string bandName)
+        {
+            bandName = bandName.Replace('-', ' ');
+            string[] wordArr = bandName.Split(" ");
+
+            for (int i = 0; i < wordArr.Length; i++)
+            {
+                wordArr[i] = wordArr[i].Trim();
+                wordArr[i] = (wordArr[i].Substring(0, 1).ToUpper() + wordArr[i].Substring(1).ToLower()).Trim();
+            }
+            bandName = String.Join(" ", wordArr);
+            return bandName;
         }
 
         public override string ToString()
@@ -151,7 +171,7 @@ namespace CourseProj
             set { lastAccomodation = value; }
         }
 
-        public string[] Languages
+        public string Languages
         {
             get { return languages; }
             set { languages = value; }
@@ -181,10 +201,11 @@ namespace CourseProj
             set { band = value; }
         }
 
-       /* public string BandName
-        {
+       public string BandName
+       {
             get { return bandName; }
             set { bandName = value; }
-        }*/
+       }
+    
     }
 }

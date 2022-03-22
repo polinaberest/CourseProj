@@ -23,7 +23,7 @@ namespace CourseProj
         public MainWindow()
         {
             InitializeComponent();
-            //InterpolCardIndex interpolCardIndex = new InterpolCardIndex();
+            InterpolCardIndex interpolCardIndex = new InterpolCardIndex();
         }
 
         private void EditAffair_Click(object sender, RoutedEventArgs e)

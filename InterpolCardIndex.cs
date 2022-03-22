@@ -8,19 +8,24 @@ namespace CourseProj
 {
     internal class InterpolCardIndex
     {
-        public static List<CrimeBand> allBands;
+        public static List<CrimeBand>? allBands;
 
-        public List<Criminal> criminals;
+        public static List<Criminal>? criminals;
 
-        public void AddCriminal()
+        public InterpolCardIndex()
         {
-            //тут проверки всех полученных полей? как к ним достучаться?
-            //criminals.Add(new Criminal(тут все проверенные поля));
+            allBands = new List<CrimeBand>();
+            criminals = new List<Criminal>();
         }
 
-        public void AddBand()
-        { 
-        
+        public static void AddCriminal(Criminal criminal)
+        {
+            criminals.Add(criminal);  
+        }
+
+        public static void AddBand(CrimeBand band)
+        {
+            allBands.Add(band);
         }
 
     }

@@ -8,7 +8,6 @@ namespace CourseProj
 {
     internal class CrimeBand
     {
-        //public static List<CrimeBand>? allBands;
         public List<Criminal> members;
 
         public string BandName { get; set; }

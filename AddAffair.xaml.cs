@@ -41,10 +41,43 @@ namespace CourseProj
 
         private void AddData_Click(object sender, RoutedEventArgs e)
         {
+            string name;
+            string surname;
+            string nickname;
+            int height;
+            string eyeColor;
+            string hairColor;
+            string specialFeatures;
+            string citizenship;
+            string dateOfBirth;
+            string placeOfBirth;
+            string lastAccomodation;
+            string languages;
+            string criminalJob;
+            string lastAffair;
+            bool isInBand;
+            string? bandName;
 
-            // пока задний фон красный + все поля не пустые (кроме краймбэнда)!!!!
-            //тут вызвать AddCriminal и передать ему все данные? тут инициализировать переменные имя, фамилия ...?
-            
+            if (IsReadyToBeAdded(textBoxName, out name) &&
+                IsReadyToBeAdded(textBoxSurname, out surname) &&
+                IsReadyToBeAdded(textBoxNickname, out nickname) &&
+                IsReadyToBeAdded(textBoxHeight, out height) &&
+                IsReadyToBeAdded(textBoxEyeColor, out eyeColor) &&
+                IsReadyToBeAdded(textBoxHairColor, out hairColor) &&
+                IsReadyToBeAdded(textBoxSpecialFeatures, out specialFeatures) &&
+                IsReadyToBeAdded(textBoxCitizenship, out citizenship) &&
+                IsReadyToBeAdded(textBoxBirthday, out dateOfBirth) &&
+                IsReadyToBeAdded(textBoxBirthPlace, out placeOfBirth) &&
+                IsReadyToBeAdded(textBoxLastAccomodation, out lastAccomodation) &&
+                IsReadyToBeAdded(textBoxLanguages, out languages) &&
+                IsReadyToBeAdded(textBoxJob, out criminalJob) &&
+                IsReadyToBeAdded(textBoxLastAffair, out lastAffair) &&
+                IsReadyToBeAdded(textBoxBandName, checkBoxIsInBand.IsChecked, out bandName, out isInBand))
+            {
+                InterpolCardIndex.AddCriminal(new Criminal(name, surname, nickname, height, eyeColor, hairColor, specialFeatures,
+                  citizenship, dateOfBirth, placeOfBirth, lastAccomodation, languages, criminalJob, lastAffair, isInBand, bandName));
+                MessageBox.Show("Це - Тарас, йому нормас!");  
+            }
         }
 
         //обробники подій
@@ -100,6 +133,11 @@ namespace CourseProj
             CommonWarningWhenTextChanged(textBoxHairColor);
         }
 
+        private void textBoxSpecialFeatures_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            CommonWarningWhenArrayTextChanged(textBoxSpecialFeatures);
+        }
+
         private void textBoxCitizenship_TextChanged(object sender, TextChangedEventArgs e)
         {
             CommonWarningWhenTextChanged(textBoxCitizenship, true);
@@ -107,7 +145,7 @@ namespace CourseProj
 
         private void textBoxBirthday_TextChanged(object sender, TextChangedEventArgs e)
         {
-            DateIsCorrect(textBoxBirthday);
+            ExtensionsToCheckInput.DateIsCorrect(textBoxBirthday);
 
         }
 
@@ -157,7 +195,7 @@ namespace CourseProj
                 textBox.ToolTip = naming + " повинно мати принаймні 2 символи!";
                 textBox.Background = Brushes.Salmon;
             }
-            else if (ContainsNumbers(value))
+            else if (ExtensionsToCheckInput.ContainsNumbers(value))
             {
                 textBox.ToolTip = naming + " не має містити цифри!";
                 textBox.Background = Brushes.Salmon;
@@ -193,7 +231,7 @@ namespace CourseProj
                 textBox.ToolTip = "Поле повинно мати принаймні 3 символи!";
                 textBox.Background = Brushes.Salmon;
             }
-            else if (ContainsNumbers(value))
+            else if (ExtensionsToCheckInput.ContainsNumbers(value))
             {
                 textBox.ToolTip = "Поле не може містити цифри!";
                 textBox.Background = Brushes.Salmon;
@@ -203,7 +241,7 @@ namespace CourseProj
                 textBox.ToolTip = "Поле не має починатися з цього знаку!";
                 textBox.Background = Brushes.Salmon;
             }
-            else if (HasSeveralWords(value))
+            else if (ExtensionsToCheckInput.HasSeveralWords(value))
             {
                 textBox.ToolTip = "Уведіть у поле одне слово!";
                 textBox.Background = Brushes.Salmon;
@@ -223,18 +261,18 @@ namespace CourseProj
         private void CommonWarningWhenTextChanged(TextBox textBox, bool hasSeveralWords)
         {
             string value = textBox.Text.Trim();
-            int i = 0;
+
             if (value.Length > 60)
             {
                 textBox.ToolTip = "Поле має бути коротшим за 60 символів!";
                 textBox.Background = Brushes.Salmon;
             }
-            else if (value.Length < 5)
+            else if (value.Length < 3)
             {
-                textBox.ToolTip = "Поле повинно мати принаймні 5 символів!";
+                textBox.ToolTip = "Поле повинно мати принаймні 3 символи!";
                 textBox.Background = Brushes.Salmon;
             }
-            else if (ContainsNumbers(value))
+            else if (ExtensionsToCheckInput.ContainsNumbers(value))
             {
                 textBox.ToolTip = "Поле не може містити цифри!";
                 textBox.Background = Brushes.Salmon;
@@ -270,7 +308,7 @@ namespace CourseProj
                 textBox.ToolTip = "Поле повинно містити принаймні 3 символи!";
                 textBox.Background = Brushes.Salmon;
             }
-            else if (ContainsNumbers(value))
+            else if (ExtensionsToCheckInput.ContainsNumbers(value))
             {
                 textBox.ToolTip = "Поле не має містити цифри!";
                 textBox.Background = Brushes.Salmon;
@@ -292,52 +330,59 @@ namespace CourseProj
             }
         }
 
-        private bool ContainsNumbers(string value)
+
+
+        //функція фінальної перевірки - на кнопці
+
+        private bool IsReadyToBeAdded(TextBox textBox, out string value)
         {
-            Regex regex = new Regex(@"\d");
-            Match match = regex.Match(value);
-
-            if (match.Success)
-                return true;
-            
-            return false;
-        }
-
-        private bool HasSeveralWords(string value)
-        {
-            string[] wordArray = value.Split(" ");
-
-            if (wordArray.Length>1)
-                return true;
-            return false;
-        }
-
-        private void DateIsCorrect(TextBox textBox)
-        {
-            string str = textBox.Text.Trim();
-            DateTime date;
-
-            if (!DateTime.TryParse(str, out date)||str.Length<10||str.Contains("/"))
+            if (textBox.Background == Brushes.Transparent && textBox.Text != null && textBox.Text != "") 
             {
-                textBox.ToolTip = "Уведіть дату у форматі ДД.ММ.РРРР !";
-                textBox.Background = Brushes.Salmon;
+                value = textBox.Text.Trim();
+                return true;
             }
-            else
+
+            value = null;
+            return false;
+        }
+
+        private bool IsReadyToBeAdded(TextBox textBox, out int value)
+        {
+            if (textBox.Background == Brushes.Transparent && textBox.Text != null && textBox.Text != "")
             {
-                string[] arr = str.Split(".");
-                int i = 0;
-                int.TryParse(arr[2], out i);
-                if (i < 1900 || i > 2022)
+                value = int.Parse(textBox.Text.Trim());
+                return true;
+            }
+
+            value = 0;
+            return false;
+        }
+
+        private bool IsReadyToBeAdded(TextBox textBox, bool? isChecked, out string value, out bool isInBand)
+        {
+            if ((bool)isChecked)
+            {
+                isInBand = true;
+                if (textBox.Background == Brushes.Transparent && textBox.Text != null && textBox.Text != "")
                 {
-                    textBox.ToolTip = "Уведіть дату в діапазоні від 1900 до 2022 року включно!";
-                    textBox.Background = Brushes.Salmon;
+                    value = textBox.Text.Trim();
+                    return true;
                 }
                 else 
                 {
-                    textBox.ToolTip = null;
-                    textBox.Background = Brushes.Transparent;
+                    value = null;
+                    return false;
                 }
             }
+            else
+            {
+                isInBand = false;
+                value = null; 
+                return true;
+            }
+            
         }
+
+        
     }
 }
