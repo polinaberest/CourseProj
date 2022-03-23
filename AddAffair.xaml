@@ -9,11 +9,11 @@
         Title="Картотека Інтерполу - Додавання особової справи" Height="750" Width="950" WindowStyle="ThreeDBorderWindow" FontFamily="Verdana" Icon="/interpollogo.png" ResizeMode="CanResize" WindowStartupLocation="Manual" WindowState="Maximized">
     <ScrollViewer>
     <Grid x:Name="AddMainRoot" Background="#FF8FCDFF" MinHeight="700" MinWidth="900">
-        <Border MinWidth="800" Background="White" VerticalAlignment="Center" Margin="20" Padding="20" CornerRadius="20">
+            <Border MinWidth="800" Background="White" VerticalAlignment="Center" Margin="20" Padding="20" CornerRadius="20" >
             <Border.Effect>
                 <DropShadowEffect BlurRadius="30" Color="#0076D6" ShadowDepth="0"></DropShadowEffect>
             </Border.Effect>
-            <StackPanel>
+            <StackPanel x:Name="Form">
                 <TextBlock x:Name="TopText" Text="Уведіть дані про злочинця:"  HorizontalAlignment="Left" VerticalAlignment="Bottom" FontSize="24" Margin="0 0 0 10" FontWeight="Bold" OpacityMask="Black" Foreground="#FF00345E"/>
 
                 <TextBox materialDesign:HintAssist.Hint ="Ім'я злочинця" x:Name="textBoxName" Style = "{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:TextFieldAssist.UnderlineBrush="#FF00345E" materialDesign:HintAssist.Foreground="#FF00345E" TextChanged="textBoxName_TextChanged" ></TextBox>

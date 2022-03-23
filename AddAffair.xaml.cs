@@ -76,7 +76,21 @@ namespace CourseProj
             {
                 InterpolCardIndex.AddCriminal(new Criminal(name, surname, nickname, height, eyeColor, hairColor, specialFeatures,
                   citizenship, dateOfBirth, placeOfBirth, lastAccomodation, languages, criminalJob, lastAffair, isInBand, bandName));
-                MessageBox.Show("Це - Тарас, йому нормас!");  
+
+                foreach (object el in Form.Children)
+                {
+                    if (el is TextBox)
+                    {
+                        CleansenForm((TextBox)el);
+                    }
+                }
+
+                MessageBox.Show("Це - Тарас, йому нормас!");
+            }
+
+            else 
+            {
+                MessageBox.Show("Заповніть усі поля!");
             }
         }
 
@@ -383,6 +397,13 @@ namespace CourseProj
             
         }
 
-        
+        //метод очистки всіх полів на формі
+
+        private void CleansenForm(TextBox textBox)
+        {
+            textBox.Text = String.Empty;
+            textBox.Background = Brushes.Transparent;
+            textBox.ToolTip = null;
+        }
     }
 }
