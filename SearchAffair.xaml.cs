@@ -22,6 +22,23 @@ namespace CourseProj
         public SearchAffair()
         {
             InitializeComponent();
+            checkBoxIsInBand.Checked += checkBoxIsInBand_Checked;
+            checkBoxIsInBand.Unchecked += checkBoxIsInBand_Checked;
+        }
+
+        private void checkBoxIsInBand_Checked(object sender, RoutedEventArgs e)
+        {
+            textBoxBandName.Visibility = Visibility.Visible;
+        }
+
+        private void checkBoxIsInBand_Unchecked(object sender, RoutedEventArgs e)
+        {
+            textBoxBandName.Visibility = Visibility.Hidden;
+        }
+
+        private void SearchData_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

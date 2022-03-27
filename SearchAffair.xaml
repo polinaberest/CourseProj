@@ -5,8 +5,44 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CourseProj"
         mc:Ignorable="d"
-        Title="SearchAffair" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        Title="Картотека Інтерполу - Пошук особової справи" Height="750" Width="950" WindowStyle="ThreeDBorderWindow" FontFamily="Verdana" Icon="/interpollogo.png" ResizeMode="CanResize" WindowStartupLocation="Manual" WindowState="Maximized">
+    <ScrollViewer>
+        <Grid x:Name="SearchMainRoot" Background="#FF8FCDFF" MinHeight="700" MinWidth="900">
+            <Border MinWidth="800" Background="White" VerticalAlignment="Center" Margin="20" Padding="20" CornerRadius="20" >
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="30" Color="#0076D6" ShadowDepth="0"></DropShadowEffect>
+                </Border.Effect>
+                <StackPanel x:Name="Form">
+                    <TextBlock x:Name="TopText" Text="Уведіть дані, необхідні для пошуку:"  HorizontalAlignment="Left" VerticalAlignment="Bottom" FontSize="24" Margin="0 0 0 10" FontWeight="Bold" OpacityMask="Black" Foreground="#FF00345E"/>
+
+                    <TextBox materialDesign:HintAssist.Hint ="Ім'я злочинця" x:Name="textBoxName" Style = "{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:TextFieldAssist.UnderlineBrush="#FF00345E" materialDesign:HintAssist.Foreground="#FF00345E"></TextBox>
+                    <TextBox materialDesign:HintAssist.Hint ="Прізвище злочинця" x:Name="textBoxSurname" Style = "{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:TextFieldAssist.UnderlineBrush="#FF00345E" materialDesign:HintAssist.Foreground="#FF00345E" ></TextBox>
+                    <TextBox materialDesign:HintAssist.Hint ="Прізвисько (позивний) злочинця" x:Name="textBoxNickname" Style = "{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:TextFieldAssist.UnderlineBrush="#FF00345E" materialDesign:HintAssist.Foreground="#FF00345E"></TextBox>
+                    <TextBox materialDesign:HintAssist.Hint ="Зріст злочинця (у сантиметрах)" x:Name="textBoxHeight" Style = "{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:TextFieldAssist.UnderlineBrush="#FF00345E" materialDesign:HintAssist.Foreground="#FF00345E" ></TextBox>
+                    <TextBox materialDesign:HintAssist.Hint ="Колір очей злочинця" x:Name="textBoxEyeColor" Style = "{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:TextFieldAssist.UnderlineBrush="#FF00345E" materialDesign:HintAssist.Foreground="#FF00345E" ></TextBox>
+                    <TextBox materialDesign:HintAssist.Hint ="Колір волосся злочинця" x:Name="textBoxHairColor" Style = "{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:TextFieldAssist.UnderlineBrush="#FF00345E" materialDesign:HintAssist.Foreground="#FF00345E" ></TextBox>
+                    <TextBox materialDesign:HintAssist.Hint ="Особливі прикмети (характеристики) злочинця" x:Name="textBoxSpecialFeatures" Style = "{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:TextFieldAssist.UnderlineBrush="#FF00345E" materialDesign:HintAssist.Foreground="#FF00345E"></TextBox>
+                    <TextBox materialDesign:HintAssist.Hint ="Громадянство злочинця" x:Name="textBoxCitizenship" Style = "{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:TextFieldAssist.UnderlineBrush="#FF00345E" materialDesign:HintAssist.Foreground="#FF00345E"  ></TextBox>
+                    <TextBox materialDesign:HintAssist.Hint ="Дата народження злочинця (у форматі ДД.ММ.РРРР)" x:Name="textBoxBirthday" Style = "{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:TextFieldAssist.UnderlineBrush="#FF00345E" materialDesign:HintAssist.Foreground="#FF00345E"  ></TextBox>
+                    <TextBox materialDesign:HintAssist.Hint ="Місце народження злочинця (назва міста/села)" x:Name="textBoxBirthPlace" Style = "{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:TextFieldAssist.UnderlineBrush="#FF00345E" materialDesign:HintAssist.Foreground="#FF00345E"  ></TextBox>
+                    <TextBox materialDesign:HintAssist.Hint ="Останнє місце проживання злочинця (назва міста/села)" x:Name="textBoxLastAccomodation" Style = "{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:TextFieldAssist.UnderlineBrush="#FF00345E" materialDesign:HintAssist.Foreground="#FF00345E"  ></TextBox>
+                    <TextBox materialDesign:HintAssist.Hint ="Перелік мов, якими володіє злочинець (через коми)" x:Name="textBoxLanguages" Style = "{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:TextFieldAssist.UnderlineBrush="#FF00345E" materialDesign:HintAssist.Foreground="#FF00345E"  ></TextBox>
+                    <TextBox materialDesign:HintAssist.Hint ="Злочинна професія" x:Name="textBoxJob" Style = "{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:TextFieldAssist.UnderlineBrush="#FF00345E" materialDesign:HintAssist.Foreground="#FF00345E"  ></TextBox>
+                    <TextBox materialDesign:HintAssist.Hint ="Остання справа злочинця" x:Name="textBoxLastAffair" Style = "{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:TextFieldAssist.UnderlineBrush="#FF00345E" materialDesign:HintAssist.Foreground="#FF00345E" ></TextBox>
+                    <CheckBox x:Name="checkBoxIsInBand" Margin="0 10" Checked="checkBoxIsInBand_Checked"  Background="#FF0076D6" BorderBrush="#FF00457D" >Злочинець є членом злочинного угрупування (банди)</CheckBox>
+                    <TextBox materialDesign:HintAssist.Hint ="Назва банди, членом якої є злочинець" x:Name="textBoxBandName" Visibility="Hidden" Style = "{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:TextFieldAssist.UnderlineBrush="#FF00345E" materialDesign:HintAssist.Foreground="#FF00345E"></TextBox>
+
+                    <Button x:Name="SearchData" Click="SearchData_Click"  Content="Здійснити пошук в базі Інтерполу" Margin="50,10,50,5" FontSize="20" MinHeight="40" BorderBrush="#FF00345E">
+                        <Button.Background>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="#FF0076D6"/>
+                                <GradientStop Color="#FF0061AF" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Button.Background>
+                    </Button>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </ScrollViewer>
 </Window>
