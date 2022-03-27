@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Windows.Media.Animation;
 
 namespace CourseProj
 {
@@ -24,6 +25,17 @@ namespace CourseProj
             InitializeComponent();
             checkBoxIsInBand.Checked += checkBoxIsInBand_Checked;
             checkBoxIsInBand.Unchecked += checkBoxIsInBand_Checked;
+
+            DoubleAnimation btnAnimation = new DoubleAnimation();
+            btnAnimation.From = 0;
+            btnAnimation.To = 1;
+            btnAnimation.Duration = TimeSpan.FromSeconds(2);
+            SearchData.BeginAnimation(Button.OpacityProperty, btnAnimation);
+        }
+
+        private void textBoxBirthday_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            ExtensionsToCheckInput.DateIsCorrect(textBoxBirthday);
         }
 
         private void checkBoxIsInBand_Checked(object sender, RoutedEventArgs e)
@@ -37,6 +49,97 @@ namespace CourseProj
         }
 
         private void SearchData_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void CheckLength(TextBox textBox)
+        {
+            string value = textBox.Text.Trim();
+
+            if (value.Length > 50)
+            {
+                textBox.ToolTip = "Уведіть менше 100 символів для пошуку";
+                textBox.Background = Brushes.Salmon;
+            }
+            else if (value.Length < 2)
+            {
+                textBox.ToolTip = "Уведіть принаймні 2 символи для пошуку";
+                textBox.Background = Brushes.Salmon;
+            }
+            else
+            {
+                textBox.ToolTip = null;
+                textBox.Background = Brushes.Transparent;
+            }
+        }
+
+        private void textBoxName_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
+
+        private void textBoxSurname_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
+
+        private void textBoxNickname_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
+
+        private void textBoxHeight_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
+
+        private void textBoxEyeColor_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
+
+        private void textBoxHairColor_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
+
+        private void textBoxSpecialFeatures_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
+
+        private void textBoxCitizenship_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
+
+        private void textBoxBirthPlace_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
+
+        private void textBoxLastAccomodation_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
+
+        private void textBoxLanguages_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
+
+        private void textBoxJob_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
+
+        private void textBoxLastAffair_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
+
+        private void textBoxBandName_TextChanged(object sender, TextChangedEventArgs e)
         {
 
         }

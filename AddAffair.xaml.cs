@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Text.RegularExpressions;
-
+using System.Windows.Media.Animation;
 
 namespace CourseProj
 {
@@ -27,6 +27,12 @@ namespace CourseProj
             InitializeComponent();
             checkBoxIsInBand.Checked += checkBox_Checked;
             checkBoxIsInBand.Unchecked += checkBox_Unchecked;
+
+            DoubleAnimation btnAnimation = new DoubleAnimation();
+            btnAnimation.From = 0;
+            btnAnimation.To = 1;
+            btnAnimation.Duration = TimeSpan.FromSeconds(2);
+            AddData.BeginAnimation(Button.OpacityProperty, btnAnimation);
         }
 
         private void checkBox_Checked(object sender, RoutedEventArgs e)
