@@ -58,5 +58,32 @@ namespace CourseProj
                 }
             }
         }
+
+        public static void CheckHeight(TextBox textBox)
+        {
+            string value = textBox.Text.Trim();
+            int i = 0;
+
+            if (!int.TryParse(value, out i))
+            {
+                textBox.ToolTip = "Уведіть у поле число!";
+                textBox.Background = Brushes.Salmon;
+            }
+            else if (int.TryParse(value, out i))
+            {
+                int height = int.Parse(value);
+
+                if (height < 60 || height > 260)
+                {
+                    textBox.ToolTip = "Уведіть у поле число в діапазоні від 60 до 260!";
+                    textBox.Background = Brushes.Salmon;
+                }
+                else
+                {
+                    textBox.ToolTip = null;
+                    textBox.Background = Brushes.Transparent;
+                }
+            }
+        }
     }
 }

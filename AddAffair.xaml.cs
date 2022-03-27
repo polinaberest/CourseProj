@@ -27,7 +27,7 @@ namespace CourseProj
             InitializeComponent();
             checkBoxIsInBand.Checked += checkBox_Checked;
             checkBoxIsInBand.Unchecked += checkBox_Unchecked;
-
+            //button animation
             DoubleAnimation btnAnimation = new DoubleAnimation();
             btnAnimation.From = 0;
             btnAnimation.To = 1;
@@ -118,29 +118,8 @@ namespace CourseProj
 
         private void textBoxHeight_TextChanged(object sender, TextChangedEventArgs e)
         {
-            string value  = textBoxHeight.Text.Trim();
-            int i = 0;
-
-            if (!int.TryParse(value, out i))
-            {
-                textBoxHeight.ToolTip = "Уведіть у поле число!";
-                textBoxHeight.Background = Brushes.Salmon;
-            }
-            else if (int.TryParse(value, out i))
-            { 
-                int height = int.Parse(value);
-
-                if (height < 60 || height > 260)
-                {
-                    textBoxHeight.ToolTip = "Уведіть у поле число в діапазоні від 60 до 260!";
-                    textBoxHeight.Background = Brushes.Salmon;
-                }
-                else
-                {
-                    textBoxHeight.ToolTip = null;
-                    textBoxHeight.Background = Brushes.Transparent;
-                }
-            }
+            ExtensionsToCheckInput.CheckHeight(textBoxHeight);
+            
         }
 
         private void textBoxEyeColor_TextChanged(object sender, TextChangedEventArgs e)
