@@ -25,7 +25,7 @@ namespace CourseProj
             InitializeComponent();
             checkBoxIsInBand.Checked += checkBoxIsInBand_Checked;
             checkBoxIsInBand.Unchecked += checkBoxIsInBand_Checked;
-            
+        
             //button animation
             DoubleAnimation btnAnimation = new DoubleAnimation();
             btnAnimation.From = 0;
