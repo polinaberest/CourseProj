@@ -24,7 +24,7 @@ namespace CourseProj
         {
             InitializeComponent();
             checkBoxIsInBand.Checked += checkBoxIsInBand_Checked;
-            checkBoxIsInBand.Unchecked += checkBoxIsInBand_Checked;
+            checkBoxIsInBand.Unchecked += checkBoxIsInBand_Unchecked;
         
             //button animation
             DoubleAnimation btnAnimation = new DoubleAnimation();
@@ -37,81 +37,11 @@ namespace CourseProj
         private void textBoxBirthday_TextChanged(object sender, TextChangedEventArgs e)
         {
             ExtensionsToCheckInput.DateIsCorrect(textBoxBirthday);
-        }
-
-        private void textBoxName_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            CheckLength(textBoxName);
-        }
-
-        private void textBoxSurname_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            CheckLength(textBoxSurname);
-        }
-
-        private void textBoxNickname_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            CheckLength(textBoxNickname);
-        }
-
-        private void textBoxHeight_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            ExtensionsToCheckInput.CheckHeight(textBoxHeight);
-            if (textBoxHeight.Text.Trim() == null || textBoxHeight.Text.Trim() == "")
+            if (textBoxBirthday.Text.Trim() == "")
             {
-                textBoxHeight.ToolTip = null;
-                textBoxHeight.Background = Brushes.Transparent;
+                textBoxBirthday.ToolTip = null;
+                textBoxBirthday.Background = Brushes.Transparent;
             }
-        }
-
-        private void textBoxEyeColor_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            CheckLength(textBoxEyeColor);
-        }
-
-        private void textBoxHairColor_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            CheckLength(textBoxHairColor);
-        }
-
-        private void textBoxSpecialFeatures_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            CheckLength(textBoxSpecialFeatures);
-        }
-
-        private void textBoxCitizenship_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            CheckLength(textBoxCitizenship);
-        }
-
-        private void textBoxBirthPlace_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            CheckLength(textBoxBirthPlace);
-        }
-
-        private void textBoxLastAccomodation_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            CheckLength(textBoxLastAccomodation);
-        }
-
-        private void textBoxLanguages_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            CheckLength(textBoxLanguages);
-        }
-
-        private void textBoxJob_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            CheckLength(textBoxJob);
-        }
-
-        private void textBoxLastAffair_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            CheckLength(textBoxLastAffair);
-        }
-
-        private void textBoxBandName_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            CheckLength(textBoxBandName);
         }
 
         private void checkBoxIsInBand_Checked(object sender, RoutedEventArgs e)
@@ -126,28 +56,97 @@ namespace CourseProj
 
         private void SearchData_Click(object sender, RoutedEventArgs e)
         {
+            if (!CheckAbsoluteEmpty(textBoxBirthday, textBoxHeight))
+            {
+                if (checkBoxIsInBand.IsChecked == true)
+                {
+                    // логика поиска в листе всех банд по названию банды. Потом в найденной по названию банде ищем в членах банды criminal' а с такими параметрами;
+                    MessageBox.Show("Це - Сава, він у банді!");
+                }
+                if (checkBoxIsInBand.IsChecked == false)
+                {
+                    Criminal prototype = CreateCriminalProto(textBoxName, textBoxSurname, textBoxNickname, textBoxHeight, textBoxEyeColor, textBoxHairColor, textBoxSpecialFeatures, textBoxCitizenship, textBoxBirthday, textBoxBirthPlace, textBoxLastAccomodation, textBoxLanguages, textBoxJob, textBoxLastAffair);
+                    InterpolCardIndex.SearchNotinBand(prototype);
+                    MessageBox.Show("Це - Сава, він красава без банди!");
+                }
+            }
+            else
+                MessageBox.Show("Нема інформації для здійснення пошуку!");
+        }
+
+        private bool CheckAbsoluteEmpty(TextBox textBoxBirthday, TextBox textBoxHeight)
+        {
+            int count = 0;
+            int h;
+            if (textBoxBirthday.Background == Brushes.Salmon) 
+            {
+                textBoxBirthday.Text = "";
+            }
+            if (!int.TryParse(textBoxHeight.Text.Trim(), out h))
+            {
+                textBoxHeight.Text = "";
+            }
+            foreach (object el in Form.Children)
+            {
+                if (el is TextBox)
+                {
+                    TextBox box = (TextBox)el;
+                    if(box.Text == "" || box.Text == null)
+                        count++;
+                }
+            }
+            if ((bool)checkBoxIsInBand.IsChecked && count == 15)
+            {
+                return true;
+            }
+            else if ((!(bool)checkBoxIsInBand.IsChecked) && count == 15)
+            { 
+                return true;
+            }
+            return false;
 
         }
 
-        private void CheckLength(TextBox textBox)
+        private Criminal CreateCriminalProto(
+        TextBox nameTB,
+        TextBox surnameTB,
+        TextBox nicknameTB,
+        TextBox heightTB,
+        TextBox eyeColorTB,
+        TextBox hairColorTB,
+        TextBox specialFeaturesTB,
+        TextBox citizenshipTB,
+        TextBox dateOfBirthTB,
+        TextBox placeOfBirthTB,
+        TextBox lastAccomodationTB,
+        TextBox languagesTB,
+        TextBox criminalJobTB,
+        TextBox lastAffairTB,
+        bool isInBand = false,
+        string? bandName = null)
         {
-            string value = textBox.Text.Trim();
+            string name = nameTB.Text.Trim();
+            string surname = surnameTB.Text.Trim();
+            string nickname = nicknameTB.Text.Trim();
+            int height;
+            int.TryParse(heightTB.Text.Trim(), out height);
+            string eyeColor = eyeColorTB.Text.Trim();
+            string hairColor = hairColorTB.Text.Trim();
+            string specialFeatures = specialFeaturesTB.Text.Trim();
+            string citizenship = citizenshipTB.Text.Trim();
+            string dateOfBirth = dateOfBirthTB.Text.Trim();
+            if(dateOfBirthTB.Background != Brushes.Transparent)
+            {
+                dateOfBirth = "";
+            }
+            string placeOfBirth = placeOfBirthTB.Text.Trim();
+            string lastAccomodation = lastAccomodationTB.Text.Trim();   
+            string languages = languagesTB.Text.Trim();
+            string criminalJob = criminalJobTB.Text.Trim();
+            string lastAffair = lastAffairTB.Text.Trim();
 
-            if (value.Length > 100)
-            {
-                textBox.ToolTip = "Уведіть менше 100 символів для пошуку";
-                textBox.Background = Brushes.Salmon;
-            }
-            else if (value.Length < 2 && value.Length>0)
-            {
-                textBox.ToolTip = "Уведіть принаймні 2 символи для пошуку";
-                textBox.Background = Brushes.Salmon;
-            }
-            else
-            {
-                textBox.ToolTip = null;
-                textBox.Background = Brushes.Transparent;
-            }
+            Criminal prototype = new Criminal(name, surname, nickname, height, eyeColor, hairColor, specialFeatures, citizenship, dateOfBirth, placeOfBirth, lastAccomodation, languages, criminalJob, lastAffair, isInBand, bandName);
+            return prototype;
         }
     }
 }

@@ -28,5 +28,27 @@ namespace CourseProj
             allBands.Add(band);
         }
 
+        public static void SearchNotinBand(Criminal prototype) 
+        {
+            if (criminals.Count==0)
+            {
+                // если все поля пустые или база преступников пуста, то нам нужно вывести на екран НИЧЕГО НЕ НАЙДЕНО
+                return;
+            }
+            foreach (Criminal criminal in criminals)
+            {
+                if (!criminal.IsInBand) 
+                {
+                    var processedProto = prototype.Clone();
+                    
+                        
+                    //MakeNullsEquivalent(processedProto, criminal);
+                    //CompareCriminals(processedProto, criminal);
+                }
+            }
+        }
+
+       
+
     }
 }

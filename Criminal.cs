@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 
 namespace CourseProj
 {
-    internal class Criminal
+    internal class Criminal:ICloneable
     {
         private string name;
         private string surname;
@@ -23,7 +23,7 @@ namespace CourseProj
         private string languages;
         private string criminalJob;
         private string lastAffair;
-        //private bool isInBand = false;
+        public bool IsInBand;
         private string? bandName;
         private CrimeBand band;
 
@@ -61,6 +61,7 @@ namespace CourseProj
             LastAffair = lastAffair;
             if (isInBand)
             {
+                IsInBand = true;
                 //тут функція перевірки на адекватність, обрізки(валідація) bandname
                 BandName = AdoptBandName(bandName);
                 band = SearchBand(BandName);
@@ -100,27 +101,51 @@ namespace CourseProj
             return bandName;
         }
 
+        public object Clone()
+        {
+            return this.MemberwiseClone();
+        }
+
         public override string ToString()
         {
             return this.Name + " " + this.Surname + " (" + this.Nickname + ")\n ";
         }
 
+
         public string Name
         {
             get { return name; }
-            set { name = (value.Substring(0, 1).ToUpper() + value.Substring(1).ToLower()).Trim(); }
+            set 
+            {
+                if (value.Length >= 1)
+                    name = (value.Substring(0, 1).ToUpper() + value.Substring(1).ToLower()).Trim();
+                else
+                    name = "";
+            }
         }
 
         public string Surname
         {
             get { return surname; }
-            set { surname = (value.Substring(0, 1).ToUpper() + value.Substring(1).ToLower()).Trim(); }
+            set
+            {
+                if (value.Length >= 1)
+                    name = (value.Substring(0, 1).ToUpper() + value.Substring(1).ToLower()).Trim();
+                else
+                    name = "";
+            }
         }
 
         public string Nickname
         {
             get { return nickname; }
-            set { nickname = (value.Substring(0, 1).ToUpper() + value.Substring(1).ToLower()).Trim(); }
+            set
+            {
+                if (value.Length >= 1)
+                    name = (value.Substring(0, 1).ToUpper() + value.Substring(1).ToLower()).Trim();
+                else
+                    name = "";
+            }
         }
 
         public int Height
@@ -189,12 +214,7 @@ namespace CourseProj
             set { lastAffair = value; }
         }
 
-        /*public bool IsInBand
-        {
-            get { return isInBand; }
-            set { isInBand = value; }
-        }*/
-
+       
         public CrimeBand Band
         {
             get { return band; }

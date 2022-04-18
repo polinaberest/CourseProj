@@ -16,7 +16,7 @@ namespace CourseProj
         {
             BandName = bandName;
             this.members = members;
-            InterpolCardIndex.allBands.Add(this);
+            InterpolCardIndex.AddBand(this);
         }
 
         public string ShowMembers()
