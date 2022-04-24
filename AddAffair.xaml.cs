@@ -390,5 +390,12 @@ namespace CourseProj
             textBox.Background = Brushes.Transparent;
             textBox.ToolTip = null;
         }
+
+        private void BackInAddForm_Click(object sender, RoutedEventArgs e)
+        {
+            MainWindow main = new MainWindow();
+            main.Show();
+            this.Close();
+        }
     }
 }

@@ -78,6 +78,7 @@ namespace CourseProj
                 {
                     if (band.BandName == bandName)
                     {
+                        band.AddMember(this);
                         return band;
                     }
                 }
@@ -91,11 +92,13 @@ namespace CourseProj
         {
             bandName = bandName.Replace('-', ' ');
             string[] wordArr = bandName.Split(" ");
-
-            for (int i = 0; i < wordArr.Length; i++)
+            if (bandName != "" && bandName != null)
             {
-                wordArr[i] = wordArr[i].Trim();
-                wordArr[i] = (wordArr[i].Substring(0, 1).ToUpper() + wordArr[i].Substring(1).ToLower()).Trim();
+                for (int i = 0; i < wordArr.Length; i++)
+                {
+                    wordArr[i] = wordArr[i].Trim();
+                    wordArr[i] = (wordArr[i].Substring(0, 1).ToUpper() + wordArr[i].Substring(1).ToLower()).Trim();
+                }
             }
             bandName = String.Join(" ", wordArr);
             return bandName;
@@ -130,9 +133,9 @@ namespace CourseProj
             set
             {
                 if (value.Length >= 1)
-                    name = (value.Substring(0, 1).ToUpper() + value.Substring(1).ToLower()).Trim();
+                    surname = (value.Substring(0, 1).ToUpper() + value.Substring(1).ToLower()).Trim();
                 else
-                    name = "";
+                    surname = "";
             }
         }
 
@@ -142,9 +145,9 @@ namespace CourseProj
             set
             {
                 if (value.Length >= 1)
-                    name = (value.Substring(0, 1).ToUpper() + value.Substring(1).ToLower()).Trim();
+                    nickname = (value.Substring(0, 1).ToUpper() + value.Substring(1).ToLower()).Trim();
                 else
-                    name = "";
+                    nickname = "";
             }
         }
 

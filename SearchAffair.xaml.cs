@@ -58,14 +58,18 @@ namespace CourseProj
         {
             if (!CheckAbsoluteEmpty(textBoxBirthday, textBoxHeight))
             {
+                InterpolCardIndex.criminalsFoundByRequest.Clear(); // очищуємо список знайдених з минулого разу
                 if (checkBoxIsInBand.IsChecked == true)
                 {
                     // логика поиска в листе всех банд по названию банды. Потом в найденной по названию банде ищем в членах банды criminal' а с такими параметрами;
+                    Criminal prototype = CreateCriminalProto(textBoxName, textBoxSurname, textBoxNickname, textBoxHeight, textBoxEyeColor, textBoxHairColor, textBoxSpecialFeatures, textBoxCitizenship, textBoxBirthday, textBoxBirthPlace, textBoxLastAccomodation, textBoxLanguages, textBoxJob, textBoxLastAffair, true, textBoxBandName.Text.Trim());
+                    
+                    InterpolCardIndex.SearchInBand(prototype);
                     MessageBox.Show("Це - Сава, він у банді!");
                 }
                 if (checkBoxIsInBand.IsChecked == false)
                 {
-                    Criminal prototype = CreateCriminalProto(textBoxName, textBoxSurname, textBoxNickname, textBoxHeight, textBoxEyeColor, textBoxHairColor, textBoxSpecialFeatures, textBoxCitizenship, textBoxBirthday, textBoxBirthPlace, textBoxLastAccomodation, textBoxLanguages, textBoxJob, textBoxLastAffair);
+                    Criminal prototype = CreateCriminalProto(textBoxName, textBoxSurname, textBoxNickname, textBoxHeight, textBoxEyeColor, textBoxHairColor, textBoxSpecialFeatures, textBoxCitizenship, textBoxBirthday, textBoxBirthPlace, textBoxLastAccomodation, textBoxLanguages, textBoxJob, textBoxLastAffair, false, null);
                     InterpolCardIndex.SearchNotinBand(prototype);
                     MessageBox.Show("Це - Сава, він красава без банди!");
                 }
@@ -122,8 +126,8 @@ namespace CourseProj
         TextBox languagesTB,
         TextBox criminalJobTB,
         TextBox lastAffairTB,
-        bool isInBand = false,
-        string? bandName = null)
+        bool isInBand,
+        string? bandName)
         {
             string name = nameTB.Text.Trim();
             string surname = surnameTB.Text.Trim();
@@ -147,6 +151,13 @@ namespace CourseProj
 
             Criminal prototype = new Criminal(name, surname, nickname, height, eyeColor, hairColor, specialFeatures, citizenship, dateOfBirth, placeOfBirth, lastAccomodation, languages, criminalJob, lastAffair, isInBand, bandName);
             return prototype;
+        }
+
+        private void BackInSearchForm_Click(object sender, RoutedEventArgs e)
+        {
+            MainWindow main = new MainWindow();
+            main.Show();
+            this.Close();
         }
     }
 }
