@@ -56,6 +56,8 @@ namespace CourseProj
 
         private void SearchData_Click(object sender, RoutedEventArgs e)
         {
+            
+            
             if (!CheckAbsoluteEmpty(textBoxBirthday, textBoxHeight))
             {
                 InterpolCardIndex.criminalsFoundByRequest.Clear(); // очищуємо список знайдених з минулого разу
@@ -66,6 +68,7 @@ namespace CourseProj
                     
                     InterpolCardIndex.SearchInBand(prototype);
                     MessageBox.Show("Це - Сава, він у банді!");
+
                 }
                 if (checkBoxIsInBand.IsChecked == false)
                 {
@@ -73,6 +76,9 @@ namespace CourseProj
                     InterpolCardIndex.SearchNotinBand(prototype);
                     MessageBox.Show("Це - Сава, він красава без банди!");
                 }
+                SearchResults results = new SearchResults();
+                results.Show();
+                this.Close();
             }
             else
                 MessageBox.Show("Нема інформації для здійснення пошуку!");

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CourseProj
 {
-    internal class InterpolCardIndex
+    internal static class InterpolCardIndex
     {
         public static List<CrimeBand>? allBands;
 
@@ -14,11 +14,15 @@ namespace CourseProj
 
         public static List<Criminal>? criminalsFoundByRequest;
 
-        public InterpolCardIndex()
+        public static List<Criminal>? archived;
+
+        static InterpolCardIndex()
         {
             allBands = new List<CrimeBand>();
             criminals = new List<Criminal>();
             criminalsFoundByRequest = new List<Criminal>();
+            archived = new List<Criminal>();
+
             Criminal cr = new Criminal("vasya", "pupkin", "vip", 185, "grey", "broun", "big nose", "russian", "18.04.2000", "Pupkinsk", "Hzz", "russian", "rushist", "operationZ", true, "banda");
             Criminal cr2 = new Criminal("vova", "putin", "huilo", 188, "red", "broun", "small", "russian", "19.04.2000", "Muhosransk", "Hz ", "russian", "rushist", "operationZ", true, "banda");
             Criminal cr3 = new Criminal("vova", "hutin", "huilo", 155, "red", "broun", "small", "russian", "19.04.2000", "Muhosransk", "Hz ", "russian", "rushist", "operationZ", false, null);
