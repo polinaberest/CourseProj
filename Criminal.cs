@@ -111,7 +111,7 @@ namespace CourseProj
 
         public override string ToString()
         {
-            return this.Name + " " + this.Surname + " (" + this.Nickname + ")\n ";
+            return this.Name + " " + this.Surname + " (" + this.Nickname + ") ";
         }
 
 

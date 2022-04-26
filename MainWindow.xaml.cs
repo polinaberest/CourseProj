@@ -23,8 +23,6 @@ namespace CourseProj
         public MainWindow()
         {
             InitializeComponent();
-            
-            
         }
 
         private void EditAffair_Click(object sender, RoutedEventArgs e)

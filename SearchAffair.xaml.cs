@@ -67,14 +67,14 @@ namespace CourseProj
                     Criminal prototype = CreateCriminalProto(textBoxName, textBoxSurname, textBoxNickname, textBoxHeight, textBoxEyeColor, textBoxHairColor, textBoxSpecialFeatures, textBoxCitizenship, textBoxBirthday, textBoxBirthPlace, textBoxLastAccomodation, textBoxLanguages, textBoxJob, textBoxLastAffair, true, textBoxBandName.Text.Trim());
                     
                     InterpolCardIndex.SearchInBand(prototype);
-                    MessageBox.Show("Це - Сава, він у банді!");
+                    //MessageBox.Show("Це - Сава, він у банді!");
 
                 }
                 if (checkBoxIsInBand.IsChecked == false)
                 {
                     Criminal prototype = CreateCriminalProto(textBoxName, textBoxSurname, textBoxNickname, textBoxHeight, textBoxEyeColor, textBoxHairColor, textBoxSpecialFeatures, textBoxCitizenship, textBoxBirthday, textBoxBirthPlace, textBoxLastAccomodation, textBoxLanguages, textBoxJob, textBoxLastAffair, false, null);
                     InterpolCardIndex.SearchNotinBand(prototype);
-                    MessageBox.Show("Це - Сава, він красава без банди!");
+                    //MessageBox.Show("Це - Сава, він красава без банди!");
                 }
                 SearchResults results = new SearchResults();
                 results.Show();

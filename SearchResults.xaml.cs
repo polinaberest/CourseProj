@@ -39,14 +39,31 @@ namespace CourseProj
                 return;
             }
             int i = 1;
+            string link = "\t\tнатисніть, щоб редагувати / побачити більше\n";
             foreach (Criminal criminal in InterpolCardIndex.criminalsFoundByRequest)
             { 
-                TextBlock textBlock = new TextBlock();
-                textBlock.Text = i +". "+ criminal.ToString();
-                textBlock.FontSize = 22;
-                Results.Children.Add(textBlock);
+                Button button = new Button();
+                button.Content = i + ". " + criminal.ToString() + link;
+/*                if (textBlock.IsMouseOver)
+                    textBlock.Foreground = Brushes.Blue;*/
+                button.FontSize = 20;
+                button.Margin = new Thickness(3);
+                Color color = Color.FromRgb(0, 118, 214);
+                button.Background = new SolidColorBrush(color);
+                button.MaxWidth = 1100;
+                button.Tag = i-1;
+                button.ToolTip = "Переглянути, редагувати, архівувати, видалити анкету " + criminal.ToString();
+                button.Click += Button_Click;
+                Results.Children.Add(button);
                 i++;
             }
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            int count = (int)((Control)sender).Tag;
+
+            //MessageBox.Show(count.ToString());
         }
     }
 }
