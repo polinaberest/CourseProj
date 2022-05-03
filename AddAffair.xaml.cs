@@ -43,6 +43,7 @@ namespace CourseProj
         private void checkBox_Unchecked(object sender, RoutedEventArgs e)
         {
             textBoxBandName.Visibility = Visibility.Hidden;
+            textBoxBandName.Text = "";
         }
 
         private void AddData_Click(object sender, RoutedEventArgs e)
@@ -103,231 +104,82 @@ namespace CourseProj
         //обробники подій
         private void textBoxName_TextChanged(object sender, TextChangedEventArgs e)
         {
-            CommonWarningWhenTextChanged(textBoxName, "Ім'я");
+            ExtensionsToCheckInput.CommonWarningWhenTextChanged(textBoxName, "Ім'я");
         }
 
         private void textBoxSurname_TextChanged(object sender, TextChangedEventArgs e)
         {
-            CommonWarningWhenTextChanged(textBoxSurname, "Прізвище");
+            ExtensionsToCheckInput.CommonWarningWhenTextChanged(textBoxSurname, "Прізвище");
         }
 
         private void textBoxNickname_TextChanged(object sender, TextChangedEventArgs e)
         {
-            CommonWarningWhenTextChanged(textBoxNickname, "Прізвисько");
+            ExtensionsToCheckInput.CommonWarningWhenTextChanged(textBoxNickname, "Прізвисько");
         }
 
         private void textBoxHeight_TextChanged(object sender, TextChangedEventArgs e)
         {
             ExtensionsToCheckInput.CheckHeight(textBoxHeight);
-            
         }
 
         private void textBoxEyeColor_TextChanged(object sender, TextChangedEventArgs e)
         {
-            CommonWarningWhenTextChanged(textBoxEyeColor);
+            ExtensionsToCheckInput.CommonWarningWhenTextChanged(textBoxEyeColor);
         }
 
         private void textBoxHairColor_TextChanged(object sender, TextChangedEventArgs e)
         {
-            CommonWarningWhenTextChanged(textBoxHairColor);
+            ExtensionsToCheckInput.CommonWarningWhenTextChanged(textBoxHairColor);
         }
 
         private void textBoxSpecialFeatures_TextChanged(object sender, TextChangedEventArgs e)
         {
-            CommonWarningWhenArrayTextChanged(textBoxSpecialFeatures);
+            ExtensionsToCheckInput.CommonWarningWhenArrayTextChanged(textBoxSpecialFeatures);
         }
 
         private void textBoxCitizenship_TextChanged(object sender, TextChangedEventArgs e)
         {
-            CommonWarningWhenTextChanged(textBoxCitizenship, true);
+            ExtensionsToCheckInput.CommonWarningWhenTextChanged(textBoxCitizenship, true);
         }
 
         private void textBoxBirthday_TextChanged(object sender, TextChangedEventArgs e)
         {
             ExtensionsToCheckInput.DateIsCorrect(textBoxBirthday);
-
         }
 
         private void textBoxBirthPlace_TextChanged(object sender, TextChangedEventArgs e)
         {
-            CommonWarningWhenTextChanged(textBoxBirthPlace, true);
+            ExtensionsToCheckInput.CommonWarningWhenTextChanged(textBoxBirthPlace, true);
         }
 
         private void textBoxLastAccomodation_TextChanged(object sender, TextChangedEventArgs e)
         {
-            CommonWarningWhenTextChanged(textBoxLastAccomodation, true);
+            ExtensionsToCheckInput.CommonWarningWhenTextChanged(textBoxLastAccomodation, true);
         }
 
         private void textBoxLanguages_TextChanged(object sender, TextChangedEventArgs e)
         {
-            CommonWarningWhenArrayTextChanged(textBoxLanguages);
+            ExtensionsToCheckInput.CommonWarningWhenArrayTextChanged(textBoxLanguages);
         }
 
         private void textBoxJob_TextChanged(object sender, TextChangedEventArgs e)
         {
-            CommonWarningWhenTextChanged(textBoxJob, true);
+            ExtensionsToCheckInput.CommonWarningWhenTextChanged(textBoxJob, true);
         }
 
         private void textBoxLastAffair_TextChanged(object sender, TextChangedEventArgs e)
         {
-            CommonWarningWhenTextChanged(textBoxLastAffair, true);
+            ExtensionsToCheckInput.CommonWarningWhenTextChanged(textBoxLastAffair, true);
         }
 
         private void textBoxBandName_TextChanged(object sender, TextChangedEventArgs e)
         {
-            CommonWarningWhenTextChanged(textBoxBandName, true);
+            ExtensionsToCheckInput.CommonWarningWhenTextChanged(textBoxBandName, true);
         }
 
         //функції для обробників подій
 
-        private void CommonWarningWhenTextChanged(TextBox textBox, string naming)
-        {
-            string value = textBox.Text.Trim();
-            
-            if (value.Length > 50)
-            {
-                textBox.ToolTip = naming + " має бути коротшим за 50 символів!";
-                textBox.Background = Brushes.Salmon;
-            }
-            else if (value.Length < 2)
-            {
-                textBox.ToolTip = naming + " повинно мати принаймні 2 символи!";
-                textBox.Background = Brushes.Salmon;
-            }
-            else if (ExtensionsToCheckInput.ContainsNumbers(value))
-            {
-                textBox.ToolTip = naming + " не має містити цифри!";
-                textBox.Background = Brushes.Salmon;
-            }
-            else if (value.ToLower().StartsWith("ь") || value.ToLower().StartsWith("ъ") || value.ToLower().StartsWith("ы"))
-            {
-                textBox.ToolTip = naming + " не має починатися з цього знаку!";
-                textBox.Background = Brushes.Salmon;
-            }
-            else if (value.ToLower().Contains("!") || value.ToLower().Contains("+") || value.ToLower().Contains("=") || value.ToLower().Contains("?") || value.ToLower().Contains("*") || value.ToLower().Contains("|") || value.ToLower().Contains("/") || value.ToLower().Contains(",") || value.ToLower().Contains("#") || value.ToLower().Contains("$")|| value.ToLower().Contains("@")|| value.ToLower().Contains("%"))
-            {
-                textBox.ToolTip = naming + " не має містити цих знаків: ! ? # @ $ % , * | / + =";
-                textBox.Background = Brushes.Salmon;
-            }
-            else
-            {
-                textBox.ToolTip = null;
-                textBox.Background = Brushes.Transparent;
-            }
-        }
-
-        private void CommonWarningWhenTextChanged(TextBox textBox)
-        {
-            string value = textBox.Text.Trim();
-            
-            if (value.Length > 50)
-            {
-                textBox.ToolTip = "Поле має бути коротшим за 50 символів!";
-                textBox.Background = Brushes.Salmon;
-            }
-            else if (value.Length < 3)
-            {
-                textBox.ToolTip = "Поле повинно мати принаймні 3 символи!";
-                textBox.Background = Brushes.Salmon;
-            }
-            else if (ExtensionsToCheckInput.ContainsNumbers(value))
-            {
-                textBox.ToolTip = "Поле не може містити цифри!";
-                textBox.Background = Brushes.Salmon;
-            }
-            else if (value.ToLower().StartsWith("ь") || value.ToLower().StartsWith("ъ") || value.ToLower().StartsWith("ы"))
-            {
-                textBox.ToolTip = "Поле не має починатися з цього знаку!";
-                textBox.Background = Brushes.Salmon;
-            }
-            else if (ExtensionsToCheckInput.HasSeveralWords(value))
-            {
-                textBox.ToolTip = "Уведіть у поле одне слово!";
-                textBox.Background = Brushes.Salmon;
-            }
-            else if (value.ToLower().Contains("!") || value.ToLower().Contains("+") || value.ToLower().Contains("=") || value.ToLower().Contains("?") || value.ToLower().Contains("*") || value.ToLower().Contains("|") || value.ToLower().Contains("/") || value.ToLower().Contains(",") || value.ToLower().Contains("#") || value.ToLower().Contains("$") || value.ToLower().Contains("@") || value.ToLower().Contains("%"))
-            {
-                textBox.ToolTip = "Поле не має містити цих знаків: ! ? # @ $ % , * | / + =";
-                textBox.Background = Brushes.Salmon;
-            }
-            else
-            {
-                textBox.ToolTip = null;
-                textBox.Background = Brushes.Transparent;
-            }
-        }
-
-        private void CommonWarningWhenTextChanged(TextBox textBox, bool hasSeveralWords)
-        {
-            string value = textBox.Text.Trim();
-
-            if (value.Length > 60)
-            {
-                textBox.ToolTip = "Поле має бути коротшим за 60 символів!";
-                textBox.Background = Brushes.Salmon;
-            }
-            else if (value.Length < 3)
-            {
-                textBox.ToolTip = "Поле повинно мати принаймні 3 символи!";
-                textBox.Background = Brushes.Salmon;
-            }
-            else if (ExtensionsToCheckInput.ContainsNumbers(value))
-            {
-                textBox.ToolTip = "Поле не може містити цифри!";
-                textBox.Background = Brushes.Salmon;
-            }
-            else if (value.ToLower().StartsWith("ь") || value.ToLower().StartsWith("ъ") || value.ToLower().StartsWith("ы"))
-            {
-                textBox.ToolTip = "Поле не має починатися з цього знаку!";
-                textBox.Background = Brushes.Salmon;
-            }
-            else if (value.ToLower().Contains("!") || value.ToLower().Contains("+") || value.ToLower().Contains("=") || value.ToLower().Contains("?") || value.ToLower().Contains("*") || value.ToLower().Contains("|") || value.ToLower().Contains("/") || value.ToLower().Contains(",") || value.ToLower().Contains("#") || value.ToLower().Contains("$") || value.ToLower().Contains("@") || value.ToLower().Contains("%"))
-            {
-                textBox.ToolTip = "Поле не має містити цих знаків: ! ? # @ $ % , * | / + =";
-                textBox.Background = Brushes.Salmon;
-            }
-            else
-            {
-                textBox.ToolTip = null;
-                textBox.Background = Brushes.Transparent;
-            }
-        }
-
-        private void CommonWarningWhenArrayTextChanged(TextBox textBox)
-        {
-            string value = textBox.Text.Trim();
-
-            if (value.Length > 100)
-            {
-                textBox.ToolTip = "Поле може містити до 100 символів!";
-                textBox.Background = Brushes.Salmon;
-            }
-            else if (value.Length < 3)
-            {
-                textBox.ToolTip = "Поле повинно містити принаймні 3 символи!";
-                textBox.Background = Brushes.Salmon;
-            }
-            else if (ExtensionsToCheckInput.ContainsNumbers(value))
-            {
-                textBox.ToolTip = "Поле не має містити цифри!";
-                textBox.Background = Brushes.Salmon;
-            }
-            else if (value.ToLower().StartsWith("ь") || value.ToLower().StartsWith("ъ") || value.ToLower().StartsWith("ы"))
-            {
-                textBox.ToolTip = "Поле не має починатися з цього знаку!";
-                textBox.Background = Brushes.Salmon;
-            }
-            else if (value.ToLower().Contains("!") || value.ToLower().Contains("+") || value.ToLower().Contains("=") || value.ToLower().Contains("?") || value.ToLower().Contains("*") || value.ToLower().Contains("|") || value.ToLower().Contains("/") || value.ToLower().Contains("#") || value.ToLower().Contains("$") || value.ToLower().Contains("@") || value.ToLower().Contains("%"))
-            {
-                textBox.ToolTip = "Поле не має містити цих знаків: ! ? # @ $ % * | / + =";
-                textBox.Background = Brushes.Salmon;
-            }
-            else
-            {
-                textBox.ToolTip = null;
-                textBox.Background = Brushes.Transparent;
-            }
-        }
+        
 
 
 

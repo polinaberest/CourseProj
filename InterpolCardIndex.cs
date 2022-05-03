@@ -22,13 +22,16 @@ namespace CourseProj
             criminals = new List<Criminal>();
             criminalsFoundByRequest = new List<Criminal>();
             archived = new List<Criminal>();
-
+            
             Criminal cr = new Criminal("vasya", "pupkin", "vip", 185, "grey", "broun", "big nose", "russian", "18.04.2000", "Pupkinsk", "Hzz", "russian", "rushist", "operationZ", true, "banda");
-            Criminal cr2 = new Criminal("vova", "putin", "hlo", 188, "red", "broun", "small", "russian", "19.04.2000", "Muhosransk", "Hz ", "russian", "rushist", "operationZ", true, "banda");
-            Criminal cr3 = new Criminal("vova", "huuuutin", "hlo", 155, "red", "broun", "small", "russian", "19.04.2000", "Muhosransk", "Hz ", "russian", "rushist", "operationZ", false, null);
+            Criminal cr2 = new Criminal("vova", "putin", "hlo", 188, "red", "broun", "small", "russian", "19.04.2000", "Muhosransk", "Hzzz ", "russian", "rushist", "operationZ", true, "banda");
+            Criminal cr3 = new Criminal("vova", "huuuutin", "hlo", 155, "red", "broun", "small", "russian", "19.04.2000", "Muhosransk", "Hzzz ", "russian", "rushist", "operationZ", false, null);
+            criminals.Add(cr3);
             criminals.Add(cr);
             criminals.Add(cr2);
-            criminals.Add(cr3);
+            
+
+            SortByNames(criminals);
         }
 
         public static void AddCriminal(Criminal criminal)
@@ -151,6 +154,17 @@ namespace CourseProj
                 prototype.BandName == criminal.BandName)
                     return true;
             return false;
+        }
+
+        public static void SortByNames(List<Criminal> list)
+        {
+            list.Sort(delegate (Criminal x, Criminal y)
+            {
+                if (x.Name == null && y.Name == null) return 0;
+                else if (x.Name == null) return -1;
+                else if (y.Name == null) return 1;
+                else return x.Name.CompareTo(y.Name);
+            });
         }
     }
 }

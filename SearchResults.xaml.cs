@@ -40,12 +40,11 @@ namespace CourseProj
             }
             int i = 1;
             string link = "\t\tнатисніть, щоб редагувати / побачити більше\n";
+
             foreach (Criminal criminal in InterpolCardIndex.criminalsFoundByRequest)
             { 
                 Button button = new Button();
                 button.Content = i + ". " + criminal.ToString() + link;
-/*                if (textBlock.IsMouseOver)
-                    textBlock.Foreground = Brushes.Blue;*/
                 button.FontSize = 20;
                 button.Margin = new Thickness(3);
                 Color color = Color.FromRgb(0, 118, 214);
@@ -62,8 +61,10 @@ namespace CourseProj
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             int count = (int)((Control)sender).Tag;
-
-            //MessageBox.Show(count.ToString());
+            EditAffair edit = new EditAffair(InterpolCardIndex.criminalsFoundByRequest[count]);
+           
+            edit.Show();
+            this.Close();
         }
     }
 }

@@ -23,6 +23,8 @@ namespace CourseProj
         public MainWindow()
         {
             InitializeComponent();
+            InterpolCardIndex.SortByNames(InterpolCardIndex.criminals);
+            InterpolCardIndex.SortByNames(InterpolCardIndex.archived);
         }
 
         private void EditAffair_Click(object sender, RoutedEventArgs e)
@@ -40,3 +42,4 @@ namespace CourseProj
         }
     }
 }
+  
