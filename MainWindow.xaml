@@ -7,8 +7,9 @@
         mc:Ignorable="d"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         Title="Картотека Інтерполу" Height="700" Width="900" WindowStyle="ThreeDBorderWindow" FontFamily="Verdana" Icon="/interpollogo.png">
-    <Grid x:Name="MainRoot" Background="White" MinWidth="870" MinHeight="520">
+    <Grid x:Name="MainRoot" Background="White" MinWidth="870" MinHeight="620">
         <Grid.RowDefinitions>
+            <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
@@ -34,7 +35,7 @@
                 </LinearGradientBrush>
             </Button.Background>
         </Button>
-        <Button x:Name="AddAffair" Grid.Column="1" Grid.Row="3" Height="80" FontSize="24" Margin="0 0 0 20" BorderBrush="#FF00457D" MinWidth="300" BorderThickness="1,1,1,1" AutomationProperties.HelpText="Додати особову справу злочинця до картотеки" Content="Додати особову справу" FontWeight="Bold" Foreground="White"
+        <Button x:Name="AddAffair" Grid.Column="1" Grid.Row="3" Height="80" FontSize="24" Margin="0 0 0 0" BorderBrush="#FF00457D" MinWidth="300" BorderThickness="1,1,1,1" AutomationProperties.HelpText="Додати особову справу злочинця до картотеки" Content="Додати особову справу" FontWeight="Bold" Foreground="White"
                 Click="AddAffair_Click">
             <Button.Background>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -43,8 +44,17 @@
                 </LinearGradientBrush>
             </Button.Background>
         </Button>
-        <TextBlock Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" x:Name="FooterText" Text="INTERPOL 2022"  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="40,10,40,15" FontSize="24" OpacityMask="Black" Foreground="#FF00345E"/>
-        <TextBlock Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" x:Name="FooterTextRights" Text="All rights reserved"  HorizontalAlignment="Right" VerticalAlignment="Center" Margin="40,10,40,15" FontSize="24" OpacityMask="Black" Foreground="#FF00345E"/>
+        <Button x:Name="SeeArchived" Grid.Column="1" Grid.Row="4" Height="80" FontSize="24" Margin="0 0 0 20" BorderBrush="#FFE3A400" Content="Переглянути архів" AutomationProperties.HelpText="Переглянути архівовані особові справи злочинців (справи злочинців, що виправилися)" MinWidth="300" Foreground="White" FontWeight="Bold"
+                Click="SeeArchived_Click">
+            <Button.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FFE3A400"/>
+                    <GradientStop Color="#FFD66500" Offset="1"/>
+                </LinearGradientBrush>
+            </Button.Background>
+        </Button>
+        <TextBlock Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3" x:Name="FooterText" Text="INTERPOL 2022"  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="40,10,40,15" FontSize="24" OpacityMask="Black" Foreground="#FF00345E"/>
+        <TextBlock Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3" x:Name="FooterTextRights" Text="All rights reserved"  HorizontalAlignment="Right" VerticalAlignment="Center" Margin="40,10,40,15" FontSize="24" OpacityMask="Black" Foreground="#FF00345E"/>
     
     </Grid>
 </Window>

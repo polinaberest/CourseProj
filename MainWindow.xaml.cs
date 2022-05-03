@@ -40,6 +40,14 @@ namespace CourseProj
             addAffair.Show();
             this.Close();
         }
+
+
+        private void SeeArchived_Click(object sender, RoutedEventArgs e)
+        {
+            //Archive archive = new Archive();
+            //archive.Show();
+            this.Close();
+        }
     }
 }
   
