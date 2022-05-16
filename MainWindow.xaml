@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         Title="Картотека Інтерполу" Height="700" Width="900" WindowStyle="ThreeDBorderWindow" FontFamily="Verdana" Icon="/interpollogo.png">
-    <Grid x:Name="MainRoot" Background="White" MinWidth="870" MinHeight="620">
+    <Grid x:Name="MainRoot" Background="White" MinWidth="870" MinHeight="600">
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition/>

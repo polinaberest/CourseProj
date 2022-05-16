@@ -27,6 +27,11 @@ namespace CourseProj
         private string? bandName;
         private CrimeBand band;
 
+        public Criminal()
+        {
+
+        }
+
         public Criminal(
             string name,
             string surname,
@@ -113,6 +118,8 @@ namespace CourseProj
         {
             return this.Name + " " + this.Surname + " (" + this.Nickname + ") ";
         }
+
+
 
 
         public string Name

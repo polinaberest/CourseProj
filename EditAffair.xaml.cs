@@ -124,7 +124,25 @@ namespace CourseProj
 
         private void DeleteData_Click(object sender, RoutedEventArgs e)
         {
+            MessageBoxResult result = MessageBox.Show("Ви впевнені, що хочете видалити анкету ?\nНатискаючи ОК, Ви підтверджуєте, що злочинець мертвий", "Header", MessageBoxButton.OKCancel);
+            if (result == MessageBoxResult.OK)
+            {
+                MessageBox.Show("Справу видалено з картотеки");
 
+                InterpolCardIndex.criminalsFoundByRequest.Remove(processed);
+                InterpolCardIndex.criminals.Remove(processed);
+                if (processed.IsInBand)
+                {
+                    foreach (var band in InterpolCardIndex.allBands)
+                    {
+                        if (band.BandName == processed.BandName)
+                        {
+                            band.members.Remove(processed);
+                        }
+                    }
+                }
+                BackInResultsForm_Click(null, null);
+            }
         }
 
         private void EditData_Click(object sender, RoutedEventArgs e)
@@ -176,13 +194,13 @@ namespace CourseProj
                                     band.members.Remove(processed);
                                 }
                             }
-                            foreach (CrimeBand band in InterpolCardIndex.allBands)
+                            /*foreach (CrimeBand band in InterpolCardIndex.allBands)
                             {
                                 if (band.members.Count == 0)
                                 {
                                     InterpolCardIndex.allBands.Remove(band);
                                 }
-                            }
+                            }*/
                         }
                         bool _isInBand = false;
                         string _bandName = textBoxBandName.Text.Trim();
@@ -208,7 +226,34 @@ namespace CourseProj
 
         private void ArchiveData_Click(object sender, RoutedEventArgs e)
         {
+            if (isEdited)
+            {
+                MessageBox.Show("Внесені зміни не буде збережено при архівуванні! Спершу збережіть зміни!");
+                return;
+            }
+            InterpolCardIndex.archived.Add(processed);
+            InterpolCardIndex.criminalsFoundByRequest.Remove(processed);
+            InterpolCardIndex.criminals.Remove(processed);
+            if (processed.IsInBand)
+            {
+                foreach (var band in InterpolCardIndex.allBands)
+                {
+                    if (band.BandName == processed.BandName)
+                    {
+                        band.members.Remove(processed);
+                    }
+                }
+                /*foreach (CrimeBand band in InterpolCardIndex.allBands)
+                {
+                    if (band.members.Count == 0)
+                    {
+                        InterpolCardIndex.allBands.Remove(band);
+                    }
+                }*/
+            }
 
+            MessageBox.Show("Справу архівовано");
+            BackInResultsForm_Click(null, null);
         }
 
         private void FillAllFields(Criminal criminal)
@@ -266,6 +311,12 @@ namespace CourseProj
             SearchAffair search = new SearchAffair();
             search.Show();
             this.Close();
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            InterpolCardIndex.WriteToFile("criminals.txt");
+            InterpolCardIndex.WriteToFile("archived.txt");
         }
     }
 }

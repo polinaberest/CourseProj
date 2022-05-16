@@ -20,9 +20,16 @@ namespace CourseProj
     /// </summary>
     public partial class MainWindow : Window
     {
+        public static int initializer = 0;
         public MainWindow()
         {
+            initializer += 1;
             InitializeComponent();
+            if (initializer == 1)
+            {
+                InterpolCardIndex.ReadFromFile("criminals.txt");
+                InterpolCardIndex.ReadFromFile("archived.txt");
+            }
             InterpolCardIndex.SortByNames(InterpolCardIndex.criminals);
             InterpolCardIndex.SortByNames(InterpolCardIndex.archived);
         }
@@ -44,8 +51,10 @@ namespace CourseProj
 
         private void SeeArchived_Click(object sender, RoutedEventArgs e)
         {
-            //Archive archive = new Archive();
-            //archive.Show();
+            InterpolCardIndex.SortByNames(InterpolCardIndex.archived);
+            Archived archive = new Archived();
+            
+            archive.Show();
             this.Close();
         }
     }

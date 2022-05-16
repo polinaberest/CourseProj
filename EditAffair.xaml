@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:CourseProj"
         mc:Ignorable="d"
  xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        Title="Картотека Інтерполу - Перегляд та редагування особової справи" Height="750" Width="950" WindowStyle="ThreeDBorderWindow" FontFamily="Verdana" Icon="/interpollogo.png" ResizeMode="CanResize" WindowStartupLocation="Manual" WindowState="Maximized">
+        Title="Картотека Інтерполу - Перегляд та редагування особової справи" Height="750" Width="950" WindowStyle="ThreeDBorderWindow" FontFamily="Verdana" Icon="/interpollogo.png" ResizeMode="CanResize" WindowStartupLocation="Manual" WindowState="Maximized" Closing="Window_Closing">
     <ScrollViewer>
         <Grid x:Name="EditMainRoot" Background="#FF8FCDFF" MinHeight="700" MinWidth="900">
             <Border MinWidth="800" Background="White" VerticalAlignment="Center" Margin="20" Padding="20" CornerRadius="20" >
@@ -14,7 +14,7 @@
                     <DropShadowEffect BlurRadius="30" Color="#0076D6" ShadowDepth="0"></DropShadowEffect>
                 </Border.Effect>
                 <StackPanel x:Name="Form">
-                    <Button x:Name="BackInResultsForm" Width="30" Height="20" Click="BackInResultsForm_Click">
+                    <Button x:Name="BackInResultsForm" Width="30" Height="20" Click="BackInResultsForm_Click" Cursor="Hand">
                         <Button.Template>
                             <ControlTemplate>
                                 <Grid>
@@ -51,7 +51,7 @@
 
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
 
-                        <Button x:Name="DeleteData"  Content="Видалити анкету" Margin="20,5,20,5" FontSize="20" MinHeight="40" BorderBrush="#FF5E0000"  Click="DeleteData_Click" Width="225" >
+                        <Button x:Name="DeleteData"  Content="Видалити анкету" Margin="20,5,20,5" FontSize="20" MinHeight="40" BorderBrush="#FF5E0000"  Click="DeleteData_Click" Width="225" Cursor="Hand" >
                             <Button.Background>
                                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                                     <GradientStop Color="#FFFF4E4E"/>
@@ -60,7 +60,7 @@
                             </Button.Background>
                         </Button>
 
-                        <Button x:Name="EditData"  Content="Зберегти зміни" Margin="40,5,40,5" FontSize="20" MinHeight="40" BorderBrush="#FF00345E"  Click="EditData_Click" Width="245">
+                        <Button x:Name="EditData"  Content="Зберегти зміни" Margin="40,5,40,5" FontSize="20" MinHeight="40" BorderBrush="#FF00345E"  Click="EditData_Click" Width="245" Cursor="Hand">
                             <Button.Background>
                                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                                     <GradientStop Color="#FF0076D6"/>
@@ -69,7 +69,7 @@
                             </Button.Background>
                         </Button>
 
-                        <Button x:Name="ArchiveData"  Content="Архівувати справу" Margin="20,5,20,5" FontSize="20" MinHeight="40" BorderBrush="#FFA09000" Click="ArchiveData_Click" Width="225" >
+                        <Button x:Name="ArchiveData"  Content="Архівувати справу" Margin="20,5,20,5" FontSize="20" MinHeight="40" BorderBrush="#FFA09000" Click="ArchiveData_Click" Width="225" Cursor="Hand" >
                             <Button.Background>
                                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                                     <GradientStop Color="#FFD66500"/>

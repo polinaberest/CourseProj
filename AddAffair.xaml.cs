@@ -92,7 +92,7 @@ namespace CourseProj
                     }
                 }
 
-                MessageBox.Show("Це - Тарас, йому нормас!");
+                //MessageBox.Show("Це - Тарас, йому нормас!");
             }
 
             else 
@@ -248,6 +248,12 @@ namespace CourseProj
             MainWindow main = new MainWindow();
             main.Show();
             this.Close();
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            InterpolCardIndex.WriteToFile("criminals.txt");
+            //InterpolCardIndex.WriteToFile("archived.txt");
         }
     }
 }

@@ -55,7 +55,7 @@ namespace CourseProj
         }
 
         private void SearchData_Click(object sender, RoutedEventArgs e)
-        {
+         {
             
             
             if (!CheckAbsoluteEmpty(textBoxBirthday, textBoxHeight))
