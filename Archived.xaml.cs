@@ -44,8 +44,9 @@ namespace CourseProj
             foreach (Criminal criminal in InterpolCardIndex.archived)
             {
                 Button button = new Button();
-                button.Content = i + ". " + criminal.ToString() + "\t" + criminal.DateOfBirth + " Остання справа: " + criminal.LastAffair;
+                button.Content = i + ". " + criminal.ToString()  + criminal.DateOfBirth + "\t" + " Остання справа: " + criminal.LastAffair;
                 button.FontSize = 20;
+                button.HorizontalContentAlignment = HorizontalAlignment.Left;
                 button.Margin = new Thickness(3);
                 Color color = Color.FromRgb(204, 119, 34);
                 button.Background = new SolidColorBrush(color);
@@ -62,40 +63,16 @@ namespace CourseProj
         {
             int count = (int)((Control)sender).Tag;
             MessageBoxResult result = MessageBox.Show("Ви впевнені, що хочете перемістити анкету з архіву до основної картотеки ?\nНатискаючи ОК, Ви підтверджуєте, що злочинець більше не належить до тих, хто виправився", "Header", MessageBoxButton.OKCancel);
+
             if (result == MessageBoxResult.OK)
             {
-                Unarchive(InterpolCardIndex.archived[count]);
+                InterpolCardIndex.Unarchive(InterpolCardIndex.archived[count]);
                 MessageBox.Show("Справу деархівовано");
                 InterpolCardIndex.SortByNames(InterpolCardIndex.archived);
-
                 Archived arch = new Archived();
                 arch.Show();
                 this.Close();
             }            
-        }
-
-        private void Unarchive(Criminal criminal)
-        { 
-            InterpolCardIndex.AddCriminal(criminal);
-            if (criminal.IsInBand)
-            {
-                if (InterpolCardIndex.allBands != null)
-                {
-                    foreach (CrimeBand band in InterpolCardIndex.allBands)
-                    {
-                        if (band.BandName == criminal.BandName)
-                        {
-                            band.AddMember(criminal);
-                        }
-                    }
-                }
-
-                else
-                {
-                    CrimeBand newBand = new CrimeBand(criminal.BandName, new List<Criminal> { criminal });
-                }
-            }
-            InterpolCardIndex.archived.Remove(criminal);
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)

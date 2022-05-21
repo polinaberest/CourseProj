@@ -28,7 +28,6 @@ namespace CourseProj
             InitializeComponent();
             processed = (Criminal)criminal;
             FillAllFields(processed);
-            //изменения происходят с объектами списка
         }
 
         private void textBoxName_TextChanged(object sender, TextChangedEventArgs e)
@@ -131,6 +130,7 @@ namespace CourseProj
 
                 InterpolCardIndex.criminalsFoundByRequest.Remove(processed);
                 InterpolCardIndex.criminals.Remove(processed);
+
                 if (processed.IsInBand)
                 {
                     foreach (var band in InterpolCardIndex.allBands)
@@ -146,6 +146,17 @@ namespace CourseProj
         }
 
         private void EditData_Click(object sender, RoutedEventArgs e)
+        {
+            Edit();
+        }
+
+        private void ArchiveData_Click(object sender, RoutedEventArgs e)
+        {
+            Archive();
+            BackInResultsForm_Click(null, null);
+        }
+
+        private void Edit()
         {
             if (textBoxBandName.Text == "")
                 textBoxBandName.Text = "НЕ є членом банди";
@@ -176,7 +187,6 @@ namespace CourseProj
                     processed.LastAffair = textBoxLastAffair.Text.Trim();
 
                     InterpolCardIndex.SortByNames(InterpolCardIndex.criminals);
-                    //вызвать метод сортировки листа преступников по ФИО
                     MessageBox.Show("Зміни збережено! - без змін банди");
                 }
                 else
@@ -194,13 +204,6 @@ namespace CourseProj
                                     band.members.Remove(processed);
                                 }
                             }
-                            /*foreach (CrimeBand band in InterpolCardIndex.allBands)
-                            {
-                                if (band.members.Count == 0)
-                                {
-                                    InterpolCardIndex.allBands.Remove(band);
-                                }
-                            }*/
                         }
                         bool _isInBand = false;
                         string _bandName = textBoxBandName.Text.Trim();
@@ -218,13 +221,13 @@ namespace CourseProj
                 }
                 BackInResultsForm_Click(null, null);
             }
-            else 
+            else
             {
                 MessageBox.Show("Внесені зміни не є коректними!");
             }
         }
 
-        private void ArchiveData_Click(object sender, RoutedEventArgs e)
+        private void Archive()
         {
             if (isEdited)
             {
@@ -243,17 +246,9 @@ namespace CourseProj
                         band.members.Remove(processed);
                     }
                 }
-                /*foreach (CrimeBand band in InterpolCardIndex.allBands)
-                {
-                    if (band.members.Count == 0)
-                    {
-                        InterpolCardIndex.allBands.Remove(band);
-                    }
-                }*/
             }
 
             MessageBox.Show("Справу архівовано");
-            BackInResultsForm_Click(null, null);
         }
 
         private void FillAllFields(Criminal criminal)

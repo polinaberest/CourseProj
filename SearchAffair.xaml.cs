@@ -55,9 +55,20 @@ namespace CourseProj
         }
 
         private void SearchData_Click(object sender, RoutedEventArgs e)
-         {
-            
-            
+        {
+            Search();
+        }
+
+        private void SearchMainRoot_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                Search();
+            }
+        }
+
+        private void Search()
+        {
             if (!CheckAbsoluteEmpty(textBoxBirthday, textBoxHeight))
             {
                 InterpolCardIndex.criminalsFoundByRequest.Clear(); // очищуємо список знайдених з минулого разу
@@ -65,7 +76,7 @@ namespace CourseProj
                 {
                     // логика поиска в листе всех банд по названию банды. Потом в найденной по названию банде ищем в членах банды criminal' а с такими параметрами;
                     Criminal prototype = CreateCriminalProto(textBoxName, textBoxSurname, textBoxNickname, textBoxHeight, textBoxEyeColor, textBoxHairColor, textBoxSpecialFeatures, textBoxCitizenship, textBoxBirthday, textBoxBirthPlace, textBoxLastAccomodation, textBoxLanguages, textBoxJob, textBoxLastAffair, true, textBoxBandName.Text.Trim());
-                    
+
                     InterpolCardIndex.SearchInBand(prototype);
                     //MessageBox.Show("Це - Сава, він у банді!");
 

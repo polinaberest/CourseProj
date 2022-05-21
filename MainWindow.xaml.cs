@@ -52,8 +52,7 @@ namespace CourseProj
         private void SeeArchived_Click(object sender, RoutedEventArgs e)
         {
             InterpolCardIndex.SortByNames(InterpolCardIndex.archived);
-            Archived archive = new Archived();
-            
+            Archived archive = new Archived(); 
             archive.Show();
             this.Close();
         }

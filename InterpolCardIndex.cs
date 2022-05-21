@@ -24,11 +24,7 @@ namespace CourseProj
             criminalsFoundByRequest = new List<Criminal>();
             archived = new List<Criminal>();
             //ReadFromFile();
-            //Criminal cr = new Criminal("vasya", "pupkin", "vip", 185, "grey", "broun", "big nose", "russian", "18.04.2000", "Pupkinsk", "Hzz", "russian", "rushist", "operationZ", true, "banda");
-            /*Criminal cr2 = new Criminal("vova", "putin", "hlo", 188, "red", "broun", "small", "russian", "19.04.2000", "Muhosransk", "Hzzz ", "russian", "rushist", "operationZ", true, "banda");
-            Criminal cr3 = new Criminal("vova", "huuuutin", "hlo", 155, "red", "broun", "small", "russian", "19.04.2000", "Muhosransk", "Hzzz ", "russian", "rushist", "operationZ", false, null);
-            Criminal cr4 = new Criminal("vova", "huuuuti", "hlo", 155, "red", "broun", "small", "russian", "19.04.2000", "Muhosransk", "Hzzz ", "russian", "rushist", "operationZ", false, null);
-            Criminal cr5 = new Criminal("vova", "huuuti", "hlo", 155, "red", "broun", "small", "russian", "19.04.2000", "Muhosransk", "Hzzz ", "russian", "rushist", "operationZ", false, null);*/
+           
 
            // criminals.Add(cr);
            /* criminals.Add(cr2);
@@ -278,6 +274,30 @@ namespace CourseProj
                 else if (y.Name + y.Surname == null) return 1;
                 else return (x.Name + x.Surname).CompareTo(y.Name + y.Surname);
             });
+        }
+
+        public static void Unarchive(Criminal criminal)
+        {
+            InterpolCardIndex.AddCriminal(criminal);
+            if (criminal.IsInBand)
+            {
+                if (InterpolCardIndex.allBands != null)
+                {
+                    foreach (CrimeBand band in InterpolCardIndex.allBands)
+                    {
+                        if (band.BandName == criminal.BandName)
+                        {
+                            band.AddMember(criminal);
+                        }
+                    }
+                }
+
+                else
+                {
+                    CrimeBand newBand = new CrimeBand(criminal.BandName, new List<Criminal> { criminal });
+                }
+            }
+            InterpolCardIndex.archived.Remove(criminal);
         }
     }
 }

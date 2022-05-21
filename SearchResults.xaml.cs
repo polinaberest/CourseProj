@@ -46,6 +46,7 @@ namespace CourseProj
                 Button button = new Button();
                 button.Content = i + ". " + criminal.ToString() + link;
                 button.FontSize = 20;
+                button.HorizontalContentAlignment = HorizontalAlignment.Left;
                 button.Margin = new Thickness(3);
                 Color color = Color.FromRgb(0, 118, 214);
                 button.Background = new SolidColorBrush(color);
