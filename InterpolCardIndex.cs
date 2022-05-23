@@ -17,22 +17,15 @@ namespace CourseProj
 
         public static List<Criminal>? archived;
 
+        public static List<Criminal>? foundToWrite;
+
         static InterpolCardIndex()
         {
             allBands = new List<CrimeBand>();
             criminals = new List<Criminal>();
             criminalsFoundByRequest = new List<Criminal>();
             archived = new List<Criminal>();
-            //ReadFromFile();
-           
-
-           // criminals.Add(cr);
-           /* criminals.Add(cr2);
-           criminals.Add(cr3);
-            criminals.Add(cr4);
-            criminals.Add(cr5);*/
-
-
+            foundToWrite = new List<Criminal>();
             //SortByNames(criminals);
         }
 
@@ -276,6 +269,40 @@ namespace CourseProj
             });
         }
 
+        public static void DeleteAffair(Criminal processed)
+        {
+            criminalsFoundByRequest.Remove(processed);
+            criminals.Remove(processed);
+
+            if (processed.IsInBand)
+            {
+                foreach (var band in allBands)
+                {
+                    if (band.BandName == processed.BandName)
+                    {
+                        band.members.Remove(processed);
+                    }
+                }
+            }
+        }
+
+        public static void ArchiveAffair(Criminal processed)
+        {
+            archived.Add(processed);
+            criminalsFoundByRequest.Remove(processed);
+            criminals.Remove(processed);
+            if (processed.IsInBand)
+            {
+                foreach (var band in allBands)
+                {
+                    if (band.BandName == processed.BandName)
+                    {
+                        band.members.Remove(processed);
+                    }
+                }
+            }
+        }
+
         public static void Unarchive(Criminal criminal)
         {
             InterpolCardIndex.AddCriminal(criminal);
@@ -298,6 +325,73 @@ namespace CourseProj
                 }
             }
             InterpolCardIndex.archived.Remove(criminal);
+        }
+
+        public static void FormListToPrint(Criminal criminal)
+        {
+            if (foundToWrite.Count == 0)
+            {
+                foundToWrite.Add(criminal);
+                return;
+            }
+            if (foundToWrite.Contains(criminal))
+            {
+                foundToWrite.Remove(criminal);
+                return;
+            }
+            else {
+                foundToWrite.Add(criminal);
+            }
+        }
+
+        public static void WriteResults()
+        {
+            string path = "";
+            string header = "\t\t\tВитяг з картотеки Інтерполу\n\n";
+            string str = "";
+            string band = "";
+            string footer = "\n\n\t\t\tДата та час звернення до картотеки Інтерполу: " + DateTime.Now;
+            // Configure save file dialog box
+            var dialog = new Microsoft.Win32.SaveFileDialog();
+            dialog.FileName = "results"; // Default file name
+            dialog.DefaultExt = ".pdf"; // Default file extension
+            dialog.Filter = "Text documents (.txt)|*.txt"; // Filter files by extension
+
+            // Show save file dialog box
+            bool? result = dialog.ShowDialog();
+
+            // Process save file dialog box results
+            if (result == true)
+            {
+                // Save document
+                path = dialog.FileName;
+            }
+            foreach (Criminal criminal in foundToWrite)
+            {
+                if (criminal.IsInBand)
+                {
+                    band = "\nЗлочинець є членом банди " + criminal.BandName;
+                }
+                str += (foundToWrite.IndexOf(criminal) + 1) + ". "
+                    + criminal.ToString() + "\nДата народження: " + criminal.DateOfBirth
+                    + "\nЗріст: " + criminal.Height
+                    + "\nКолір очей: " + criminal.EyeColor
+                    + "\tКолір волосся: " + criminal.EyeColor
+                    + "\nОсобливі прикмети: " + criminal.SpecialFeatures
+                    + "\nГромадянство: " + criminal.Citizenship
+                    + "\nМісце народження: " + criminal.PlaceOfBirth
+                    + "\tМісце останнього проживання: " + criminal.LastAccomodation
+                    + "\nВолодіє мовами: " + criminal.Languages
+                    + "\nКримінальний фах: " + criminal.CriminalJob
+                    + "\nОстання справа: " + criminal.LastAffair
+                    + band + "\n\n";
+            }
+            using (StreamWriter writer = new StreamWriter(path, false))
+            {
+                writer.Write(header + str + footer);
+                writer.Close();
+            }
+
         }
     }
 }

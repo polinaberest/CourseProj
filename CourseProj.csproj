@@ -19,4 +19,8 @@
     <Resource Include="interpollogo.png" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="f\" />
+  </ItemGroup>
+
 </Project>

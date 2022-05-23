@@ -127,20 +127,7 @@ namespace CourseProj
             if (result == MessageBoxResult.OK)
             {
                 MessageBox.Show("Справу видалено з картотеки");
-
-                InterpolCardIndex.criminalsFoundByRequest.Remove(processed);
-                InterpolCardIndex.criminals.Remove(processed);
-
-                if (processed.IsInBand)
-                {
-                    foreach (var band in InterpolCardIndex.allBands)
-                    {
-                        if (band.BandName == processed.BandName)
-                        {
-                            band.members.Remove(processed);
-                        }
-                    }
-                }
+                InterpolCardIndex.DeleteAffair(processed);
                 BackInResultsForm_Click(null, null);
             }
         }
@@ -234,20 +221,7 @@ namespace CourseProj
                 MessageBox.Show("Внесені зміни не буде збережено при архівуванні! Спершу збережіть зміни!");
                 return;
             }
-            InterpolCardIndex.archived.Add(processed);
-            InterpolCardIndex.criminalsFoundByRequest.Remove(processed);
-            InterpolCardIndex.criminals.Remove(processed);
-            if (processed.IsInBand)
-            {
-                foreach (var band in InterpolCardIndex.allBands)
-                {
-                    if (band.BandName == processed.BandName)
-                    {
-                        band.members.Remove(processed);
-                    }
-                }
-            }
-
+            InterpolCardIndex.ArchiveAffair(processed);
             MessageBox.Show("Справу архівовано");
         }
 

@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:CourseProj"
         mc:Ignorable="d"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        Title="Картотека Інтерполу - Результати пошуку" Height="750" Width="950" WindowStyle="ThreeDBorderWindow" FontFamily="Verdana" Icon="/interpollogo.png" ResizeMode="CanResize" WindowStartupLocation="Manual" WindowState="Maximized">
+        Title="Картотека Інтерполу - Результати пошуку" Height="750" Width="950" WindowStyle="ThreeDBorderWindow" FontFamily="Verdana" Icon="/interpollogo.png" ResizeMode="CanResize" WindowStartupLocation="Manual" WindowState="Maximized" Closing="Window_Closing">
     <ScrollViewer>
         <Grid x:Name="AddMainRoot" Background="#FF8FCDFF" MinHeight="700" MinWidth="900">
             <Border MinWidth="800" Background="White" VerticalAlignment="Center" Margin="20" Padding="20" CornerRadius="20" >
@@ -32,8 +32,20 @@
                         </Button.Template>
                     </Button>
                     <TextBlock x:Name="TopText" Text="Результати пошуку:"  HorizontalAlignment="Left" VerticalAlignment="Bottom" FontSize="24" Margin="0 0 0 10" FontWeight="Bold" OpacityMask="Black" Foreground="#FF00345E"/>
+                    <TextBlock x:Name="TextHint" Text="Натисніть лівою клавішею миші по назві справи, щоб побачити більше, або правою, щоб додати справу до звіту"  HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Bottom" FontSize="16" Margin="0 0 0 10" FontWeight="Bold" OpacityMask="Black" Foreground="#FF00345E"/>
                     <StackPanel x:Name="Results">
                         <TextBlock x:Name="NothingFound" Text="За Вашим запитом нічого не знайдено" Visibility="Hidden"  HorizontalAlignment="Center" VerticalAlignment="Bottom" FontSize="24" Margin="0 0 0 10" FontWeight="Bold" OpacityMask="Black" Foreground="#0076D6"/>
+                        <StackPanel x:Name="ResultsInner">
+                            
+                        </StackPanel>
+                        <Button x:Name="Write" Click="Write_Click"  Content="Сформувати звіт" Margin="50,10,50,5" FontSize="20" MinHeight="40" BorderBrush="#FF08AC00" Width="361">
+                            <Button.Background>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                    <GradientStop Color="#FF31D600"/>
+                                    <GradientStop Color="#FF1B7800" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Button.Background>
+                        </Button>
                     </StackPanel>
 
                 </StackPanel>
