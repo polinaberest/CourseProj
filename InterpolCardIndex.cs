@@ -146,7 +146,7 @@ namespace CourseProj
             
         }
 
-        public static void SearchNotinBand(Criminal prototype) 
+        public static void SearchNotinBand(Criminal prototype, int[] hRange) 
         {
             if (criminals.Count==0)
             {
@@ -158,14 +158,14 @@ namespace CourseProj
                     var processedProto = (Criminal)prototype.Clone();
 
                     MakeNullsEquivalent(processedProto, criminal);
-                    if (CompareCriminals(processedProto, criminal))
+                    if (CompareCriminals(processedProto, criminal, hRange))
                     {
                         criminalsFoundByRequest.Add(criminal);
                     }
             }
         }
 
-        public static void SearchInBand(Criminal prototype)
+        public static void SearchInBand(Criminal prototype, int[] hRange)
         {
             if (criminals.Count == 0 || allBands.Count == 0)
             {
@@ -182,7 +182,7 @@ namespace CourseProj
                         var processedProto = (Criminal)prototype.Clone();
 
                         MakeNullsEquivalent(processedProto, criminal);
-                        if (CompareCriminals(processedProto, criminal))
+                        if (CompareCriminals(processedProto, criminal, hRange))
                         {
                             criminalsFoundByRequest.Add(criminal);
                         }
@@ -200,7 +200,7 @@ namespace CourseProj
                         var processedProto = (Criminal)prototype.Clone();
                         MakeNullsEquivalent(processedProto, criminal);
 
-                        if (CompareCriminals(processedProto, criminal))
+                        if (CompareCriminals(processedProto, criminal, hRange))
                         {
                             criminalsFoundByRequest.Add(criminal);
                         }
@@ -236,12 +236,11 @@ namespace CourseProj
 
         }
 
-        public static bool CompareCriminals(Criminal prototype, Criminal criminal)
+        public static bool CompareCriminals(Criminal prototype, Criminal criminal, int[] hRange)
         {
             if (prototype.Name == criminal.Name &&
                 prototype.Surname == criminal.Surname &&
                 prototype.Nickname == criminal.Nickname &&
-                prototype.Height == criminal.Height &&
                 prototype.EyeColor == criminal.EyeColor &&
                 prototype.HairColor == criminal.HairColor &&
                 prototype.SpecialFeatures == criminal.SpecialFeatures &&
@@ -252,9 +251,21 @@ namespace CourseProj
                 prototype.CriminalJob == criminal.CriminalJob &&
                 prototype.Languages == criminal.Languages &&
                 prototype.LastAffair == criminal.LastAffair &&
-                //prototype.IsInBand == criminal.IsInBand &&
                 prototype.BandName == criminal.BandName)
+            {
+                if (hRange[0] == -1)
                     return true;
+                else if (HeightEquals(criminal.Height, hRange))
+                    return true;
+            }
+                    
+            return false;
+        }
+
+        private static bool HeightEquals(int crHeight, int[] range)
+        {
+            if (crHeight >= range[0] && crHeight <= range[1])
+                return true;
             return false;
         }
 
@@ -327,11 +338,13 @@ namespace CourseProj
             InterpolCardIndex.archived.Remove(criminal);
         }
 
-        public static void FormListToPrint(Criminal criminal)
+        public static void FormListToPrint(Criminal criminal, out bool isIncluded)
         {
+            isIncluded = false;
             if (foundToWrite.Count == 0)
             {
                 foundToWrite.Add(criminal);
+                isIncluded = true;
                 return;
             }
             if (foundToWrite.Contains(criminal))
@@ -341,6 +354,8 @@ namespace CourseProj
             }
             else {
                 foundToWrite.Add(criminal);
+                isIncluded = true;
+                return;
             }
         }
 
@@ -376,7 +391,7 @@ namespace CourseProj
                     + criminal.ToString() + "\nДата народження: " + criminal.DateOfBirth
                     + "\nЗріст: " + criminal.Height
                     + "\nКолір очей: " + criminal.EyeColor
-                    + "\tКолір волосся: " + criminal.EyeColor
+                    + "\tКолір волосся: " + criminal.HairColor
                     + "\nОсобливі прикмети: " + criminal.SpecialFeatures
                     + "\nГромадянство: " + criminal.Citizenship
                     + "\nМісце народження: " + criminal.PlaceOfBirth

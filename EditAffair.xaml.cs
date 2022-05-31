@@ -54,15 +54,35 @@ namespace CourseProj
             isEdited = true;
         }
 
-        private void textBoxEyeColor_TextChanged(object sender, TextChangedEventArgs e)
+      /*  private void textBoxEyeColor_TextChanged(object sender, TextChangedEventArgs e)
         {
             ExtensionsToCheckInput.CommonWarningWhenTextChanged(textBoxEyeColor);
             isEdited = true;
-        }
+        }*/
 
-        private void textBoxHairColor_TextChanged(object sender, TextChangedEventArgs e)
+        /*private void textBoxHairColor_TextChanged(object sender, TextChangedEventArgs e)
         {
             ExtensionsToCheckInput.CommonWarningWhenTextChanged(textBoxHairColor);
+            isEdited = true;
+        }*/
+
+        private void ComboBoxEyeColor_LostFocus(object sender, RoutedEventArgs e)
+        {
+            ExtensionsToCheckInput.CommonWarningWhenTextChanged(ComboBoxEyeColor);
+        }
+
+        private void ComboBoxHairColor_LostFocus(object sender, RoutedEventArgs e)
+        {
+            ExtensionsToCheckInput.CommonWarningWhenTextChanged(ComboBoxEyeColor);
+        }
+
+        private void ComboBoxEyeColor_GotFocus(object sender, RoutedEventArgs e)
+        {
+            isEdited = true;
+        }
+
+        private void ComboBoxHairColor_GotFocus(object sender, RoutedEventArgs e)
+        {
             isEdited = true;
         }
 
@@ -162,8 +182,8 @@ namespace CourseProj
                     processed.Surname = textBoxSurname.Text.Trim();
                     processed.Nickname = textBoxNickname.Text.Trim();
                     processed.Height = int.Parse(textBoxHeight.Text.Trim());
-                    processed.HairColor = textBoxHairColor.Text.Trim();
-                    processed.EyeColor = textBoxEyeColor.Text.Trim();
+                    processed.HairColor = ComboBoxHairColor.Text.Trim();
+                    processed.EyeColor = ComboBoxEyeColor.Text.Trim();
                     processed.SpecialFeatures = textBoxSpecialFeatures.Text.Trim();
                     processed.Citizenship = textBoxCitizenship.Text.Trim();
                     processed.DateOfBirth = textBoxBirthday.Text.Trim();
@@ -200,7 +220,7 @@ namespace CourseProj
                         }
 
                         InterpolCardIndex.AddCriminal(new Criminal(textBoxName.Text.Trim(), textBoxSurname.Text.Trim(), textBoxNickname.Text.Trim(),
-                                int.Parse(textBoxHeight.Text.Trim()), textBoxEyeColor.Text.Trim(), textBoxHairColor.Text.Trim(), textBoxSpecialFeatures.Text.Trim(),
+                                int.Parse(textBoxHeight.Text.Trim()), ComboBoxEyeColor.Text.Trim(), ComboBoxHairColor.Text.Trim(), textBoxSpecialFeatures.Text.Trim(),
                             textBoxCitizenship.Text.Trim(), textBoxBirthday.Text.Trim(), textBoxBirthPlace.Text.Trim(), textBoxLastAccomodation.Text.Trim(), textBoxLanguages.Text.Trim(), textBoxJob.Text.Trim(), textBoxLastAffair.Text.Trim(), _isInBand, _bandName));
                         InterpolCardIndex.SortByNames(InterpolCardIndex.criminals);
                         MessageBox.Show("Зміни збережено! - зміна назви банди");
@@ -231,8 +251,8 @@ namespace CourseProj
             textBoxSurname.Text = criminal.Surname;
             textBoxNickname.Text = criminal.Nickname;
             textBoxHeight.Text = criminal.Height.ToString();
-            textBoxEyeColor.Text = criminal.EyeColor;
-            textBoxHairColor.Text = criminal.HairColor;
+            ComboBoxEyeColor.Text = criminal.EyeColor;
+            ComboBoxHairColor.Text = criminal.HairColor;
             textBoxSpecialFeatures.Text = criminal.SpecialFeatures;
             textBoxCitizenship.Text = criminal.Citizenship;
             textBoxBirthday.Text = criminal.DateOfBirth;
@@ -268,6 +288,14 @@ namespace CourseProj
                         count++;
                     }
                 }
+                else if (el is ComboBox)
+                {
+                    ComboBox cb = (ComboBox)el;
+                    if (cb.Background == Brushes.Transparent && cb.Text != null && cb.Text != "")
+                    {
+                        count++;
+                    }
+                }
             }
 
             if(count==15)
@@ -287,5 +315,7 @@ namespace CourseProj
             InterpolCardIndex.WriteToFile("criminals.txt");
             InterpolCardIndex.WriteToFile("archived.txt");
         }
+
+        
     }
 }

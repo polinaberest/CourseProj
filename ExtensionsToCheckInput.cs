@@ -199,6 +199,47 @@ namespace CourseProj
             }
         }
 
+        public static void CommonWarningWhenTextChanged(ComboBox comboBox)
+        {
+            string value = comboBox.Text.Trim();
+
+            if (value.Length > 50)
+            {
+                comboBox.ToolTip = "Поле має бути коротшим за 50 символів!";
+                comboBox.Background = Brushes.Salmon;
+            }
+            else if (value.Length < 3)
+            {
+                comboBox.ToolTip = "Поле повинно мати принаймні 3 символи!";
+                comboBox.Background = Brushes.Salmon;
+            }
+            else if (ContainsNumbers(value))
+            {
+                comboBox.ToolTip = "Поле не може містити цифри!";
+                comboBox.Background = Brushes.Salmon;
+            }
+            else if (value.ToLower().StartsWith("ь") || value.ToLower().StartsWith("ъ") || value.ToLower().StartsWith("ы"))
+            {
+                comboBox.ToolTip = "Поле не має починатися з цього знаку!";
+                comboBox.Background = Brushes.Salmon;
+            }
+            else if (HasSeveralWords(value))
+            {
+                comboBox.ToolTip = "Уведіть у поле одне слово!";
+                comboBox.Background = Brushes.Salmon;
+            }
+            else if (value.ToLower().Contains("!") || value.ToLower().Contains("+") || value.ToLower().Contains("=") || value.ToLower().Contains("?") || value.ToLower().Contains("*") || value.ToLower().Contains("|") || value.ToLower().Contains("/") || value.ToLower().Contains(",") || value.ToLower().Contains("#") || value.ToLower().Contains("$") || value.ToLower().Contains("@") || value.ToLower().Contains("%") || value.ToLower().Contains(";"))
+            {
+                comboBox.ToolTip = "Поле не має містити цих знаків: ! ? # @ $ % , ; * | / + =";
+                comboBox.Background = Brushes.Salmon;
+            }
+            else
+            {
+                comboBox.ToolTip = null;
+                comboBox.Background = Brushes.Transparent;
+            }
+        }
+
         public static void CommonWarningWhenArrayTextChanged(TextBox textBox)
         {
             string value = textBox.Text.Trim();

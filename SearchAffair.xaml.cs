@@ -20,6 +20,9 @@ namespace CourseProj
     /// </summary>
     public partial class SearchAffair : Window
     {
+        //int[,] heightRange = new int[,] { { 40, 140 }, { 141, 160 }, { 161, 180 }, { 181 , 250 } };
+        int[] intRange;
+        string defHeight = "";
         public SearchAffair()
         {
             InitializeComponent();
@@ -42,6 +45,36 @@ namespace CourseProj
                 textBoxBirthday.ToolTip = null;
                 textBoxBirthday.Background = Brushes.Transparent;
             }
+        }
+
+        private void RadioButton_Checked(object sender, RoutedEventArgs e)
+        {
+            defHeight = "";
+            intRange = new int[] {  -1, -1 };
+        }
+
+        private void RadioButton_Checked_1(object sender, RoutedEventArgs e)
+        {
+            defHeight = "1";
+            intRange = new int[] { 0, 140 };
+        }
+
+        private void RadioButton_Checked_2(object sender, RoutedEventArgs e)
+        {
+            defHeight = "1";
+            intRange = new int[] { 141, 160 };
+        }
+
+        private void RadioButton_Checked_3(object sender, RoutedEventArgs e)
+        {
+            defHeight = "1";
+            intRange = new int[] { 161, 180 };
+        }
+
+        private void RadioButton_Checked_4(object sender, RoutedEventArgs e)
+        {
+            defHeight = "1";
+            intRange = new int[] { 181, 270 };
         }
 
         private void checkBoxIsInBand_Checked(object sender, RoutedEventArgs e)
@@ -69,22 +102,22 @@ namespace CourseProj
 
         private void Search()
         {
-            if (!CheckAbsoluteEmpty(textBoxBirthday, textBoxHeight))
+            if (!CheckAbsoluteEmpty(textBoxBirthday, defHeight))
             {
                 InterpolCardIndex.criminalsFoundByRequest.Clear(); // очищуємо список знайдених з минулого разу
                 if (checkBoxIsInBand.IsChecked == true)
                 {
                     // логика поиска в листе всех банд по названию банды. Потом в найденной по названию банде ищем в членах банды criminal' а с такими параметрами;
-                    Criminal prototype = CreateCriminalProto(textBoxName, textBoxSurname, textBoxNickname, textBoxHeight, textBoxEyeColor, textBoxHairColor, textBoxSpecialFeatures, textBoxCitizenship, textBoxBirthday, textBoxBirthPlace, textBoxLastAccomodation, textBoxLanguages, textBoxJob, textBoxLastAffair, true, textBoxBandName.Text.Trim());
+                    Criminal prototype = CreateCriminalProto(textBoxName, textBoxSurname, textBoxNickname, ComboBoxEyeColor, ComboBoxHairColor, textBoxSpecialFeatures, textBoxCitizenship, textBoxBirthday, textBoxBirthPlace, textBoxLastAccomodation, textBoxLanguages, textBoxJob, textBoxLastAffair, true, textBoxBandName.Text.Trim());
 
-                    InterpolCardIndex.SearchInBand(prototype);
+                    InterpolCardIndex.SearchInBand(prototype, intRange);
                     //MessageBox.Show("Це - Сава, він у банді!");
 
                 }
                 if (checkBoxIsInBand.IsChecked == false)
                 {
-                    Criminal prototype = CreateCriminalProto(textBoxName, textBoxSurname, textBoxNickname, textBoxHeight, textBoxEyeColor, textBoxHairColor, textBoxSpecialFeatures, textBoxCitizenship, textBoxBirthday, textBoxBirthPlace, textBoxLastAccomodation, textBoxLanguages, textBoxJob, textBoxLastAffair, false, null);
-                    InterpolCardIndex.SearchNotinBand(prototype);
+                    Criminal prototype = CreateCriminalProto(textBoxName, textBoxSurname, textBoxNickname, ComboBoxEyeColor, ComboBoxHairColor, textBoxSpecialFeatures, textBoxCitizenship, textBoxBirthday, textBoxBirthPlace, textBoxLastAccomodation, textBoxLanguages, textBoxJob, textBoxLastAffair, false, null);
+                    InterpolCardIndex.SearchNotinBand(prototype, intRange);
                     //MessageBox.Show("Це - Сава, він красава без банди!");
                 }
                 SearchResults results = new SearchResults();
@@ -95,7 +128,7 @@ namespace CourseProj
                 MessageBox.Show("Нема інформації для здійснення пошуку!");
         }
 
-        private bool CheckAbsoluteEmpty(TextBox textBoxBirthday, TextBox textBoxHeight)
+        private bool CheckAbsoluteEmpty(TextBox textBoxBirthday, string defHeight)
         {
             int count = 0;
             int h;
@@ -103,9 +136,9 @@ namespace CourseProj
             {
                 textBoxBirthday.Text = "";
             }
-            if (!int.TryParse(textBoxHeight.Text.Trim(), out h))
+            if (defHeight == "")
             {
-                textBoxHeight.Text = "";
+                count++;
             }
             foreach (object el in Form.Children)
             {
@@ -113,6 +146,12 @@ namespace CourseProj
                 {
                     TextBox box = (TextBox)el;
                     if(box.Text == "" || box.Text == null)
+                        count++;
+                }
+                else if (el is ComboBox)
+                {
+                    ComboBox box = (ComboBox)el;
+                    if (box.Text == "" || box.Text == null)
                         count++;
                 }
             }
@@ -132,9 +171,8 @@ namespace CourseProj
         TextBox nameTB,
         TextBox surnameTB,
         TextBox nicknameTB,
-        TextBox heightTB,
-        TextBox eyeColorTB,
-        TextBox hairColorTB,
+        ComboBox eyeColorCB,
+        ComboBox hairColorCB,
         TextBox specialFeaturesTB,
         TextBox citizenshipTB,
         TextBox dateOfBirthTB,
@@ -149,10 +187,9 @@ namespace CourseProj
             string name = nameTB.Text.Trim();
             string surname = surnameTB.Text.Trim();
             string nickname = nicknameTB.Text.Trim();
-            int height;
-            int.TryParse(heightTB.Text.Trim(), out height);
-            string eyeColor = eyeColorTB.Text.Trim();
-            string hairColor = hairColorTB.Text.Trim();
+            int height = 0;
+            string eyeColor = eyeColorCB.Text.Trim();
+            string hairColor = hairColorCB.Text.Trim();
             string specialFeatures = specialFeaturesTB.Text.Trim();
             string citizenship = citizenshipTB.Text.Trim();
             string dateOfBirth = dateOfBirthTB.Text.Trim();

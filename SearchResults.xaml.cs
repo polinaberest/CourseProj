@@ -77,8 +77,11 @@ namespace CourseProj
         {
             //MessageBox.Show("правая");
             int count = (int)((Control)sender).Tag;
+            bool isIncluded;
+            
             Criminal proto = InterpolCardIndex.criminalsFoundByRequest[count];
-            InterpolCardIndex.FormListToPrint(proto);      
+            InterpolCardIndex.FormListToPrint(proto, out isIncluded);
+            HighlightAdded(isIncluded, (sender as Button));
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -94,11 +97,16 @@ namespace CourseProj
                 return;
             }
             InterpolCardIndex.WriteResults();
-            /*str += item.Name + ";" + item.Surname + ";" + item.Nickname + ";" + item.Height + ";"
-                        + item.EyeColor + ";" + item.HairColor + ";" + item.SpecialFeatures + ";" + item.Citizenship + ";"
-                        + item.DateOfBirth + ";" + item.PlaceOfBirth + ";" + item.LastAccomodation + ";"
-                        + item.Languages + ";" + item.CriminalJob + ";" + item.LastAffair + ";" + item.IsInBand + ";" + bandName + "\n";*/
+        }
 
+        private void HighlightAdded(bool isIn, Button button)
+        {
+            Color initColor = Color.FromRgb(0, 118, 214);
+            Color newColor = Color.FromRgb(34, 139, 34);
+            if (isIn)
+                button.Background = new SolidColorBrush(newColor);
+            else
+                button.Background = new SolidColorBrush(initColor);
         }
     }
 }

@@ -69,8 +69,8 @@ namespace CourseProj
                 IsReadyToBeAdded(textBoxSurname, out surname) &&
                 IsReadyToBeAdded(textBoxNickname, out nickname) &&
                 IsReadyToBeAdded(textBoxHeight, out height) &&
-                IsReadyToBeAdded(textBoxEyeColor, out eyeColor) &&
-                IsReadyToBeAdded(textBoxHairColor, out hairColor) &&
+                IsReadyToBeAdded(ComboBoxEyeColor, out eyeColor) &&
+                IsReadyToBeAdded(ComboBoxHairColor, out hairColor) &&
                 IsReadyToBeAdded(textBoxSpecialFeatures, out specialFeatures) &&
                 IsReadyToBeAdded(textBoxCitizenship, out citizenship) &&
                 IsReadyToBeAdded(textBoxBirthday, out dateOfBirth) &&
@@ -88,7 +88,11 @@ namespace CourseProj
                 {
                     if (el is TextBox)
                     {
-                        CleansenForm((TextBox)el);
+                        Clean((TextBox)el);
+                    }
+                    else if (el is ComboBox)
+                    {
+                        Clean((ComboBox)el);
                     }
                 }
 
@@ -121,16 +125,18 @@ namespace CourseProj
         {
             ExtensionsToCheckInput.CheckHeight(textBoxHeight);
         }
+     
 
-        private void textBoxEyeColor_TextChanged(object sender, TextChangedEventArgs e)
+        private void ComboBoxHairColor_LostFocus(object sender, RoutedEventArgs e)
         {
-            ExtensionsToCheckInput.CommonWarningWhenTextChanged(textBoxEyeColor);
+            ExtensionsToCheckInput.CommonWarningWhenTextChanged(ComboBoxHairColor);
         }
 
-        private void textBoxHairColor_TextChanged(object sender, TextChangedEventArgs e)
+        private void ComboBoxEyeColor_LostFocus(object sender, RoutedEventArgs e)
         {
-            ExtensionsToCheckInput.CommonWarningWhenTextChanged(textBoxHairColor);
+            ExtensionsToCheckInput.CommonWarningWhenTextChanged(ComboBoxEyeColor);
         }
+ 
 
         private void textBoxSpecialFeatures_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -197,6 +203,18 @@ namespace CourseProj
             return false;
         }
 
+        private bool IsReadyToBeAdded(ComboBox comboBox, out string value)
+        {
+            if (comboBox.Background == Brushes.Transparent && comboBox.Text != null && comboBox.Text != "")
+            {
+                value = comboBox.Text.Trim();
+                return true;
+            }
+
+            value = null;
+            return false;
+        }
+
         private bool IsReadyToBeAdded(TextBox textBox, out int value)
         {
             if (textBox.Background == Brushes.Transparent && textBox.Text != null && textBox.Text != "")
@@ -236,11 +254,19 @@ namespace CourseProj
 
         //метод очистки всіх полів на формі
 
-        private void CleansenForm(TextBox textBox)
+
+        public void Clean(ComboBox inputbox)
+        { 
+            inputbox.Text = String.Empty;
+            inputbox.Background = Brushes.Transparent;
+            inputbox.ToolTip = null;
+        }
+
+        public void Clean(TextBox inputbox)
         {
-            textBox.Text = String.Empty;
-            textBox.Background = Brushes.Transparent;
-            textBox.ToolTip = null;
+            inputbox.Text = String.Empty;
+            inputbox.Background = Brushes.Transparent;
+            inputbox.ToolTip = null;
         }
 
         private void BackInAddForm_Click(object sender, RoutedEventArgs e)
@@ -253,7 +279,7 @@ namespace CourseProj
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             InterpolCardIndex.WriteToFile("criminals.txt");
-            //InterpolCardIndex.WriteToFile("archived.txt");
         }
+
     }
 }

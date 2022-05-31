@@ -37,8 +37,32 @@
                     <TextBox materialDesign:HintAssist.Hint ="Прізвище злочинця" x:Name="textBoxSurname" Style = "{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:TextFieldAssist.UnderlineBrush="#FF00345E" materialDesign:HintAssist.Foreground="#FF00345E" TextChanged="textBoxSurname_TextChanged" ></TextBox>
                     <TextBox materialDesign:HintAssist.Hint ="Прізвисько (позивний) злочинця" x:Name="textBoxNickname" Style = "{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:TextFieldAssist.UnderlineBrush="#FF00345E" materialDesign:HintAssist.Foreground="#FF00345E" TextChanged="textBoxNickname_TextChanged"></TextBox>
                     <TextBox materialDesign:HintAssist.Hint ="Зріст злочинця (у сантиметрах)" x:Name="textBoxHeight" Style = "{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:TextFieldAssist.UnderlineBrush="#FF00345E" materialDesign:HintAssist.Foreground="#FF00345E" TextChanged="textBoxHeight_TextChanged" ></TextBox>
-                    <TextBox materialDesign:HintAssist.Hint ="Колір очей злочинця" x:Name="textBoxEyeColor" Style = "{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:TextFieldAssist.UnderlineBrush="#FF00345E" materialDesign:HintAssist.Foreground="#FF00345E" TextChanged="textBoxEyeColor_TextChanged" ></TextBox>
-                    <TextBox materialDesign:HintAssist.Hint ="Колір волосся злочинця" x:Name="textBoxHairColor" Style = "{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:TextFieldAssist.UnderlineBrush="#FF00345E" materialDesign:HintAssist.Foreground="#FF00345E" TextChanged="textBoxHairColor_TextChanged"></TextBox>
+                    <ComboBox IsEditable="True" x:Name="ComboBoxEyeColor"  Style = "{StaticResource MaterialDesignFloatingHintComboBox}" materialDesign:TextFieldAssist.UnderlineBrush="#FF00345E" materialDesign:HintAssist.Foreground="#FF00345E"  materialDesign:HintAssist.Hint ="Колір очей злочинця" SelectedValuePath="Content" LostFocus="ComboBoxEyeColor_LostFocus" GotFocus="ComboBoxEyeColor_GotFocus" >
+                        <ComboBoxItem>Блакитні</ComboBoxItem>
+                        <ComboBoxItem>Жовті</ComboBoxItem>
+                        <ComboBoxItem>Зелені</ComboBoxItem>
+                        <ComboBoxItem>Карі</ComboBoxItem>
+                        <ComboBoxItem>Світло-карі</ComboBoxItem>
+                        <ComboBoxItem>Сині</ComboBoxItem>
+                        <ComboBoxItem>Сірі</ComboBoxItem>
+                        <ComboBoxItem>Сіро-зелені</ComboBoxItem>
+                        <ComboBoxItem>Темно-карі</ComboBoxItem>
+                        <ComboBoxItem>Чорні</ComboBoxItem>
+                    </ComboBox>
+
+                    <ComboBox IsEditable="True" x:Name="ComboBoxHairColor" Style = "{StaticResource MaterialDesignFloatingHintComboBox}" materialDesign:TextFieldAssist.UnderlineBrush="#FF00345E" materialDesign:HintAssist.Foreground="#FF00345E"  materialDesign:HintAssist.Hint ="Колір волосся злочинця" SelectedValuePath="Content" LostFocus="ComboBoxHairColor_LostFocus" GotFocus="ComboBoxHairColor_GotFocus" >
+                        <ComboBoxItem>Блондин</ComboBoxItem>
+                        <ComboBoxItem>Брюнет</ComboBoxItem>
+                        <ComboBoxItem>Жовтий</ComboBoxItem>
+                        <ComboBoxItem>Зелений</ComboBoxItem>
+                        <ComboBoxItem>Рудий</ComboBoxItem>
+                        <ComboBoxItem>Русявий</ComboBoxItem>
+                        <ComboBoxItem>Сивий</ComboBoxItem>
+                        <ComboBoxItem>Синій</ComboBoxItem>
+                        <ComboBoxItem>Фіалковий</ComboBoxItem>
+                        <ComboBoxItem>Червоний</ComboBoxItem>
+                        <ComboBoxItem>Шатен</ComboBoxItem>
+                    </ComboBox>
                     <TextBox materialDesign:HintAssist.Hint ="Особливі прикмети (характеристики) злочинця" x:Name="textBoxSpecialFeatures" Style = "{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:TextFieldAssist.UnderlineBrush="#FF00345E" materialDesign:HintAssist.Foreground="#FF00345E" TextChanged="textBoxSpecialFeatures_TextChanged" ></TextBox>
                     <TextBox materialDesign:HintAssist.Hint ="Громадянство злочинця" x:Name="textBoxCitizenship" Style = "{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:TextFieldAssist.UnderlineBrush="#FF00345E" materialDesign:HintAssist.Foreground="#FF00345E" TextChanged="textBoxCitizenship_TextChanged" ></TextBox>
                     <TextBox materialDesign:HintAssist.Hint ="Дата народження злочинця (у форматі ДД.ММ.РРРР)" x:Name="textBoxBirthday" Style = "{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:TextFieldAssist.UnderlineBrush="#FF00345E" materialDesign:HintAssist.Foreground="#FF00345E" TextChanged="textBoxBirthday_TextChanged" ></TextBox>
