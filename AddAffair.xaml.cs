@@ -22,12 +22,14 @@ namespace CourseProj
     public partial class AddAffair : Window
     {
 
+        // конструктор класу AddAffair
         public AddAffair()
         {
             InitializeComponent();
             checkBoxIsInBand.Checked += checkBox_Checked;
             checkBoxIsInBand.Unchecked += checkBox_Unchecked;
-            //button animation
+
+            //анімація кнопки додавання
             DoubleAnimation btnAnimation = new DoubleAnimation();
             btnAnimation.From = 0;
             btnAnimation.To = 1;
@@ -35,6 +37,84 @@ namespace CourseProj
             AddData.BeginAnimation(Button.OpacityProperty, btnAnimation);
         }
 
+        //функції фінальної перевірки полів
+        private bool IsReadyToBeAdded(TextBox textBox, out string value)
+        {
+            if (textBox.Background == Brushes.Transparent && textBox.Text != null && textBox.Text != "")
+            {
+                value = textBox.Text.Trim();
+                return true;
+            }
+
+            value = null;
+            return false;
+        }
+
+        private bool IsReadyToBeAdded(ComboBox comboBox, out string value)
+        {
+            if (comboBox.Background == Brushes.Transparent && comboBox.Text != null && comboBox.Text != "")
+            {
+                value = comboBox.Text.Trim();
+                return true;
+            }
+
+            value = null;
+            return false;
+        }
+
+        private bool IsReadyToBeAdded(TextBox textBox, out int value)
+        {
+            if (textBox.Background == Brushes.Transparent && textBox.Text != null && textBox.Text != "")
+            {
+                value = int.Parse(textBox.Text.Trim());
+                return true;
+            }
+
+            value = 0;
+            return false;
+        }
+
+        private bool IsReadyToBeAdded(TextBox textBox, bool? isChecked, out string value, out bool isInBand)
+        {
+            if ((bool)isChecked)
+            {
+                isInBand = true;
+                if (textBox.Background == Brushes.Transparent && textBox.Text != null && textBox.Text != "")
+                {
+                    value = textBox.Text.Trim();
+                    return true;
+                }
+                else
+                {
+                    value = null;
+                    return false;
+                }
+            }
+            else
+            {
+                isInBand = false;
+                value = null;
+                return true;
+            }
+
+        }
+
+        //метод очистки всіх полів на формі
+        private void Clean(ComboBox inputbox)
+        {
+            inputbox.Text = String.Empty;
+            inputbox.Background = Brushes.Transparent;
+            inputbox.ToolTip = null;
+        }
+
+        private void Clean(TextBox inputbox)
+        {
+            inputbox.Text = String.Empty;
+            inputbox.Background = Brushes.Transparent;
+            inputbox.ToolTip = null;
+        }
+
+        //обробники подій
         private void checkBox_Checked(object sender, RoutedEventArgs e)
         {
             textBoxBandName.Visibility = Visibility.Visible;
@@ -95,8 +175,6 @@ namespace CourseProj
                         Clean((ComboBox)el);
                     }
                 }
-
-                //MessageBox.Show("Це - Тарас, йому нормас!");
             }
 
             else 
@@ -105,7 +183,6 @@ namespace CourseProj
             }
         }
 
-        //обробники подій
         private void textBoxName_TextChanged(object sender, TextChangedEventArgs e)
         {
             ExtensionsToCheckInput.CommonWarningWhenTextChanged(textBoxName, "Ім'я");
@@ -137,7 +214,6 @@ namespace CourseProj
             ExtensionsToCheckInput.CommonWarningWhenTextChanged(ComboBoxEyeColor);
         }
  
-
         private void textBoxSpecialFeatures_TextChanged(object sender, TextChangedEventArgs e)
         {
             ExtensionsToCheckInput.CommonWarningWhenArrayTextChanged(textBoxSpecialFeatures);
@@ -183,92 +259,6 @@ namespace CourseProj
             ExtensionsToCheckInput.CommonWarningWhenTextChanged(textBoxBandName, true);
         }
 
-        //функції для обробників подій
-
-        
-
-
-
-        //функція фінальної перевірки - на кнопці
-
-        private bool IsReadyToBeAdded(TextBox textBox, out string value)
-        {
-            if (textBox.Background == Brushes.Transparent && textBox.Text != null && textBox.Text != "") 
-            {
-                value = textBox.Text.Trim();
-                return true;
-            }
-
-            value = null;
-            return false;
-        }
-
-        private bool IsReadyToBeAdded(ComboBox comboBox, out string value)
-        {
-            if (comboBox.Background == Brushes.Transparent && comboBox.Text != null && comboBox.Text != "")
-            {
-                value = comboBox.Text.Trim();
-                return true;
-            }
-
-            value = null;
-            return false;
-        }
-
-        private bool IsReadyToBeAdded(TextBox textBox, out int value)
-        {
-            if (textBox.Background == Brushes.Transparent && textBox.Text != null && textBox.Text != "")
-            {
-                value = int.Parse(textBox.Text.Trim());
-                return true;
-            }
-
-            value = 0;
-            return false;
-        }
-
-        private bool IsReadyToBeAdded(TextBox textBox, bool? isChecked, out string value, out bool isInBand)
-        {
-            if ((bool)isChecked)
-            {
-                isInBand = true;
-                if (textBox.Background == Brushes.Transparent && textBox.Text != null && textBox.Text != "")
-                {
-                    value = textBox.Text.Trim();
-                    return true;
-                }
-                else 
-                {
-                    value = null;
-                    return false;
-                }
-            }
-            else
-            {
-                isInBand = false;
-                value = null; 
-                return true;
-            }
-            
-        }
-
-        //метод очистки всіх полів на формі
-
-
-        public void Clean(ComboBox inputbox)
-        { 
-            inputbox.Text = String.Empty;
-            inputbox.Background = Brushes.Transparent;
-            inputbox.ToolTip = null;
-        }
-
-        public void Clean(TextBox inputbox)
-        {
-            inputbox.Text = String.Empty;
-            inputbox.Background = Brushes.Transparent;
-            inputbox.ToolTip = null;
-        }
-
         private void BackInAddForm_Click(object sender, RoutedEventArgs e)
         {
             MainWindow main = new MainWindow();
@@ -280,6 +270,5 @@ namespace CourseProj
         {
             InterpolCardIndex.WriteToFile("criminals.txt");
         }
-
     }
 }

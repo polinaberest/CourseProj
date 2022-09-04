@@ -21,22 +21,17 @@ namespace CourseProj
     /// </summary>
     public partial class SearchResults : Window
     {
+        // конструктор класу
         public SearchResults()
         {
             InitializeComponent();
             DisplayFound(); 
         }
 
-        private void BackInSearchResults_Click(object sender, RoutedEventArgs e)
+        private void DisplayFound()
         {
-            SearchAffair search = new SearchAffair();
-            search.Show();
-            this.Close();
-        }
-
-        private void DisplayFound() 
-        {
-            if (InterpolCardIndex.criminalsFoundByRequest.Count==0) {
+            if (InterpolCardIndex.CriminalsFoundByRequest.Count == 0)
+            {
                 NothingFound.Visibility = Visibility.Visible;
                 TextHint.Visibility = Visibility.Hidden;
                 Write.Visibility = Visibility.Collapsed;
@@ -45,8 +40,8 @@ namespace CourseProj
             int i = 1;
             string link = "\t\tнатисніть, щоб редагувати / побачити більше\n";
 
-            foreach (Criminal criminal in InterpolCardIndex.criminalsFoundByRequest)
-            { 
+            foreach (Criminal criminal in InterpolCardIndex.CriminalsFoundByRequest)
+            {
                 Button button = new Button();
                 button.Content = i + ". " + criminal.ToString() + link;
                 button.FontSize = 20;
@@ -55,48 +50,14 @@ namespace CourseProj
                 Color color = Color.FromRgb(0, 118, 214);
                 button.Background = new SolidColorBrush(color);
                 button.MaxWidth = 1100;
-                button.Tag = i-1;
-                button.ToolTip = "Переглянути, редагувати, архівувати, видалити анкету " + criminal.ToString() + " - натисніть ліву клавішу миші.";
+                button.Tag = i - 1;
+                button.ToolTip = "Переглянути, редагувати, архівувати, видалити анкету " +
+                    criminal.ToString() + " - натисніть ліву клавішу миші.";
                 button.MouseRightButtonDown += Button_RMBdown;
                 button.Click += Button_Click;
                 ResultsInner.Children.Add(button);
                 i++;
             }
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            int count = (int)((Control)sender).Tag;
-            EditAffair edit = new EditAffair(InterpolCardIndex.criminalsFoundByRequest[count]);
-           
-            edit.Show();
-            this.Close();
-        }
-
-        private void Button_RMBdown(object sender, RoutedEventArgs e)
-        {
-            //MessageBox.Show("правая");
-            int count = (int)((Control)sender).Tag;
-            bool isIncluded;
-            
-            Criminal proto = InterpolCardIndex.criminalsFoundByRequest[count];
-            InterpolCardIndex.FormListToPrint(proto, out isIncluded);
-            HighlightAdded(isIncluded, (sender as Button));
-        }
-
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            InterpolCardIndex.foundToWrite.Clear();
-        }
-
-        private void Write_Click(object sender, RoutedEventArgs e)
-        {
-            if (InterpolCardIndex.foundToWrite.Count == 0)
-            {
-                MessageBox.Show("Ви не обрали жодної справи!");
-                return;
-            }
-            InterpolCardIndex.WriteResults();
         }
 
         private void HighlightAdded(bool isIn, Button button)
@@ -107,6 +68,47 @@ namespace CourseProj
                 button.Background = new SolidColorBrush(newColor);
             else
                 button.Background = new SolidColorBrush(initColor);
+        }
+
+        private void BackInSearchResults_Click(object sender, RoutedEventArgs e)
+        {
+            SearchAffair search = new SearchAffair();
+            search.Show();
+            this.Close();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            int count = (int)((Control)sender).Tag;
+            EditAffair edit = new EditAffair(InterpolCardIndex.CriminalsFoundByRequest[count]);
+           
+            edit.Show();
+            this.Close();
+        }
+
+        private void Button_RMBdown(object sender, RoutedEventArgs e)
+        {
+            int count = (int)((Control)sender).Tag;
+            bool isIncluded;
+            
+            Criminal proto = InterpolCardIndex.CriminalsFoundByRequest[count];
+            InterpolCardIndex.FormListToPrint(proto, out isIncluded);
+            HighlightAdded(isIncluded, (sender as Button));
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            InterpolCardIndex.FoundToWrite.Clear();
+        }
+
+        private void Write_Click(object sender, RoutedEventArgs e)
+        {
+            if (InterpolCardIndex.FoundToWrite.Count == 0)
+            {
+                MessageBox.Show("Ви не обрали жодної справи!");
+                return;
+            }
+            InterpolCardIndex.WriteResults();
         }
     }
 }

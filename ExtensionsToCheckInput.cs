@@ -9,8 +9,10 @@ using System.Windows.Controls;
 
 namespace CourseProj
 {
+    // клас методів розширення для опрацювання та перевірки вхідних даних
     internal static class ExtensionsToCheckInput
     {
+        // метод визначення, чи є в рядку числа
         public static bool ContainsNumbers(string value)
         {
             Regex regex = new Regex(@"\d");
@@ -22,6 +24,7 @@ namespace CourseProj
             return false;
         }
 
+        // метод визначення, чи складається рядок з кількох слів
         public static bool HasSeveralWords(string value)
         {
             string[] wordArray = value.Split(" ");
@@ -31,6 +34,7 @@ namespace CourseProj
             return false;
         }
 
+        // метод визначення коректності введення дати
         public static void DateIsCorrect(TextBox textBox)
         {
             string str = textBox.Text.Trim();
@@ -59,6 +63,7 @@ namespace CourseProj
             }
         }
 
+        // метод визначення правильності введення зросту
         public static void CheckHeight(TextBox textBox)
         {
             string value = textBox.Text.Trim();
@@ -86,6 +91,7 @@ namespace CourseProj
             }
         }
 
+        // метод визначення правильності введення текстових даних (з назвою поля)
         public static void CommonWarningWhenTextChanged(TextBox textBox, string naming)
         {
             string value = textBox.Text.Trim();
@@ -110,7 +116,11 @@ namespace CourseProj
                 textBox.ToolTip = naming + " не має починатися з цього знаку!";
                 textBox.Background = Brushes.Salmon;
             }
-            else if (value.ToLower().Contains("!") || value.ToLower().Contains("+") || value.ToLower().Contains("=") || value.ToLower().Contains("?") || value.ToLower().Contains("*") || value.ToLower().Contains("|") || value.ToLower().Contains("/") || value.ToLower().Contains(",") || value.ToLower().Contains("#") || value.ToLower().Contains("$") || value.ToLower().Contains("@") || value.ToLower().Contains("%") || value.ToLower().Contains(";"))
+            else if (value.ToLower().Contains("!") || value.ToLower().Contains("+") || value.ToLower().Contains("=") 
+                   || value.ToLower().Contains("?") || value.ToLower().Contains("*") || value.ToLower().Contains("|") 
+                   || value.ToLower().Contains("/") || value.ToLower().Contains(",") || value.ToLower().Contains("#") 
+                   || value.ToLower().Contains("$") || value.ToLower().Contains("@") || value.ToLower().Contains("%") 
+                   || value.ToLower().Contains(";"))
             {
                 textBox.ToolTip = naming + " не має містити цих знаків: ! ? # @ $ % , ; * | / + =";
                 textBox.Background = Brushes.Salmon;
@@ -122,6 +132,7 @@ namespace CourseProj
             }
         }
 
+        // метод визначення правильності введення текстових даних 
         public static void CommonWarningWhenTextChanged(TextBox textBox)
         {
             string value = textBox.Text.Trim();
@@ -151,7 +162,11 @@ namespace CourseProj
                 textBox.ToolTip = "Уведіть у поле одне слово!";
                 textBox.Background = Brushes.Salmon;
             }
-            else if (value.ToLower().Contains("!") || value.ToLower().Contains("+") || value.ToLower().Contains("=") || value.ToLower().Contains("?") || value.ToLower().Contains("*") || value.ToLower().Contains("|") || value.ToLower().Contains("/") || value.ToLower().Contains(",") || value.ToLower().Contains("#") || value.ToLower().Contains("$") || value.ToLower().Contains("@") || value.ToLower().Contains("%") || value.ToLower().Contains(";"))
+            else if (value.ToLower().Contains("!") || value.ToLower().Contains("+") || value.ToLower().Contains("=") 
+                || value.ToLower().Contains("?") || value.ToLower().Contains("*") || value.ToLower().Contains("|") 
+                || value.ToLower().Contains("/") || value.ToLower().Contains(",") || value.ToLower().Contains("#") 
+                || value.ToLower().Contains("$") || value.ToLower().Contains("@") || value.ToLower().Contains("%") 
+                || value.ToLower().Contains(";"))
             {
                 textBox.ToolTip = "Поле не має містити цих знаків: ! ? # @ $ % , ; * | / + =";
                 textBox.Background = Brushes.Salmon;
@@ -163,6 +178,7 @@ namespace CourseProj
             }
         }
 
+        // метод визначення правильності введення текстових даних у поле, де передбачено декілька слів 
         public static void CommonWarningWhenTextChanged(TextBox textBox, bool hasSeveralWords)
         {
             string value = textBox.Text.Trim();
@@ -187,7 +203,11 @@ namespace CourseProj
                 textBox.ToolTip = "Поле не має починатися з цього знаку!";
                 textBox.Background = Brushes.Salmon;
             }
-            else if (value.ToLower().Contains("!") || value.ToLower().Contains("+") || value.ToLower().Contains("=") || value.ToLower().Contains("?") || value.ToLower().Contains("*") || value.ToLower().Contains("|") || value.ToLower().Contains("/") || value.ToLower().Contains(",") || value.ToLower().Contains("#") || value.ToLower().Contains("$") || value.ToLower().Contains("@") || value.ToLower().Contains("%") || value.ToLower().Contains(";"))
+            else if (value.ToLower().Contains("!") || value.ToLower().Contains("+") || value.ToLower().Contains("=") 
+                || value.ToLower().Contains("?") || value.ToLower().Contains("*") || value.ToLower().Contains("|") 
+                || value.ToLower().Contains("/") || value.ToLower().Contains(",") || value.ToLower().Contains("#") 
+                || value.ToLower().Contains("$") || value.ToLower().Contains("@") || value.ToLower().Contains("%") 
+                || value.ToLower().Contains(";"))
             {
                 textBox.ToolTip = "Поле не має містити цих знаків: ! ? # @ $ % , ; * | / + =";
                 textBox.Background = Brushes.Salmon;
@@ -199,6 +219,7 @@ namespace CourseProj
             }
         }
 
+        // метод визначення правильності вибору / введення у випадному списку
         public static void CommonWarningWhenTextChanged(ComboBox comboBox)
         {
             string value = comboBox.Text.Trim();
@@ -228,7 +249,11 @@ namespace CourseProj
                 comboBox.ToolTip = "Уведіть у поле одне слово!";
                 comboBox.Background = Brushes.Salmon;
             }
-            else if (value.ToLower().Contains("!") || value.ToLower().Contains("+") || value.ToLower().Contains("=") || value.ToLower().Contains("?") || value.ToLower().Contains("*") || value.ToLower().Contains("|") || value.ToLower().Contains("/") || value.ToLower().Contains(",") || value.ToLower().Contains("#") || value.ToLower().Contains("$") || value.ToLower().Contains("@") || value.ToLower().Contains("%") || value.ToLower().Contains(";"))
+            else if (value.ToLower().Contains("!") || value.ToLower().Contains("+") || value.ToLower().Contains("=") 
+                || value.ToLower().Contains("?") || value.ToLower().Contains("*") || value.ToLower().Contains("|") 
+                || value.ToLower().Contains("/") || value.ToLower().Contains(",") || value.ToLower().Contains("#") 
+                || value.ToLower().Contains("$") || value.ToLower().Contains("@") || value.ToLower().Contains("%") 
+                || value.ToLower().Contains(";"))
             {
                 comboBox.ToolTip = "Поле не має містити цих знаків: ! ? # @ $ % , ; * | / + =";
                 comboBox.Background = Brushes.Salmon;
@@ -240,6 +265,7 @@ namespace CourseProj
             }
         }
 
+        // метод визначення правильності введення текстових даних при введенні переліку
         public static void CommonWarningWhenArrayTextChanged(TextBox textBox)
         {
             string value = textBox.Text.Trim();
@@ -264,7 +290,10 @@ namespace CourseProj
                 textBox.ToolTip = "Поле не має починатися з цього знаку!";
                 textBox.Background = Brushes.Salmon;
             }
-            else if (value.ToLower().Contains("!") || value.ToLower().Contains("+") || value.ToLower().Contains("=") || value.ToLower().Contains("?") || value.ToLower().Contains("*") || value.ToLower().Contains("|") || value.ToLower().Contains("/") || value.ToLower().Contains("#") || value.ToLower().Contains("$") || value.ToLower().Contains("@") || value.ToLower().Contains("%") || value.ToLower().Contains(";"))
+            else if (value.ToLower().Contains("!") || value.ToLower().Contains("+") || value.ToLower().Contains("=") 
+                || value.ToLower().Contains("?") || value.ToLower().Contains("*") || value.ToLower().Contains("|") 
+                || value.ToLower().Contains("/") || value.ToLower().Contains("#") || value.ToLower().Contains("$") 
+                || value.ToLower().Contains("@") || value.ToLower().Contains("%") || value.ToLower().Contains(";"))
             {
                 textBox.ToolTip = "Поле не має містити цих знаків: ! ? # @ $ % ; * | / + =";
                 textBox.Background = Brushes.Salmon;

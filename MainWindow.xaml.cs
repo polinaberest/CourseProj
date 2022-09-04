@@ -20,18 +20,22 @@ namespace CourseProj
     /// </summary>
     public partial class MainWindow : Window
     {
+        // лічильник кількості разів ініціалізації вікна за час роботи програми
         public static int initializer = 0;
+
+        // конструктор класу
         public MainWindow()
         {
             initializer += 1;
+
             InitializeComponent();
             if (initializer == 1)
             {
                 InterpolCardIndex.ReadFromFile("criminals.txt");
                 InterpolCardIndex.ReadFromFile("archived.txt");
             }
-            InterpolCardIndex.SortByNames(InterpolCardIndex.criminals);
-            InterpolCardIndex.SortByNames(InterpolCardIndex.archived);
+            InterpolCardIndex.SortByNames(InterpolCardIndex.Criminals);
+            InterpolCardIndex.SortByNames(InterpolCardIndex.Archived);
         }
 
         private void EditAffair_Click(object sender, RoutedEventArgs e)
@@ -51,7 +55,7 @@ namespace CourseProj
 
         private void SeeArchived_Click(object sender, RoutedEventArgs e)
         {
-            InterpolCardIndex.SortByNames(InterpolCardIndex.archived);
+            InterpolCardIndex.SortByNames(InterpolCardIndex.Archived);
             Archived archive = new Archived(); 
             archive.Show();
             this.Close();

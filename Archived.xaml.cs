@@ -19,32 +19,26 @@ namespace CourseProj
     /// </summary>
     public partial class Archived : Window
     {
+        // конструктор класу Archived
         public Archived()
         {
             InitializeComponent();
             DisplayArchive();
         }
-
-        private void BackInMain_Click(object sender, RoutedEventArgs e)
-        {
-            MainWindow mainWindow = new MainWindow();
-            mainWindow.Show();
-            this.Close();
-        }
-
         private void DisplayArchive()
         {
-            if (InterpolCardIndex.archived.Count == 0)
+            if (InterpolCardIndex.Archived.Count == 0)
             {
                 NothingFound.Visibility = Visibility.Visible;
                 return;
             }
             int i = 1;
 
-            foreach (Criminal criminal in InterpolCardIndex.archived)
+            foreach (Criminal criminal in InterpolCardIndex.Archived)
             {
                 Button button = new Button();
-                button.Content = i + ". " + criminal.ToString()  + criminal.DateOfBirth + "\t" + " Остання справа: " + criminal.LastAffair;
+                button.Content = i + ". " + criminal.ToString() + criminal.DateOfBirth +
+                    "\t" + " Остання справа: " + criminal.LastAffair;
                 button.FontSize = 20;
                 button.HorizontalContentAlignment = HorizontalAlignment.Left;
                 button.Margin = new Thickness(3);
@@ -59,16 +53,27 @@ namespace CourseProj
             }
         }
 
+        // обробники подій
+        private void BackInMain_Click(object sender, RoutedEventArgs e)
+        {
+            MainWindow mainWindow = new MainWindow();
+            mainWindow.Show();
+            this.Close();
+        }
+
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             int count = (int)((Control)sender).Tag;
-            MessageBoxResult result = MessageBox.Show("Ви впевнені, що хочете перемістити анкету з архіву до основної картотеки ?\nНатискаючи ОК, Ви підтверджуєте, що злочинець більше не належить до тих, хто виправився", "Header", MessageBoxButton.OKCancel);
-
+            MessageBoxResult result = MessageBox.Show(
+                "Ви впевнені, що хочете перемістити анкету з архіву до основної картотеки ?\n" +
+                "Натискаючи ОК, Ви підтверджуєте, що злочинець більше не належить до тих, хто виправився", 
+                "Підтверждення деархівації", MessageBoxButton.OKCancel);
+            
             if (result == MessageBoxResult.OK)
             {
-                InterpolCardIndex.Unarchive(InterpolCardIndex.archived[count]);
+                InterpolCardIndex.Unarchive(InterpolCardIndex.Archived[count]);
                 MessageBox.Show("Справу деархівовано");
-                InterpolCardIndex.SortByNames(InterpolCardIndex.archived);
+                InterpolCardIndex.SortByNames(InterpolCardIndex.Archived);
                 Archived arch = new Archived();
                 arch.Show();
                 this.Close();

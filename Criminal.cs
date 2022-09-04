@@ -7,8 +7,10 @@ using System.Text.RegularExpressions;
 
 namespace CourseProj
 {
+    // клас, що описує злочинця
     internal class Criminal:ICloneable
     {
+        public bool IsInBand;
         private string name;
         private string surname;
         private string nickname;
@@ -23,15 +25,16 @@ namespace CourseProj
         private string languages;
         private string criminalJob;
         private string lastAffair;
-        public bool IsInBand;
         private string? bandName;
         private CrimeBand band;
 
+        // конструктор без параметрів
         public Criminal()
         {
 
         }
 
+        // конструктор з параметрами
         public Criminal(
             string name,
             string surname,
@@ -67,65 +70,18 @@ namespace CourseProj
             if (isInBand)
             {
                 IsInBand = true;
-                //тут функція перевірки на адекватність, обрізки(валідація) bandname
-                BandName = AdoptBandName(bandName);
+
+                BandName = CrimeBand.AdoptBandName(bandName);
                 band = SearchBand(BandName);
             }
             
         }
 
-        //логіка пошуку банди, в якій є цей злочинець
-        private CrimeBand SearchBand(string bandName)
-        {
-            if(InterpolCardIndex.allBands != null)
-            { 
-                foreach (CrimeBand band in InterpolCardIndex.allBands)
-                {
-                    if (band.BandName == bandName)
-                    {
-                        band.AddMember(this);
-                        return band;
-                    }
-                }
-            }
-
-            CrimeBand newBand = new CrimeBand(bandName, new List<Criminal> { this });
-            return newBand;
-        }
-
-        private string AdoptBandName(string bandName)
-        {
-            bandName = bandName.Replace('-', ' ');
-            string[] wordArr = bandName.Split(" ");
-            if (bandName != "" && bandName != null)
-            {
-                for (int i = 0; i < wordArr.Length; i++)
-                {
-                    wordArr[i] = wordArr[i].Trim();
-                    wordArr[i] = (wordArr[i].Substring(0, 1).ToUpper() + wordArr[i].Substring(1).ToLower()).Trim();
-                }
-            }
-            bandName = String.Join(" ", wordArr);
-            return bandName;
-        }
-
-        public object Clone()
-        {
-            return this.MemberwiseClone();
-        }
-
-        public override string ToString()
-        {
-            return this.Name + " " + this.Surname + " (" + this.Nickname + ") ";
-        }
-
-
-
-
+        // властивість 'ім'я злочинця'
         public string Name
         {
             get { return name; }
-            set 
+            set
             {
                 if (value.Length >= 1)
                     name = (value.Substring(0, 1).ToUpper() + value.Substring(1).ToLower()).Trim();
@@ -134,6 +90,7 @@ namespace CourseProj
             }
         }
 
+        // властивість 'прізвище злочинця'
         public string Surname
         {
             get { return surname; }
@@ -146,6 +103,7 @@ namespace CourseProj
             }
         }
 
+        // властивість 'позивний злочинця'
         public string Nickname
         {
             get { return nickname; }
@@ -158,84 +116,128 @@ namespace CourseProj
             }
         }
 
+        // властивість 'зріст злочинця'
         public int Height
-        { 
+        {
             get { return height; }
             set { height = value; }
         }
 
+        // властивість 'колір очей злочинця'
         public string EyeColor
         {
             get { return eyeColor; }
             set { eyeColor = value; }
         }
 
+        // властивість 'колір волосся злочинця'
         public string HairColor
         {
             get { return hairColor; }
             set { hairColor = value; }
         }
 
+        // властивість 'особливі прикмети злочинця'
         public string SpecialFeatures
         {
             get { return specialFeatures; }
             set { specialFeatures = value; }
         }
 
+        // властивість 'громадянство злочинця'
         public string Citizenship
         {
             get { return citizenship; }
             set { citizenship = value; }
         }
 
+        // властивість 'дата народження злочинця'
         public string DateOfBirth
         {
             get { return dateOfBirth; }
             set { dateOfBirth = value; }
         }
 
+        // властивість 'місце народження злочинця'
         public string PlaceOfBirth
         {
             get { return placeOfBirth; }
             set { placeOfBirth = value; }
         }
 
+        // властивість 'останнє місце проживання злочинця'
         public string LastAccomodation
         {
             get { return lastAccomodation; }
             set { lastAccomodation = value; }
         }
 
+        // властивість 'мови, якими володіє злочинець'
         public string Languages
         {
             get { return languages; }
             set { languages = value; }
         }
 
+        // властивість 'кримінальний фах злочинця'
         public string CriminalJob
         {
             get { return criminalJob; }
             set { criminalJob = value; }
         }
 
+        // властивість 'остання справа злочинця'
         public string LastAffair
         {
             get { return lastAffair; }
             set { lastAffair = value; }
         }
 
-       
+        // властивість 'банда, до якої належить злочинець'
         public CrimeBand Band
         {
             get { return band; }
             set { band = value; }
         }
 
-       public string BandName
-       {
+        // властивість 'назва банди, до якої належить злочинець'
+        public string BandName
+        {
             get { return bandName; }
             set { bandName = value; }
-       }
-    
+        }
+
+        // методи:
+
+        // копіювання об'єкта злочинця
+        public object Clone()
+        {
+            return this.MemberwiseClone();
+        }
+
+        // перегрузка методу ToString() для виведення ПІ та позивного
+        public override string ToString()
+        {
+            return this.Name + " " + this.Surname + " (" + this.Nickname + ") ";
+        }
+
+        // логіка визначення банди (за назвою), членом якої є злочинець
+        private CrimeBand SearchBand(string bandName)
+        {
+            if(InterpolCardIndex.AllBands != null)
+            { 
+                foreach (CrimeBand band in InterpolCardIndex.AllBands)
+                {
+                    if (band.BandName == bandName)
+                    {
+                        band.AddMember(this);
+                        return band;
+                    }
+                }
+            }
+
+            CrimeBand newBand = new CrimeBand(bandName, new List<Criminal> { this });
+            return newBand;
+        }    
     }
 }

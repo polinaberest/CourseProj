@@ -7,48 +7,57 @@ using System.Threading.Tasks;
 
 namespace CourseProj
 {
+    // клас картотеки
     internal static class InterpolCardIndex
     {
-        public static List<CrimeBand>? allBands;
+        // перелік усіх банд, що зареєстровані в картотеці
+        public static List<CrimeBand>? AllBands;
 
-        public static List<Criminal>? criminals;
+        // перелік усіх злочинців, анкети яких зберігаються в основній картотеці
+        public static List<Criminal>? Criminals;
 
-        public static List<Criminal>? criminalsFoundByRequest;
+        // перелік злочинців, знайдених за поточним запитом
+        public static List<Criminal>? CriminalsFoundByRequest;
 
-        public static List<Criminal>? archived;
+        // перелік злочинців, справи яких збережено в архіві
+        public static List<Criminal>? Archived;
 
-        public static List<Criminal>? foundToWrite;
+        // перелік злочинців, справи яких треба занести до файлу-витягу з картотеки
+        public static List<Criminal>? FoundToWrite;
 
+        // конструктор без параметрів
         static InterpolCardIndex()
         {
-            allBands = new List<CrimeBand>();
-            criminals = new List<Criminal>();
-            criminalsFoundByRequest = new List<Criminal>();
-            archived = new List<Criminal>();
-            foundToWrite = new List<Criminal>();
-            //SortByNames(criminals);
+            AllBands = new List<CrimeBand>();
+            Criminals = new List<Criminal>();
+            CriminalsFoundByRequest = new List<Criminal>();
+            Archived = new List<Criminal>();
+            FoundToWrite = new List<Criminal>();
         }
 
+        // метод додавання злочинця до переліку картотеки
         public static void AddCriminal(Criminal criminal)
         {
-            criminals.Add(criminal);
-            SortByNames(criminals);
+            Criminals.Add(criminal);
+            SortByNames(Criminals);
         }
 
+        // метод додавання банди до переліку картотеки
         public static void AddBand(CrimeBand band)
         {
-            allBands.Add(band);
+            AllBands.Add(band);
         }
 
+        // метод запису переліку картотеки в файл для збереження
         public static void WriteToFile(string p)
         {
             string path = p;
-            
             string str = "";
             string bandName = "-1";
+
             if (path == "criminals.txt")
             {
-                foreach (var item in criminals)
+                foreach (var item in Criminals)
                 {
                     if (item.IsInBand)
                     {
@@ -67,7 +76,7 @@ namespace CourseProj
             }
             else if (path == "archived.txt")
             {
-                foreach (var item in archived)
+                foreach (var item in Archived)
                 {
                     if (item.IsInBand)
                     {
@@ -86,19 +95,18 @@ namespace CourseProj
             }
         }
 
+        // метод зчитування даних картотеки, збережених у текстовому файлі
         public static void ReadFromFile(string p)
         {
             string path = p;
-
 
             using (StreamReader reader = new StreamReader(path))
             {
                 string? str;
                 
-                while ((str = reader.ReadLine()) != null) //null
+                while ((str = reader.ReadLine()) != null) 
                 {
                     string[] propArr = str.Split(";", StringSplitOptions.RemoveEmptyEntries);
-                    //вотуть прописать все поля имя = массив[0]
                     string name = propArr[0];
                     string surname = propArr[1];
                     string nickname = propArr[2];
@@ -121,16 +129,16 @@ namespace CourseProj
                         bandName = "";
                     }
 
-                    //добавить в лист криминалов
                     Criminal criminal = new Criminal(name, surname, nickname, height, eyeColor, hairColor, specialFeatures, citizenship, dateOfBirth, placeOfBirth, lastAcc, languages, job, lastAffair, isInBand, bandName);
+
                     if (p == "criminals.txt")
-                        criminals.Add(criminal);
+                        Criminals.Add(criminal);
                     else if (p == "archived.txt")
                     {
-                        archived.Add(criminal);
+                        Archived.Add(criminal);
                         if (criminal.IsInBand)
                         {
-                            foreach (var band in allBands)
+                            foreach (var band in AllBands)
                             {
                                 if (band.BandName == criminal.BandName)
                                 {
@@ -139,43 +147,42 @@ namespace CourseProj
                             }
                         }
                     }
-                    //ТУТ СДЕЛАТЬ ИСКЛЮЧЕНИЕ ИЗ ЧЛЕНОВ БАНДЫ, ЕСЛИ ЧУВАК В БАНДЕ
                 }
                 reader.Close();
             }
             
         }
 
+        // метод пошуку справи в картотеці (за запитом незрозуміло, чи злочинець є членом банди)
         public static void SearchNotinBand(Criminal prototype, int[] hRange) 
         {
-            if (criminals.Count==0)
+            if (Criminals.Count==0)
             {
-                // если все поля пустые или база преступников пуста, то нам нужно вывести на екран НИЧЕГО НЕ НАЙДЕНО
                 return;
             }
-            foreach (Criminal criminal in criminals)
+            foreach (Criminal criminal in Criminals)
             {
                     var processedProto = (Criminal)prototype.Clone();
 
                     MakeNullsEquivalent(processedProto, criminal);
                     if (CompareCriminals(processedProto, criminal, hRange))
                     {
-                        criminalsFoundByRequest.Add(criminal);
+                        CriminalsFoundByRequest.Add(criminal);
                     }
             }
         }
 
+        // метод пошуку справи в картотеці (злочинець є членом банди)
         public static void SearchInBand(Criminal prototype, int[] hRange)
         {
-            if (criminals.Count == 0 || allBands.Count == 0)
+            if (Criminals.Count == 0 || AllBands.Count == 0)
             {
-                // база преступников / банд пуста, то нам нужно вывести на екран НИЧЕГО НЕ НАЙДЕНО
                 return;
             }
             if (prototype.BandName == "")
             {
-                allBands.RemoveAt(allBands.Count-1);
-                foreach (Criminal criminal in criminals)
+                AllBands.RemoveAt(AllBands.Count-1);
+                foreach (Criminal criminal in Criminals)
                 {
                     if (criminal.IsInBand)
                     {
@@ -184,13 +191,13 @@ namespace CourseProj
                         MakeNullsEquivalent(processedProto, criminal);
                         if (CompareCriminals(processedProto, criminal, hRange))
                         {
-                            criminalsFoundByRequest.Add(criminal);
+                            CriminalsFoundByRequest.Add(criminal);
                         }
                     }
                 }
                 return;
             }
-            foreach (CrimeBand band in allBands)
+            foreach (CrimeBand band in AllBands)
             {
                 if (prototype.BandName == band.BandName && band.members.Count!=0)
                 {
@@ -202,22 +209,14 @@ namespace CourseProj
 
                         if (CompareCriminals(processedProto, criminal, hRange))
                         {
-                            criminalsFoundByRequest.Add(criminal);
+                            CriminalsFoundByRequest.Add(criminal);
                         }
                     }
                 }
             }
-            /*foreach (CrimeBand band in allBands)
-            {
-                if (band.members.Count == 0)
-                {
-                    allBands.Remove(band);
-                    return;
-                }
-            }*/
-           
         }
 
+        // метод підготовки прототипу для пошуку справи в картотеці
         public static void MakeNullsEquivalent(Criminal prototype, Criminal criminal)
         { 
             var protoProps = prototype.GetType().GetProperties();
@@ -236,6 +235,7 @@ namespace CourseProj
 
         }
 
+        // метод порівняння справ (прототипу та н-ного злочинця з картотеки)
         public static bool CompareCriminals(Criminal prototype, Criminal criminal, int[] hRange)
         {
             if (prototype.Name == criminal.Name &&
@@ -262,13 +262,15 @@ namespace CourseProj
             return false;
         }
 
-        private static bool HeightEquals(int crHeight, int[] range)
+        // метод порівняння зросту (для пошуку за зростом в діапазонах)
+        public static bool HeightEquals(int crHeight, int[] range)
         {
             if (crHeight >= range[0] && crHeight <= range[1])
                 return true;
             return false;
         }
 
+        // метод сортування переліку злочинців за ім'ям та прізвищем
         public static void SortByNames(List<Criminal> list)
         {
             list.Sort(delegate (Criminal x, Criminal y)
@@ -280,14 +282,15 @@ namespace CourseProj
             });
         }
 
+        // метод видалення анкети
         public static void DeleteAffair(Criminal processed)
         {
-            criminalsFoundByRequest.Remove(processed);
-            criminals.Remove(processed);
+            CriminalsFoundByRequest.Remove(processed);
+            Criminals.Remove(processed);
 
             if (processed.IsInBand)
             {
-                foreach (var band in allBands)
+                foreach (var band in AllBands)
                 {
                     if (band.BandName == processed.BandName)
                     {
@@ -297,14 +300,15 @@ namespace CourseProj
             }
         }
 
+        // метод архівування анкети
         public static void ArchiveAffair(Criminal processed)
         {
-            archived.Add(processed);
-            criminalsFoundByRequest.Remove(processed);
-            criminals.Remove(processed);
+            Archived.Add(processed);
+            CriminalsFoundByRequest.Remove(processed);
+            Criminals.Remove(processed);
             if (processed.IsInBand)
             {
-                foreach (var band in allBands)
+                foreach (var band in AllBands)
                 {
                     if (band.BandName == processed.BandName)
                     {
@@ -314,14 +318,15 @@ namespace CourseProj
             }
         }
 
+        // метод розархівування справи
         public static void Unarchive(Criminal criminal)
         {
             InterpolCardIndex.AddCriminal(criminal);
             if (criminal.IsInBand)
             {
-                if (InterpolCardIndex.allBands != null)
+                if (InterpolCardIndex.AllBands != null)
                 {
-                    foreach (CrimeBand band in InterpolCardIndex.allBands)
+                    foreach (CrimeBand band in InterpolCardIndex.AllBands)
                     {
                         if (band.BandName == criminal.BandName)
                         {
@@ -335,59 +340,59 @@ namespace CourseProj
                     CrimeBand newBand = new CrimeBand(criminal.BandName, new List<Criminal> { criminal });
                 }
             }
-            InterpolCardIndex.archived.Remove(criminal);
+            InterpolCardIndex.Archived.Remove(criminal);
         }
 
+        // метод формування списку унікальних справ для подальшого збереження у файл
         public static void FormListToPrint(Criminal criminal, out bool isIncluded)
         {
             isIncluded = false;
-            if (foundToWrite.Count == 0)
+            if (FoundToWrite.Count == 0)
             {
-                foundToWrite.Add(criminal);
+                FoundToWrite.Add(criminal);
                 isIncluded = true;
                 return;
             }
-            if (foundToWrite.Contains(criminal))
+            if (FoundToWrite.Contains(criminal))
             {
-                foundToWrite.Remove(criminal);
+                FoundToWrite.Remove(criminal);
                 return;
             }
             else {
-                foundToWrite.Add(criminal);
+                FoundToWrite.Add(criminal);
+                SortByNames(FoundToWrite);
                 isIncluded = true;
                 return;
             }
         }
 
+        // метод запису переліку справ у витяг з картотеки
         public static void WriteResults()
         {
             string path = "";
-            string header = "\t\t\tВитяг з картотеки Інтерполу\n\n";
+            string header = "\n\t\t\t\t\tВитяг з картотеки Інтерполу\n\n";
             string str = "";
             string band = "";
             string footer = "\n\n\t\t\tДата та час звернення до картотеки Інтерполу: " + DateTime.Now;
-            // Configure save file dialog box
             var dialog = new Microsoft.Win32.SaveFileDialog();
-            dialog.FileName = "results"; // Default file name
-            dialog.DefaultExt = ".pdf"; // Default file extension
-            dialog.Filter = "Text documents (.txt)|*.txt"; // Filter files by extension
 
-            // Show save file dialog box
+            dialog.FileName = "results"; 
+            dialog.DefaultExt = ".pdf"; 
+            dialog.Filter = "Text documents (.txt)|*.txt"; 
+
             bool? result = dialog.ShowDialog();
 
-            // Process save file dialog box results
             if (result == true)
             {
-                // Save document
                 path = dialog.FileName;
             }
-            foreach (Criminal criminal in foundToWrite)
+            foreach (Criminal criminal in FoundToWrite)
             {
                 if (criminal.IsInBand)
                 {
                     band = "\nЗлочинець є членом банди " + criminal.BandName;
                 }
-                str += (foundToWrite.IndexOf(criminal) + 1) + ". "
+                str += (FoundToWrite.IndexOf(criminal) + 1) + ". "
                     + criminal.ToString() + "\nДата народження: " + criminal.DateOfBirth
                     + "\nЗріст: " + criminal.Height
                     + "\nКолір очей: " + criminal.EyeColor
@@ -406,7 +411,6 @@ namespace CourseProj
                 writer.Write(header + str + footer);
                 writer.Close();
             }
-
         }
     }
 }
