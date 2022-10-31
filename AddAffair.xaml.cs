@@ -141,6 +141,7 @@ namespace CourseProj
             string lastAccomodation;
             string languages;
             string criminalJob;
+            string affairType;
             string lastAffair;
             bool isInBand;
             string? bandName;
@@ -158,11 +159,12 @@ namespace CourseProj
                 IsReadyToBeAdded(textBoxLastAccomodation, out lastAccomodation) &&
                 IsReadyToBeAdded(textBoxLanguages, out languages) &&
                 IsReadyToBeAdded(textBoxJob, out criminalJob) &&
+                IsReadyToBeAdded(ComboBoxTypeOfAffair, out affairType) &&
                 IsReadyToBeAdded(textBoxLastAffair, out lastAffair) &&
                 IsReadyToBeAdded(textBoxBandName, checkBoxIsInBand.IsChecked, out bandName, out isInBand))
             {
-                InterpolCardIndex.AddCriminal(new Criminal(name, surname, nickname, height, eyeColor, hairColor, specialFeatures,
-                  citizenship, dateOfBirth, placeOfBirth, lastAccomodation, languages, criminalJob, lastAffair, isInBand, bandName));
+                PoliceCardIndex.AddCriminal(new Criminal(name, surname, nickname, height, eyeColor, hairColor, specialFeatures,
+                  citizenship, dateOfBirth, placeOfBirth, lastAccomodation, languages, criminalJob, affairType, lastAffair, isInBand, bandName));
 
                 foreach (object el in Form.Children)
                 {
@@ -254,6 +256,11 @@ namespace CourseProj
             ExtensionsToCheckInput.CommonWarningWhenTextChanged(textBoxLastAffair, true);
         }
 
+        private void ComboBoxTypeOfAffair_LostFocus(object sender, RoutedEventArgs e)
+        {
+            ExtensionsToCheckInput.CommonWarningWhenTextChanged(ComboBoxTypeOfAffair, true);
+        }
+
         private void textBoxBandName_TextChanged(object sender, TextChangedEventArgs e)
         {
             ExtensionsToCheckInput.CommonWarningWhenTextChanged(textBoxBandName, true);
@@ -268,7 +275,7 @@ namespace CourseProj
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            InterpolCardIndex.WriteToFile("criminals.txt");
+            PoliceCardIndex.WriteToFile("criminals.txt");
         }
     }
 }

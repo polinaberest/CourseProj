@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 using System.Windows.Media;
 using System.Windows.Controls;
+using System.Data;
+using System.Data.SqlClient;
 
 namespace CourseProj
 {
@@ -88,6 +90,105 @@ namespace CourseProj
                     textBox.ToolTip = null;
                     textBox.Background = Brushes.Transparent;
                 }
+            }
+        }
+
+        //метод перевірки правильності введення номеру значка детектива
+        public static void CheckPersonalNumber(TextBox textBox)
+        {
+            string value = textBox.Text.Trim();
+            int i = 0;
+
+            if (!int.TryParse(value, out i))
+            {
+                textBox.ToolTip = "Уведіть у поле число!";
+                textBox.Background = Brushes.Salmon;
+            }
+            else if (int.TryParse(value, out i))
+            {
+                int number = int.Parse(value);
+
+                if (number < 100000 || number > 999999)
+                {
+                    textBox.ToolTip = "Уведіть у поле шестизначне число, що відповідає номеру вашого значка";
+                    textBox.Background = Brushes.Salmon;
+                }
+                else
+                {
+                    if (PoliceCardIndex.IsUniqueDetectiveNumber(number))
+                    {
+                        textBox.ToolTip = null;
+                        textBox.Background = Brushes.Transparent;
+                    }
+
+                    else
+                    {
+                        textBox.ToolTip = "Детектив з таким номером вже зареєстрований у системі! Уведіть ваш унікальний номер значка для реєстрації!";
+                        textBox.Background = Brushes.Salmon;
+                    }
+                }
+            }
+        }
+
+        //метод визначення збігу паролей при авторизації
+        public static bool PasswordMatches(string pass, int badge_num)
+        {
+            SqlDataAdapter adapter = new SqlDataAdapter($"SELECT pass FROM Detectives WHERE badge_num = {badge_num};", PoliceCardIndex.GetSqlConnection());
+            DataTable table = new DataTable();
+            adapter.Fill(table);
+            string realPass = (string)table.Rows[0][0];
+            if (realPass.Trim() == pass)
+                return true;
+            return false;
+        }
+
+        // метод визначення правильності введення паролю
+        public static void CheckPass(PasswordBox passBox)
+        {
+            string value = passBox.Password.Trim();
+
+            if (value.Length > 30)
+            {
+                passBox.ToolTip = "Пароль не має бути довшим за 50 символів!";
+                passBox.Background = Brushes.Salmon;
+            }
+            else if (value.Length < 8)
+            {
+                passBox.ToolTip = "Пароль повинен мати принаймні 8 символів!";
+                passBox.Background = Brushes.Salmon;
+            }
+            else if (!ExtensionsToCheckInput.ContainsNumbers(value))
+            {
+                passBox.ToolTip = "Пароль має містити принаймні одну цифру!";
+                passBox.Background = Brushes.Salmon;
+            }
+            else if (Int32.TryParse(value, out int i))
+            {
+                passBox.ToolTip = "Пароль має складатися не лише з цифр!";
+                passBox.Background = Brushes.Salmon;
+            }
+            else
+            {
+                passBox.ToolTip = null;
+                passBox.Background = Brushes.Transparent;
+            }
+        }
+
+        //метод перевірки повторного введення паролю
+        public static void CheckPass(PasswordBox pass, PasswordBox initPass)
+        {
+            string value = pass.Password.Trim();
+            string init = initPass.Password.Trim();
+
+            if (value != init)
+            {   
+                pass.ToolTip = "Паролі не збігаються!";
+                pass.Background = Brushes.Salmon;
+            }
+            else
+            {
+                pass.ToolTip = null;
+                pass.Background = Brushes.Transparent;
             }
         }
 
@@ -220,7 +321,7 @@ namespace CourseProj
         }
 
         // метод визначення правильності вибору / введення у випадному списку
-        public static void CommonWarningWhenTextChanged(ComboBox comboBox)
+        public static void CommonWarningWhenTextChanged(ComboBox comboBox, bool hasSeveralWords = false)
         {
             string value = comboBox.Text.Trim();
 
@@ -244,7 +345,7 @@ namespace CourseProj
                 comboBox.ToolTip = "Поле не має починатися з цього знаку!";
                 comboBox.Background = Brushes.Salmon;
             }
-            else if (HasSeveralWords(value))
+            else if (HasSeveralWords(value) && !hasSeveralWords)
             {
                 comboBox.ToolTip = "Уведіть у поле одне слово!";
                 comboBox.Background = Brushes.Salmon;
@@ -304,5 +405,51 @@ namespace CourseProj
                 textBox.Background = Brushes.Transparent;
             }
         }
+
+        public static void GetComboItems(string columnName, string tableName, ComboBox comboBox)
+        {
+            SqlDataAdapter adapter = new SqlDataAdapter("SELECT * FROM " + tableName + " ORDER BY " + columnName, PoliceCardIndex.GetSqlConnection());
+            DataTable table = new DataTable();
+            adapter.Fill(table);
+            for (int i = 0; i < table.Rows.Count; i++)
+            {
+                comboBox.Items.Add(table.Rows[i][columnName].ToString());
+            }
+        }
+
+        public static void InsertIfUnique(ComboBox comboBox, string tableN, string tableC)
+        {
+            bool isUnique = true;
+            SqlDataAdapter adapter = new SqlDataAdapter($"SELECT {tableC} FROM {tableN};", PoliceCardIndex.GetSqlConnection());
+            DataTable table = new DataTable();
+            adapter.Fill(table);
+            for (int i = 0; i < table.Rows.Count; i++)
+            {
+                if (table.Rows[i][tableC].ToString() == comboBox.Text.Trim())
+                {
+                    isUnique = false;
+                    break;
+                }
+            }
+
+            if (isUnique)
+            {
+                SqlCommand command = new SqlCommand($"INSERT INTO {tableN}({tableC}) VALUES('" + comboBox.Text.ToString() + "');", PoliceCardIndex.GetSqlConnection());
+                PoliceCardIndex.OpenConnection();
+                command.ExecuteNonQuery();
+                PoliceCardIndex.CloseConnection();
+            }
+        }
+
+        public static int GetIdForTextItems(string tableN, string tableID, string tableC, string value)
+        {
+            SqlDataAdapter adapter = new SqlDataAdapter($"SELECT {tableID} FROM {tableN} WHERE {tableC} = '{value}';", PoliceCardIndex.GetSqlConnection());
+            //SqlDataAdapter adapter = new SqlDataAdapter($"SELECT * FROM {tableN};", PoliceCardIndex.GetSqlConnection());
+            DataTable table = new DataTable();
+            adapter.Fill(table);
+            int id = (int)table.Rows[0][0];
+            return id;
+        }
+
     }
 }

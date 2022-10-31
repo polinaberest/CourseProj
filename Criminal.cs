@@ -24,6 +24,8 @@ namespace CourseProj
         private string lastAccomodation;
         private string languages;
         private string criminalJob;
+        private string affairType;
+        //private int affairTypeID;
         private string lastAffair;
         private string? bandName;
         private CrimeBand band;
@@ -49,6 +51,7 @@ namespace CourseProj
             string lastAccomodation,
             string languages,
             string criminalJob,
+            string affairType,
             string lastAffair,
             bool isInBand,
             string? bandName)
@@ -66,6 +69,7 @@ namespace CourseProj
             LastAccomodation = lastAccomodation;
             Languages = languages;
             CriminalJob = criminalJob;
+            AffairType = affairType;
             LastAffair = lastAffair;
             if (isInBand)
             {
@@ -186,6 +190,13 @@ namespace CourseProj
             set { criminalJob = value; }
         }
 
+        // властивість 'вид останньої справи злочинця'
+        public string AffairType
+        {
+            get { return affairType; }
+            set { affairType = value; }
+        }
+
         // властивість 'остання справа злочинця'
         public string LastAffair
         {
@@ -224,9 +235,9 @@ namespace CourseProj
         // логіка визначення банди (за назвою), членом якої є злочинець
         private CrimeBand SearchBand(string bandName)
         {
-            if(InterpolCardIndex.AllBands != null)
+            if(PoliceCardIndex.AllBands != null)
             { 
-                foreach (CrimeBand band in InterpolCardIndex.AllBands)
+                foreach (CrimeBand band in PoliceCardIndex.AllBands)
                 {
                     if (band.BandName == bandName)
                     {

@@ -42,7 +42,7 @@ namespace CourseProj
         {
             if (!CheckAbsoluteEmpty(textBoxBirthday, defHeight))
             {
-                InterpolCardIndex.CriminalsFoundByRequest.Clear();
+                PoliceCardIndex.CriminalsFoundByRequest.Clear();
                 if (checkBoxIsInBand.IsChecked == true)
                 {
                     // логика поиска в листе всех банд по названию банды. Потом в найденной по названию банде ищем в членах банды criminal' а с такими параметрами;
@@ -62,7 +62,7 @@ namespace CourseProj
                                                             true,
                                                             textBoxBandName.Text.Trim());
 
-                    InterpolCardIndex.SearchInBand(prototype, intRange);
+                    PoliceCardIndex.SearchInBand(prototype, intRange);
                 }
                 if (checkBoxIsInBand.IsChecked == false)
                 {
@@ -81,7 +81,7 @@ namespace CourseProj
                                                             textBoxLastAffair,
                                                             false,
                                                             null);
-                    InterpolCardIndex.SearchNotinBand(prototype, intRange);
+                    PoliceCardIndex.SearchNotinBand(prototype, intRange);
                 }
                 SearchResults results = new SearchResults();
                 results.Show();
@@ -166,10 +166,10 @@ namespace CourseProj
             string criminalJob = criminalJobTB.Text.Trim();
             string lastAffair = lastAffairTB.Text.Trim();
 
-            Criminal prototype = new Criminal(name, surname, nickname, height, eyeColor, 
+            /*Criminal prototype = new Criminal(name, surname, nickname, height, eyeColor, 
                 hairColor, specialFeatures, citizenship, dateOfBirth, placeOfBirth, 
-                lastAccomodation, languages, criminalJob, lastAffair, isInBand, bandName);
-
+                lastAccomodation, languages, criminalJob, lastAffair, isInBand, bandName);*/
+            Criminal prototype = new Criminal();
             return prototype;
         }
 

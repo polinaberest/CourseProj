@@ -31,11 +31,17 @@ namespace CourseProj
             InitializeComponent();
             if (initializer == 1)
             {
-                InterpolCardIndex.ReadFromFile("criminals.txt");
-                InterpolCardIndex.ReadFromFile("archived.txt");
+                //PoliceCardIndex.ReadFromFile("criminals.txt");
+                //PoliceCardIndex.ReadFromFile("archived.txt");
             }
-            InterpolCardIndex.SortByNames(InterpolCardIndex.Criminals);
-            InterpolCardIndex.SortByNames(InterpolCardIndex.Archived);
+            if (!PoliceCardIndex.IsDetective)
+            {
+                WarningTextBox.Visibility = Visibility.Visible;
+                ChooseButtonText.Visibility = Visibility.Hidden;
+                AddAffair.Background = Brushes.Gray;
+            }
+            PoliceCardIndex.SortByNames(PoliceCardIndex.Criminals);
+            PoliceCardIndex.SortByNames(PoliceCardIndex.Archived);
         }
 
         private void EditAffair_Click(object sender, RoutedEventArgs e)
@@ -47,17 +53,31 @@ namespace CourseProj
 
         private void AddAffair_Click(object sender, RoutedEventArgs e)
         {
-            AddAffair addAffair = new AddAffair();
-            addAffair.Show();
-            this.Close();
+            if (PoliceCardIndex.IsDetective)
+            {
+                AddAffair addAffair = new AddAffair();
+                addAffair.Show();
+                this.Close();
+            }
+            else 
+            {
+                MessageBox.Show("Авторизуйтеся або зареєструйтеся в додатку, щоб додавати нові справи до картотеки!");
+            }
         }
 
 
         private void SeeArchived_Click(object sender, RoutedEventArgs e)
         {
-            InterpolCardIndex.SortByNames(InterpolCardIndex.Archived);
+            PoliceCardIndex.SortByNames(PoliceCardIndex.Archived);
             Archived archive = new Archived(); 
             archive.Show();
+            this.Close();
+        }
+
+        private void BackInAuthorization_Click(object sender, RoutedEventArgs e)
+        {
+            Authorization auth = new Authorization();
+            auth.Show();
             this.Close();
         }
     }

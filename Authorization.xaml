@@ -1,0 +1,62 @@
+﻿<Window x:Class="CourseProj.Authorization"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CourseProj"
+        mc:Ignorable="d"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        Title="База карного розшуку - Вхід в систему" Height="750" Width="950" WindowStyle="ThreeDBorderWindow" FontFamily="Verdana" Icon="/interpollogo.png" ResizeMode="CanResize" WindowStartupLocation="Manual" WindowState="Maximized" Closing="Window_Closing">
+    <ScrollViewer>
+        <Grid x:Name="AuthorizationRoot" Background="#FF8FCDFF" MinHeight="700" MinWidth="900">
+            <Border MinWidth="800" Background="White" VerticalAlignment="Center" Margin="20" Padding="20" CornerRadius="20" >
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="30" Color="#0076D6" ShadowDepth="0"></DropShadowEffect>
+                </Border.Effect>
+                <StackPanel x:Name="Form">
+                    
+                    <TextBlock x:Name="TopText" Text="Вхід в систему"  HorizontalAlignment="Left" VerticalAlignment="Bottom" FontSize="30" Margin="0 0 0 20" FontWeight="Bold" OpacityMask="Black" Foreground="#FF00345E"/>
+                    <TextBlock x:Name="HintText" Text="Авторизуйтеся або зареєструйтеся, якщо ви детектив,"  HorizontalAlignment="Left" VerticalAlignment="Bottom" FontSize="22" Margin="0 0 0 10" FontWeight="Bold" OpacityMask="Black" Foreground="#0076D6"/>
+
+                    <TextBlock x:Name="SecondHintText" Text="або продовжуйте у режимі обмеженої функціональності."  HorizontalAlignment="Left" VerticalAlignment="Bottom" FontSize="22" Margin="0 0 0 10" FontWeight="Bold" OpacityMask="Black" Foreground="#0076D6"/>
+                    
+                    <Grid Margin="0 30 0 50">
+
+                        <Button x:Name="SkipAuthorization" Click="SkipAuthorization_Click" Content="Продовжити без авторизації" FontSize="20" MinHeight="45" MinWidth="360" MaxWidth="360" BorderBrush="#FFD66500" HorizontalAlignment="Left">
+                            <Button.Background>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                    <GradientStop Color="#FFE3A400"/>
+                                </LinearGradientBrush>
+                            </Button.Background>
+                        </Button>
+
+                        <Button x:Name="Registrate" Click="Registrate_Click" Content="Реєстрація" FontSize="20" MinHeight="45" MinWidth="360" MaxWidth="360" BorderBrush="#FF00345E" HorizontalAlignment="Right">
+                            <Button.Background>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                    <GradientStop Color="#FF0061AF" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Button.Background>
+                        </Button>
+                    </Grid>
+
+             
+                    <TextBox materialDesign:HintAssist.Hint ="Уведіть Номер значка" x:Name="textBoxPersonalNumber" Style = "{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:TextFieldAssist.UnderlineBrush="#FF00345E" materialDesign:HintAssist.Foreground="#FF00345E" TextChanged="textBoxPersonalNumber_TextChanged" Padding="20 10"></TextBox>
+                    <PasswordBox materialDesign:HintAssist.Hint ="Уведіть Пароль" x:Name="passBoxPass" Style = "{StaticResource MaterialDesignFloatingHintPasswordBox}" materialDesign:TextFieldAssist.UnderlineBrush="#FF00345E" materialDesign:HintAssist.Foreground="#FF00345E" PasswordChanged="passBoxPass_PasswordChanged" Padding="20 10"></PasswordBox>
+                    
+                    <Button x:Name="Authorize" Click="Authorize_Click" Content="Увійти до системи" FontSize="25" MinHeight="45" MinWidth="360" MaxWidth="400" BorderBrush="#FF1B7800" Margin="0 20 0 0">
+                        <Button.Background>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="#FF31D600"/>
+                                <GradientStop Color="#FF1B7800" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Button.Background>
+                    </Button>
+                    
+
+                    
+
+                </StackPanel>
+            </Border>
+        </Grid>
+    </ScrollViewer>
+</Window>

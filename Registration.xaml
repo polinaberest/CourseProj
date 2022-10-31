@@ -1,0 +1,73 @@
+﻿<Window x:Class="CourseProj.Registration"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CourseProj"
+        mc:Ignorable="d"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        Title="База карного розшуку - Реєстрація в системі" Height="750" Width="950" WindowStyle="ThreeDBorderWindow" FontFamily="Verdana" Icon="/interpollogo.png" ResizeMode="CanResize" WindowStartupLocation="Manual" WindowState="Maximized" Closing="Window_Closing" Loaded="Window_Loaded">
+    <ScrollViewer>
+        <Grid x:Name="RegistrationRoot" Background="#FF40AAFF" MinHeight="700" MinWidth="900">
+            <Border MinWidth="800" Background="White" VerticalAlignment="Center" Margin="20" Padding="20" CornerRadius="20" >
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="30" Color="#FF00355F" ShadowDepth="0"></DropShadowEffect>
+                </Border.Effect>
+                <StackPanel x:Name="Form">
+
+                    <Button x:Name="BackInAuthorizationForm" Width="30" Height="20" Click="BackInAuthorizationForm_Click" Cursor="Hand">
+                        <Button.Template>
+                            <ControlTemplate>
+                                <Grid>
+                                    <Grid.Background>
+                                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                            <GradientStop Color="#FF00345E"/>
+                                            <GradientStop Color="White" Offset="1"/>
+                                        </LinearGradientBrush>
+                                    </Grid.Background>
+                                    <Line Stroke="White" StrokeThickness="2" X1="2" Y1="10" X2="28" Y2="10"/>
+                                    <Line Stroke="White" StrokeThickness="2" X1="2" Y1="10" X2="11" Y2="5"/>
+                                    <Line Stroke="White" StrokeThickness="2" X1="2" Y1="10" X2="11" Y2="15"/>
+                                </Grid>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+
+                    <TextBlock x:Name="TopText" Text="Реєстрація детектива в системі"  HorizontalAlignment="Left" VerticalAlignment="Bottom" FontSize="30" Margin="0 0 0 20" FontWeight="Bold" OpacityMask="Black" Foreground="#FF00345E"/>
+                    <TextBlock x:Name="HintText" Text="Зареєструйтеся, щоб отримати необмежений доступ"  HorizontalAlignment="Left" VerticalAlignment="Bottom" FontSize="20" Margin="0 0 0 20" FontWeight="Bold" OpacityMask="Black" Foreground="#0076D6"/>
+
+                    
+                    <TextBox materialDesign:HintAssist.Hint ="Ваше ім'я" x:Name="textBoxName" Style = "{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:TextFieldAssist.UnderlineBrush="#FF00345E" materialDesign:HintAssist.Foreground="#FF00345E" TextChanged="textBoxName_TextChanged" Padding="20 10"></TextBox>
+                    
+                    <TextBox materialDesign:HintAssist.Hint ="Ваше прізвище" x:Name="textBoxSurname" Style = "{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:TextFieldAssist.UnderlineBrush="#FF00345E" materialDesign:HintAssist.Foreground="#FF00345E" TextChanged="textBoxSurname_TextChanged" Padding="20 10"></TextBox>
+
+                    <ComboBox IsEditable="True" x:Name="ComboBoxDepartment" Style = "{StaticResource MaterialDesignFloatingHintComboBox}" materialDesign:TextFieldAssist.UnderlineBrush="#FF00345E" materialDesign:HintAssist.Foreground="#FF00345E"  materialDesign:HintAssist.Hint ="Відділ розшуку, у якому Ви працюєте" SelectedValuePath="Content" LostFocus="ComboBoxDepartment_LostFocus" GotFocus="ComboBoxDepartment_GotFocus" Padding="20 10">
+                    </ComboBox>
+
+                    <TextBox materialDesign:HintAssist.Hint ="Номер вашого поліцейського значка" x:Name="textBoxPersonalNumber" Style = "{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:TextFieldAssist.UnderlineBrush="#FF00345E" materialDesign:HintAssist.Foreground="#FF00345E" TextChanged="textBoxPersonalNumber_TextChanged" Padding="20 10"></TextBox>
+
+                    <ComboBox IsEditable="True" x:Name="ComboBoxSpeciality" Style = "{StaticResource MaterialDesignFloatingHintComboBox}" materialDesign:TextFieldAssist.UnderlineBrush="#FF00345E" materialDesign:HintAssist.Foreground="#FF00345E"  materialDesign:HintAssist.Hint ="Спеціалізація (основна)" SelectedValuePath="Content" LostFocus="ComboBoxSpeciality_LostFocus" GotFocus="ComboBoxSpeciality_GotFocus" Padding="20 10">
+                    </ComboBox>
+
+                    <PasswordBox materialDesign:HintAssist.Hint ="Створіть Пароль для входу в систему" x:Name="passBoxInitial" Style = "{StaticResource MaterialDesignFloatingHintPasswordBox}" materialDesign:TextFieldAssist.UnderlineBrush="#FF00345E" materialDesign:HintAssist.Foreground="#FF00345E" PasswordChanged="passBoxInitial_PasswordChanged" Padding="20 10"></PasswordBox>
+                    
+                    <PasswordBox materialDesign:HintAssist.Hint ="Повторіть пароль" x:Name="passBoxSecond" Style = "{StaticResource MaterialDesignFloatingHintPasswordBox}" materialDesign:TextFieldAssist.UnderlineBrush="#FF00345E" materialDesign:HintAssist.Foreground="#FF00345E" PasswordChanged="passBoxSecond_PasswordChanged" Padding="20 10"></PasswordBox>
+
+                    
+                    <Button x:Name="Registrate" Click="Registrate_Click" Content="Зареєструватися в системі" FontSize="25" MinHeight="45" MinWidth="400" MaxWidth="430" BorderBrush="#FF00355F" Margin="0 20 0 0">
+                        <Button.Background>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="#FF00457D"/>
+                                <GradientStop Color="#FF00355F" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Button.Background>
+                    </Button>
+
+
+
+
+                </StackPanel>
+            </Border>
+        </Grid>
+    </ScrollViewer>
+</Window>

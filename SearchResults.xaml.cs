@@ -30,7 +30,7 @@ namespace CourseProj
 
         private void DisplayFound()
         {
-            if (InterpolCardIndex.CriminalsFoundByRequest.Count == 0)
+            if (PoliceCardIndex.CriminalsFoundByRequest.Count == 0)
             {
                 NothingFound.Visibility = Visibility.Visible;
                 TextHint.Visibility = Visibility.Hidden;
@@ -40,7 +40,7 @@ namespace CourseProj
             int i = 1;
             string link = "\t\tнатисніть, щоб редагувати / побачити більше\n";
 
-            foreach (Criminal criminal in InterpolCardIndex.CriminalsFoundByRequest)
+            foreach (Criminal criminal in PoliceCardIndex.CriminalsFoundByRequest)
             {
                 Button button = new Button();
                 button.Content = i + ". " + criminal.ToString() + link;
@@ -80,7 +80,7 @@ namespace CourseProj
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             int count = (int)((Control)sender).Tag;
-            EditAffair edit = new EditAffair(InterpolCardIndex.CriminalsFoundByRequest[count]);
+            EditAffair edit = new EditAffair(PoliceCardIndex.CriminalsFoundByRequest[count]);
            
             edit.Show();
             this.Close();
@@ -91,24 +91,24 @@ namespace CourseProj
             int count = (int)((Control)sender).Tag;
             bool isIncluded;
             
-            Criminal proto = InterpolCardIndex.CriminalsFoundByRequest[count];
-            InterpolCardIndex.FormListToPrint(proto, out isIncluded);
+            Criminal proto = PoliceCardIndex.CriminalsFoundByRequest[count];
+            PoliceCardIndex.FormListToPrint(proto, out isIncluded);
             HighlightAdded(isIncluded, (sender as Button));
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            InterpolCardIndex.FoundToWrite.Clear();
+            PoliceCardIndex.FoundToWrite.Clear();
         }
 
         private void Write_Click(object sender, RoutedEventArgs e)
         {
-            if (InterpolCardIndex.FoundToWrite.Count == 0)
+            if (PoliceCardIndex.FoundToWrite.Count == 0)
             {
                 MessageBox.Show("Ви не обрали жодної справи!");
                 return;
             }
-            InterpolCardIndex.WriteResults();
+            PoliceCardIndex.WriteResults();
         }
     }
 }

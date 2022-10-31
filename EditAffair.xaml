@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:CourseProj"
         mc:Ignorable="d"
  xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        Title="Картотека Інтерполу - Перегляд та редагування особової справи" Height="750" Width="950" WindowStyle="ThreeDBorderWindow" FontFamily="Verdana" Icon="/interpollogo.png" ResizeMode="CanResize" WindowStartupLocation="Manual" WindowState="Maximized" Closing="Window_Closing">
+        Title="База карного розшуку - Перегляд та редагування особової справи" Height="750" Width="950" WindowStyle="ThreeDBorderWindow" FontFamily="Verdana" Icon="/interpollogo.png" ResizeMode="CanResize" WindowStartupLocation="Manual" WindowState="Maximized" Closing="Window_Closing">
     <ScrollViewer>
         <Grid x:Name="EditMainRoot" Background="#FF8FCDFF" MinHeight="700" MinWidth="900">
             <Border MinWidth="800" Background="White" VerticalAlignment="Center" Margin="20" Padding="20" CornerRadius="20" >
@@ -71,6 +71,16 @@
                     <TextBox materialDesign:HintAssist.Hint ="Перелік мов, якими володіє злочинець (через коми)" x:Name="textBoxLanguages" Style = "{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:TextFieldAssist.UnderlineBrush="#FF00345E" materialDesign:HintAssist.Foreground="#FF00345E" TextChanged="textBoxLanguages_TextChanged" ></TextBox>
                     <TextBox materialDesign:HintAssist.Hint ="Злочинна професія" x:Name="textBoxJob" Style = "{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:TextFieldAssist.UnderlineBrush="#FF00345E" materialDesign:HintAssist.Foreground="#FF00345E" TextChanged="textBoxJob_TextChanged" ></TextBox>
                     <TextBox materialDesign:HintAssist.Hint ="Остання справа злочинця" x:Name="textBoxLastAffair" Style = "{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:TextFieldAssist.UnderlineBrush="#FF00345E" materialDesign:HintAssist.Foreground="#FF00345E" TextChanged="textBoxLastAffair_TextChanged" ></TextBox>
+                    <ComboBox IsEditable="False" x:Name="ComboBoxTypeOfAffair" Style = "{StaticResource MaterialDesignFloatingHintComboBox}" materialDesign:TextFieldAssist.UnderlineBrush="#FF00345E" materialDesign:HintAssist.Foreground="#FF00345E"  materialDesign:HintAssist.Hint ="Вид злочину, за вчинення якого розшукується злочинець" SelectedValuePath="Content" LostFocus="ComboBoxTypeOfAffair_LostFocus" GotFocus="ComboBoxTypeOfAffair_GotFocus" Padding="20 10">
+                        <ComboBoxItem>Адміністративні правопорушення</ComboBoxItem>
+                        <ComboBoxItem>Воєнні злочини</ComboBoxItem>
+                        <ComboBoxItem>Державна зрада</ComboBoxItem>
+                        <ComboBoxItem>Катування</ComboBoxItem>
+                        <ComboBoxItem>Розбій</ComboBoxItem>
+                        <ComboBoxItem>Тероризм</ComboBoxItem>
+                        <ComboBoxItem>Убивство</ComboBoxItem>
+                        <ComboBoxItem>Шахрайство</ComboBoxItem>
+                    </ComboBox>
                     <TextBox materialDesign:HintAssist.Hint ="Назва банди, членом якої є злочинець" x:Name="textBoxBandName"  Style = "{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:TextFieldAssist.UnderlineBrush="#FF00345E" materialDesign:HintAssist.Foreground="#FF00345E" TextChanged="textBoxBandName_TextChanged" ></TextBox>
 
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">

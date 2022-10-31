@@ -27,14 +27,14 @@ namespace CourseProj
         }
         private void DisplayArchive()
         {
-            if (InterpolCardIndex.Archived.Count == 0)
+            if (PoliceCardIndex.Archived.Count == 0)
             {
                 NothingFound.Visibility = Visibility.Visible;
                 return;
             }
             int i = 1;
 
-            foreach (Criminal criminal in InterpolCardIndex.Archived)
+            foreach (Criminal criminal in PoliceCardIndex.Archived)
             {
                 Button button = new Button();
                 button.Content = i + ". " + criminal.ToString() + criminal.DateOfBirth +
@@ -71,9 +71,9 @@ namespace CourseProj
             
             if (result == MessageBoxResult.OK)
             {
-                InterpolCardIndex.Unarchive(InterpolCardIndex.Archived[count]);
+                PoliceCardIndex.Unarchive(PoliceCardIndex.Archived[count]);
                 MessageBox.Show("Справу деархівовано");
-                InterpolCardIndex.SortByNames(InterpolCardIndex.Archived);
+                PoliceCardIndex.SortByNames(PoliceCardIndex.Archived);
                 Archived arch = new Archived();
                 arch.Show();
                 this.Close();
@@ -82,8 +82,8 @@ namespace CourseProj
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            InterpolCardIndex.WriteToFile("criminals.txt");
-            InterpolCardIndex.WriteToFile("archived.txt");
+            PoliceCardIndex.WriteToFile("criminals.txt");
+            PoliceCardIndex.WriteToFile("archived.txt");
         }
     }
 }

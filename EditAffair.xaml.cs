@@ -60,19 +60,20 @@ namespace CourseProj
                     processed.Languages = textBoxLanguages.Text.Trim();
                     processed.CriminalJob = textBoxJob.Text.Trim();
                     processed.LastAffair = textBoxLastAffair.Text.Trim();
+                    processed.AffairType = ComboBoxTypeOfAffair.Text.Trim();
 
-                    InterpolCardIndex.SortByNames(InterpolCardIndex.Criminals);
+                    PoliceCardIndex.SortByNames(PoliceCardIndex.Criminals);
                     MessageBox.Show("Зміни збережено! - без змін банди");
                 }
                 else
                 {
                     if (bandNameIsEdited)
                     {
-                        InterpolCardIndex.CriminalsFoundByRequest.Remove(processed);
-                        InterpolCardIndex.Criminals.Remove(processed);
+                        PoliceCardIndex.CriminalsFoundByRequest.Remove(processed);
+                        PoliceCardIndex.Criminals.Remove(processed);
                         if (processed.IsInBand)
                         {
-                            foreach (var band in InterpolCardIndex.AllBands)
+                            foreach (var band in PoliceCardIndex.AllBands)
                             {
                                 if (band.BandName == processed.BandName)
                                 {
@@ -87,7 +88,7 @@ namespace CourseProj
                             _isInBand = true;
                         }
 
-                        InterpolCardIndex.AddCriminal(new Criminal(textBoxName.Text.Trim(), 
+                        PoliceCardIndex.AddCriminal(new Criminal(textBoxName.Text.Trim(), 
                                                                    textBoxSurname.Text.Trim(), 
                                                                    textBoxNickname.Text.Trim(),
                                                                    int.Parse(textBoxHeight.Text.Trim()), 
@@ -100,9 +101,10 @@ namespace CourseProj
                                                                    textBoxLastAccomodation.Text.Trim(), 
                                                                    textBoxLanguages.Text.Trim(), 
                                                                    textBoxJob.Text.Trim(), 
+                                                                   ComboBoxTypeOfAffair.Text.Trim(),
                                                                    textBoxLastAffair.Text.Trim(), 
                                                                    _isInBand, _bandName));
-                        InterpolCardIndex.SortByNames(InterpolCardIndex.Criminals);
+                        PoliceCardIndex.SortByNames(PoliceCardIndex.Criminals);
                         MessageBox.Show("Зміни збережено! - зміна назви банди");
                     }
                 }
@@ -121,7 +123,7 @@ namespace CourseProj
                 MessageBox.Show("Внесені зміни не буде збережено при архівуванні! Спершу збережіть зміни!");
                 return;
             }
-            InterpolCardIndex.ArchiveAffair(processed);
+            PoliceCardIndex.ArchiveAffair(processed);
             MessageBox.Show("Справу архівовано");
         }
 
@@ -140,6 +142,7 @@ namespace CourseProj
             textBoxLastAccomodation.Text = criminal.LastAccomodation;
             textBoxLanguages.Text = criminal.Languages;
             textBoxJob.Text = criminal.CriminalJob;
+            ComboBoxTypeOfAffair.Text = criminal.AffairType;
             textBoxLastAffair.Text = criminal.LastAffair;
 
             if (criminal.IsInBand)
@@ -178,7 +181,7 @@ namespace CourseProj
                 }
             }
 
-            if (count == 15)
+            if (count == 16)
                 return true;
             return false;
         }
@@ -276,6 +279,16 @@ namespace CourseProj
             isEdited = true;
         }
 
+        private void ComboBoxTypeOfAffair_GotFocus(object sender, RoutedEventArgs e)
+        {
+            isEdited = true;
+        }
+
+        private void ComboBoxTypeOfAffair_LostFocus(object sender, RoutedEventArgs e)
+        {
+            ExtensionsToCheckInput.CommonWarningWhenTextChanged(ComboBoxTypeOfAffair, true);
+        }
+
         private void textBoxBandName_TextChanged(object sender, TextChangedEventArgs e)
         {
             ExtensionsToCheckInput.CommonWarningWhenTextChanged(textBoxBandName, true);
@@ -292,7 +305,7 @@ namespace CourseProj
             if (result == MessageBoxResult.OK)
             {
                 MessageBox.Show("Справу видалено з картотеки");
-                InterpolCardIndex.DeleteAffair(processed);
+                PoliceCardIndex.DeleteAffair(processed);
                 BackInResultsForm_Click(null, null);
             }
         }
@@ -317,10 +330,8 @@ namespace CourseProj
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            InterpolCardIndex.WriteToFile("criminals.txt");
-            InterpolCardIndex.WriteToFile("archived.txt");
+            PoliceCardIndex.WriteToFile("criminals.txt");
+            PoliceCardIndex.WriteToFile("archived.txt");
         }
-
-        
     }
 }

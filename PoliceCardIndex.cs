@@ -4,16 +4,20 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data.SqlClient;
+using System.Data;
 
 namespace CourseProj
 {
     // клас картотеки
-    internal static class InterpolCardIndex
+    internal static class PoliceCardIndex
     {
-        // перелік усіх банд, що зареєстровані в картотеці
+        // перелік усіх банд, що зареєстровані в базі
         public static List<CrimeBand>? AllBands;
 
-        // перелік усіх злочинців, анкети яких зберігаються в основній картотеці
+        private static SqlConnection sqlConnection = new SqlConnection(@"Data Source=DESKTOP-SH7CLGN\SQLEXPRESS;Initial Catalog=Interpol;Integrated Security=True");
+
+        // перелік усіх злочинців, анкети яких зберігаються в основній базі
         public static List<Criminal>? Criminals;
 
         // перелік злочинців, знайдених за поточним запитом
@@ -22,11 +26,15 @@ namespace CourseProj
         // перелік злочинців, справи яких збережено в архіві
         public static List<Criminal>? Archived;
 
-        // перелік злочинців, справи яких треба занести до файлу-витягу з картотеки
+        // перелік злочинців, справи яких треба занести до файлу-витягу
         public static List<Criminal>? FoundToWrite;
 
+        public static bool IsDetective = false;
+
+        public static int DetectiveID = 0;
+
         // конструктор без параметрів
-        static InterpolCardIndex()
+        static PoliceCardIndex()
         {
             AllBands = new List<CrimeBand>();
             Criminals = new List<Criminal>();
@@ -46,6 +54,27 @@ namespace CourseProj
         public static void AddBand(CrimeBand band)
         {
             AllBands.Add(band);
+        }
+
+        public static void OpenConnection()
+        {
+            if (sqlConnection.State == System.Data.ConnectionState.Closed)
+            { 
+                 sqlConnection.Open();
+            }
+        }
+
+        public static void CloseConnection()
+        {
+            if (sqlConnection.State == System.Data.ConnectionState.Open)
+            {
+                sqlConnection.Close();
+            }
+        }
+
+        public static SqlConnection GetSqlConnection()
+        {
+            return sqlConnection;
         }
 
         // метод запису переліку картотеки в файл для збереження
@@ -96,7 +125,7 @@ namespace CourseProj
         }
 
         // метод зчитування даних картотеки, збережених у текстовому файлі
-        public static void ReadFromFile(string p)
+        /*public static void ReadFromFile(string p)
         {
             string path = p;
 
@@ -151,7 +180,7 @@ namespace CourseProj
                 reader.Close();
             }
             
-        }
+        }*/
 
         // метод пошуку справи в картотеці (за запитом незрозуміло, чи злочинець є членом банди)
         public static void SearchNotinBand(Criminal prototype, int[] hRange) 
@@ -171,6 +200,31 @@ namespace CourseProj
                     }
             }
         }
+
+        //метод додавання детектива до картотеки
+        public static void AddDetective(string name, string surname, int badge_num, int department_id, string reg_date, string last_visit_date, string pass, int type_id, out int id) 
+        {
+            SqlCommand command = new SqlCommand($"INSERT INTO Detectives(first_name, surname, badge_num, department_id, reg_date, last_visit_date, pass, type_id) VALUES('{name}', '{surname}', {badge_num}, {department_id},  '{reg_date}', '{last_visit_date}', '{pass}', {type_id});", PoliceCardIndex.GetSqlConnection());
+            PoliceCardIndex.OpenConnection();
+            command.ExecuteNonQuery();
+            PoliceCardIndex.CloseConnection();
+
+            SqlDataAdapter adapter = new SqlDataAdapter($"SELECT detective_id FROM Detectives WHERE badge_num = {badge_num};", PoliceCardIndex.GetSqlConnection());
+            DataTable table = new DataTable();
+            adapter.Fill(table);
+            id = (int)table.Rows[0]["detective_id"];
+
+        }
+
+        public static int FindIDbyBadge(int badge_num)
+        {
+            SqlDataAdapter adapter = new SqlDataAdapter($"SELECT detective_id FROM Detectives WHERE badge_num = {badge_num};", PoliceCardIndex.GetSqlConnection());
+            DataTable table = new DataTable();
+            adapter.Fill(table);
+            int id = (int)table.Rows[0]["detective_id"];
+            return id;
+        }
+
 
         // метод пошуку справи в картотеці (злочинець є членом банди)
         public static void SearchInBand(Criminal prototype, int[] hRange)
@@ -270,6 +324,47 @@ namespace CourseProj
             return false;
         }
 
+        // метод перевірки унікальності особистого номера детектива
+        public static bool IsUniqueDetectiveNumber(int personalNumber)
+        {
+            bool isUnique = true;
+
+            SqlDataAdapter adapter = new SqlDataAdapter("SELECT badge_num FROM Detectives;", PoliceCardIndex.GetSqlConnection());
+            DataTable table = new DataTable();
+            adapter.Fill(table);
+
+            for (int i = 0; i < table.Rows.Count; i++)
+            {
+                if ((int)table.Rows[i]["badge_num"] == personalNumber)
+                {
+                    isUnique = false;
+                    break;
+                }
+            }
+
+            return isUnique;
+        }
+
+        public static bool IsInDetectives(int num)
+        {
+            bool isIn = false;
+
+            SqlDataAdapter adapter = new SqlDataAdapter("SELECT badge_num FROM Detectives;", PoliceCardIndex.GetSqlConnection());
+            DataTable table = new DataTable();
+            adapter.Fill(table);
+
+            for (int i = 0; i < table.Rows.Count; i++)
+            {
+                if ((int)table.Rows[i]["badge_num"] == num)
+                {
+                    isIn = true;
+                    break;
+                }
+            }
+
+            return isIn;
+        }
+
         // метод сортування переліку злочинців за ім'ям та прізвищем
         public static void SortByNames(List<Criminal> list)
         {
@@ -321,12 +416,12 @@ namespace CourseProj
         // метод розархівування справи
         public static void Unarchive(Criminal criminal)
         {
-            InterpolCardIndex.AddCriminal(criminal);
+            PoliceCardIndex.AddCriminal(criminal);
             if (criminal.IsInBand)
             {
-                if (InterpolCardIndex.AllBands != null)
+                if (PoliceCardIndex.AllBands != null)
                 {
-                    foreach (CrimeBand band in InterpolCardIndex.AllBands)
+                    foreach (CrimeBand band in PoliceCardIndex.AllBands)
                     {
                         if (band.BandName == criminal.BandName)
                         {
@@ -340,7 +435,7 @@ namespace CourseProj
                     CrimeBand newBand = new CrimeBand(criminal.BandName, new List<Criminal> { criminal });
                 }
             }
-            InterpolCardIndex.Archived.Remove(criminal);
+            PoliceCardIndex.Archived.Remove(criminal);
         }
 
         // метод формування списку унікальних справ для подальшого збереження у файл
@@ -412,5 +507,6 @@ namespace CourseProj
                 writer.Close();
             }
         }
+
     }
 }
