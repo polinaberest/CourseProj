@@ -216,6 +216,25 @@ namespace CourseProj
 
         }
 
+        //метод вибору детектива за ІD
+        public static void SelectDetectiveProps(int id, out string name, out string surname, out int badge_num, out int department_id, out string reg_date, out string last_visit_date, out string pass, out int type_id, out string department_name, out string affair_type)
+        {
+            SqlDataAdapter adapter = new SqlDataAdapter($"SELECT * FROM(SELECT d.*, dep.department_name, a.affair_type FROM Detectives d, Departments dep, Affair_Types a WHERE d.department_id = dep.department_id AND d.type_id = a.type_id) s WHERE detective_id = {id}; ", PoliceCardIndex.GetSqlConnection());
+            DataTable table = new DataTable();
+            adapter.Fill(table);
+            name = table.Rows[0]["first_name"].ToString();
+            surname = table.Rows[0]["surname"].ToString();
+            badge_num = (int)table.Rows[0]["badge_num"];
+            department_id = (int)table.Rows[0]["department_id"];
+            reg_date = table.Rows[0]["reg_date"].ToString();
+            last_visit_date = table.Rows[0]["last_visit_date"].ToString();
+            pass = table.Rows[0]["pass"].ToString();
+            type_id = (int)table.Rows[0]["type_id"];
+            department_name = table.Rows[0]["department_name"].ToString();
+            affair_type = table.Rows[0]["affair_type"].ToString();
+
+        }
+
         public static int FindIDbyBadge(int badge_num)
         {
             SqlDataAdapter adapter = new SqlDataAdapter($"SELECT detective_id FROM Detectives WHERE badge_num = {badge_num};", PoliceCardIndex.GetSqlConnection());

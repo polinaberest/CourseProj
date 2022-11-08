@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Data.SqlClient;
 
 namespace CourseProj
 {
@@ -38,6 +39,16 @@ namespace CourseProj
             {
                 PoliceCardIndex.IsDetective = true;
                 PoliceCardIndex.DetectiveID = PoliceCardIndex.FindIDbyBadge(Convert.ToInt32(textBoxPersonalNumber.Text.Trim()));
+
+                DateTime lastVisit = DateTime.Now;
+                string sqlFormattedLastVisit = lastVisit.ToString("yyy-MM-dd HH:mm:ss.fff");
+
+                //змінити дату ласт візіт
+                SqlCommand command = new SqlCommand($"UPDATE Detectives SET last_visit_date = '{sqlFormattedLastVisit}' WHERE detective_id = {PoliceCardIndex.DetectiveID};", PoliceCardIndex.GetSqlConnection());
+                PoliceCardIndex.OpenConnection();
+                command.ExecuteNonQuery();
+                PoliceCardIndex.CloseConnection();
+
                 MessageBox.Show(PoliceCardIndex.DetectiveID.ToString());
                 MainWindow main = new MainWindow();
                 main.Show();

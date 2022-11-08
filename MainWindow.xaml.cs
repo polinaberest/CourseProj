@@ -39,6 +39,7 @@ namespace CourseProj
                 WarningTextBox.Visibility = Visibility.Visible;
                 ChooseButtonText.Visibility = Visibility.Hidden;
                 AddAffair.Background = Brushes.Gray;
+                PersonalInfo.Visibility = Visibility.Hidden;
             }
             PoliceCardIndex.SortByNames(PoliceCardIndex.Criminals);
             PoliceCardIndex.SortByNames(PoliceCardIndex.Archived);
@@ -78,6 +79,13 @@ namespace CourseProj
         {
             Authorization auth = new Authorization();
             auth.Show();
+            this.Close();
+        }
+
+        private void PersonalInfo_Click(object sender, RoutedEventArgs e)
+        {
+            DetAffair det = new DetAffair();
+            det.Show();
             this.Close();
         }
     }
