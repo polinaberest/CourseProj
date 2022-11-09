@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:CourseProj"
         mc:Ignorable="d"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        Title="База карного розшуку - Реєстрація в системі" Height="750" Width="950" WindowStyle="ThreeDBorderWindow" FontFamily="Verdana" Icon="/interpollogo.png" ResizeMode="CanResize" WindowStartupLocation="Manual" WindowState="Maximized" Closing="Window_Closing" Loaded="Window_Loaded">
+        Title="Картотека Інтерполу - Реєстрація в системі" Height="750" Width="950" WindowStyle="ThreeDBorderWindow" FontFamily="Verdana" Icon="/interpollogo.png" ResizeMode="CanResize" WindowStartupLocation="Manual" WindowState="Maximized" Closing="Window_Closing" Loaded="Window_Loaded">
     <ScrollViewer>
         <Grid x:Name="RegistrationRoot" Background="#FF40AAFF" MinHeight="700" MinWidth="900">
             <Border MinWidth="800" Background="White" VerticalAlignment="Center" Margin="20" Padding="20" CornerRadius="20" >

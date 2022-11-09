@@ -1,4 +1,4 @@
-﻿<Window x:Class="CourseProj.Archived"
+﻿<Window x:Class="CourseProj.EditTables"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -6,15 +6,16 @@
         xmlns:local="clr-namespace:CourseProj"
         mc:Ignorable="d"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        Title="Картотека Інтерполу - Архів" Height="750" Width="950" WindowStyle="ThreeDBorderWindow" FontFamily="Verdana" Icon="/interpollogo.png" ResizeMode="CanResize" WindowStartupLocation="Manual" WindowState="Maximized" Closing="Window_Closing">
+        Title="Картотека Інтерполу - Редагування даних" Height="750" Width="950" WindowStyle="ThreeDBorderWindow" FontFamily="Verdana" Icon="/interpollogo.png" ResizeMode="CanResize" WindowStartupLocation="Manual" WindowState="Maximized"  Loaded="Window_Loaded">
     <ScrollViewer>
-        <Grid x:Name="MainRoot" Background="#FF8FCDFF" MinHeight="700" MinWidth="900">
+        <Grid x:Name="RegistrationRoot" Background="#FF40AAFF" MinHeight="700" MinWidth="900">
             <Border MinWidth="800" Background="White" VerticalAlignment="Center" Margin="20" Padding="20" CornerRadius="20" >
                 <Border.Effect>
-                    <DropShadowEffect BlurRadius="30" Color="#0076D6" ShadowDepth="0"></DropShadowEffect>
+                    <DropShadowEffect BlurRadius="30" Color="#FF00355F" ShadowDepth="0"></DropShadowEffect>
                 </Border.Effect>
                 <StackPanel x:Name="Form">
-                    <Button x:Name="BackInMain" Width="30" Height="20" Click="BackInMain_Click" >
+
+                    <Button x:Name="BackInDetAffair" Width="30" Height="20" Click="BackInDetAffair_Click" Cursor="Hand">
                         <Button.Template>
                             <ControlTemplate>
                                 <Grid>
@@ -31,11 +32,23 @@
                             </ControlTemplate>
                         </Button.Template>
                     </Button>
-                    <TextBlock x:Name="TopText" Text="Архів особових справ злочинців, що виправилися"  HorizontalAlignment="Left" VerticalAlignment="Bottom" FontSize="24" Margin="0 0 0 10" FontWeight="Bold" OpacityMask="Black" Foreground="#FF00345E"/>
-                    <TextBlock x:Name="HintText" Text="Натисніть на анкету, щоб розархівувати"  HorizontalAlignment="Left" VerticalAlignment="Bottom" FontSize="22" Margin="0 0 0 10" FontWeight="Bold" OpacityMask="Black" Foreground="#0076D6"/>
-                    <StackPanel x:Name="ArchivedList">
-                        <TextBlock x:Name="NothingFound" Text="Наразі архів пустий" Visibility="Hidden"  HorizontalAlignment="Center" VerticalAlignment="Bottom" FontSize="24" Margin="0 0 0 10" FontWeight="Bold" OpacityMask="Black" Foreground="#0076D6"/>
-                    </StackPanel>
+
+                    <TextBlock x:Name="TopText" Text="Інформація про відділи Інтерполу"  HorizontalAlignment="Left" VerticalAlignment="Bottom" FontSize="24" Margin="0 10 0 40" FontWeight="Bold" OpacityMask="Black" Foreground="#FF00345E" />
+
+                    <DataGrid x:Name ="Departments"  Height="500" RowEditEnding="Departments_RowEditEnding" SelectedCellsChanged="Departments_SelectedCellsChanged" />
+
+
+                    <Button x:Name="Save" Click="Save_Click" Content="Зберегти зміни" FontSize="25" MinHeight="45" MinWidth="400" MaxWidth="430" BorderBrush="#FF045100" Margin="0 20 0 0">
+                        <Button.Background>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="#FF09B200"/>
+                                <GradientStop Color="#FF045100" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Button.Background>
+                    </Button>
+                    
+
+
 
                 </StackPanel>
             </Border>

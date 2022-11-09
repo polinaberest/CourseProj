@@ -4,9 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CourseProj"
- mc:Ignorable="d"
+        mc:Ignorable="d"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        Title="База карного розшуку - Особистий кабінет - Зміна паролю" Height="550" Width="750" WindowStyle="ThreeDBorderWindow" FontFamily="Verdana" Icon="/interpollogo.png" ResizeMode="CanResize" WindowStartupLocation="Manual" WindowState="Maximized" Closing="Window_Closing" Loaded="Window_Loaded">
+        Title="Картотека Інтерполу - Особистий кабінет - Зміна паролю" Height="550" Width="750" WindowStyle="ThreeDBorderWindow" FontFamily="Verdana" Icon="/interpollogo.png" ResizeMode="CanResize" WindowStartupLocation="Manual" WindowState="Maximized" Closing="Window_Closing" Loaded="Window_Loaded">
     <ScrollViewer>
         <Grid x:Name="RegistrationRoot" Background="#FF40AAFF" MinHeight="500" MinWidth="700">
             <Border MinWidth="800" Background="White" VerticalAlignment="Center" Margin="20" Padding="20" CornerRadius="20" >

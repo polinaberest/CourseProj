@@ -88,6 +88,11 @@ namespace CourseProj
             det.Show();
             this.Close();
         }
+
+        private void StatInfo_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
   

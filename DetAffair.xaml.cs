@@ -65,12 +65,16 @@ namespace CourseProj
 
         private void ChangeDepartments_Click(object sender, RoutedEventArgs e)
         {
-
+            EditTables editTables = new EditTables("dep");
+            editTables.Show();
+            this.Close();
         }
 
         private void ChangeSpecialities_Click(object sender, RoutedEventArgs e)
         {
-
+            EditTables editTables = new EditTables("spec");
+            editTables.Show();
+            this.Close();
         }
 
         private void textBoxName_TextChanged(object sender, TextChangedEventArgs e)
@@ -137,6 +141,10 @@ namespace CourseProj
                 PoliceCardIndex.CloseConnection();
 
                 MessageBox.Show("Особисті дані змінено!");
+            }
+
+            else {
+                MessageBox.Show("Зміни не є коректними. Перевірте введені дані");
             }
         }
 
