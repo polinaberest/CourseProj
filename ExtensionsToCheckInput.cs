@@ -65,6 +65,23 @@ namespace CourseProj
             }
         }
 
+        public static void CheckTime(TextBox textBox)
+        {
+            string str = textBox.Text.Trim();
+            TimeOnly time;
+
+            if (!TimeOnly.TryParse(str, out time) || str.Length < 5)
+            {
+                textBox.ToolTip = "Уведіть час у форматі ГГ:ХХ !";
+                textBox.Background = Brushes.Salmon;
+            }
+            else
+            {
+                textBox.ToolTip = null;
+                textBox.Background = Brushes.Transparent;
+            }
+        }
+
         // метод визначення правильності введення зросту
         public static void CheckHeight(TextBox textBox)
         {

@@ -216,23 +216,173 @@ namespace CourseProj
 
         }
 
+        public static void AddCriminal(string first_name, string surname, string nickname, string add_date, int height, string eye_color, string hair_color, string special_feature, string citizenship, string birth_date, string birth_place, string last_accomodation, string criminal_job, bool is_in_band, out int id, int band_id = -1)
+        {
+            string query;
+
+            if (is_in_band)
+            {
+                query = $"INSERT INTO Criminals(first_name, surname, nickname, add_date, height, eye_color, hair_color, special_feature, citizenship, birth_date, birth_place, last_accomodation, criminal_job, is_in_band, band_id, is_archived) VALUES('{first_name}', '{surname}', '{nickname}', '{add_date}',  {height}, '{eye_color}', '{hair_color}', '{special_feature}',  '{citizenship}', '{birth_date}', '{birth_place}', '{last_accomodation}', '{criminal_job}',  '{is_in_band}', {band_id}, '{false}');";
+            }
+            else 
+            {
+                query = $"INSERT INTO Criminals(first_name, surname, nickname, add_date, height, eye_color, hair_color, special_feature, citizenship, birth_date, birth_place, last_accomodation, criminal_job, is_in_band, is_archived) VALUES('{first_name}', '{surname}', '{nickname}', '{add_date}',  {height}, '{eye_color}', '{hair_color}', '{special_feature}',  '{citizenship}', '{birth_date}', '{birth_place}', '{last_accomodation}', '{criminal_job}',  '{is_in_band}', '{false}');";
+            }
+
+            SqlCommand command = new SqlCommand(query, PoliceCardIndex.GetSqlConnection());
+            PoliceCardIndex.OpenConnection();
+            command.ExecuteNonQuery();
+            PoliceCardIndex.CloseConnection();
+
+            SqlDataAdapter adapter = new SqlDataAdapter($"SELECT criminal_id FROM Criminals WHERE surname = '{surname}' AND special_feature = '{special_feature}' AND add_date = '{add_date}' AND birth_date='{birth_date}' AND nickname = '{nickname}';", PoliceCardIndex.GetSqlConnection());
+            DataTable table = new DataTable();
+            adapter.Fill(table);
+            id = (int)table.Rows[0]["criminal_id"];
+        }
+
+        // метод додавання злочину
+        public static void AddCrime(out int crime_id, int type_id, string title, string commit_date, int detective_id = -1)
+        {
+            string query;
+            
+            if (detective_id > 0)
+            {
+                query = $"INSERT INTO Crimes(type_id, title, commit_date, detective_id) VALUES({type_id}, '{title}', '{commit_date}', {detective_id});";
+            }
+            else
+            {
+                query = $"INSERT INTO Crimes(type_id, title, commit_date) VALUES({type_id}, '{title}', '{commit_date}');";
+            }
+
+            SqlCommand command = new SqlCommand(query, PoliceCardIndex.GetSqlConnection());
+            PoliceCardIndex.OpenConnection();
+            command.ExecuteNonQuery();
+            PoliceCardIndex.CloseConnection();
+
+            SqlDataAdapter adapter = new SqlDataAdapter($"SELECT crime_id FROM Crimes WHERE type_id = {type_id} AND title = '{title}' AND commit_date = '{commit_date}';", PoliceCardIndex.GetSqlConnection());
+            DataTable table = new DataTable();
+            adapter.Fill(table);
+            crime_id = (int)table.Rows[0]["crime_id"];
+        }
+
+        // метод додавання учасника злочину
+        public static void AddParticipant(int criminal_id, int crime_id, string crime_role)
+        {
+            string query;
+
+            query = $"INSERT INTO Participants(criminal_id, crime_id, crime_role) VALUES({criminal_id}, {crime_id}, '{crime_role}';";
+
+            SqlCommand command = new SqlCommand(query, PoliceCardIndex.GetSqlConnection());
+            PoliceCardIndex.OpenConnection();
+            command.ExecuteNonQuery();
+            PoliceCardIndex.CloseConnection();
+
+            SqlDataAdapter adapter = new SqlDataAdapter($"SELECT crime_id FROM Crimes WHERE type_id = {type_id} AND title = '{title}' AND commit_date = '{commit_date}';", PoliceCardIndex.GetSqlConnection());
+            DataTable table = new DataTable();
+            adapter.Fill(table);
+            crime_id = (int)table.Rows[0]["crime_id"];
+        }
+
         //метод вибору детектива за ІD
         public static void SelectDetectiveProps(int id, out string name, out string surname, out int badge_num, out int department_id, out string reg_date, out string last_visit_date, out string pass, out int type_id, out string department_name, out string affair_type)
         {
-            SqlDataAdapter adapter = new SqlDataAdapter($"SELECT * FROM(SELECT d.*, dep.department_name, a.affair_type FROM Detectives d, Departments dep, Affair_Types a WHERE d.department_id = dep.department_id AND d.type_id = a.type_id) s WHERE detective_id = {id}; ", PoliceCardIndex.GetSqlConnection());
+            /*SqlDataAdapter adapter = new SqlDataAdapter($"SELECT * FROM(SELECT d.*, dep.department_name, a.affair_type FROM Detectives d, Departments dep, Affair_Types a WHERE d.department_id = dep.department_id AND d.type_id = a.type_id) s WHERE detective_id = {id}; ", PoliceCardIndex.GetSqlConnection());*/
+            SqlDataAdapter adapter = new SqlDataAdapter($"SELECT * FROM Detectives WHERE detective_id = {id}; ", PoliceCardIndex.GetSqlConnection());
             DataTable table = new DataTable();
             adapter.Fill(table);
             name = table.Rows[0]["first_name"].ToString();
             surname = table.Rows[0]["surname"].ToString();
             badge_num = (int)table.Rows[0]["badge_num"];
-            department_id = (int)table.Rows[0]["department_id"];
+
+            var di = table.Rows[0]["department_id"];
+            try
+            {
+                department_id = (int)di;
+            }
+            catch (Exception ex)
+            {
+                department_id = 0;
+            }
+
+            var dt = table.Rows[0]["type_id"];
+            try
+            {
+                type_id = (int)dt;
+            }
+            catch (Exception ex)
+            {
+                type_id = 0;
+            }
+
             reg_date = table.Rows[0]["reg_date"].ToString();
             last_visit_date = table.Rows[0]["last_visit_date"].ToString();
             pass = table.Rows[0]["pass"].ToString();
-            type_id = (int)table.Rows[0]["type_id"];
-            department_name = table.Rows[0]["department_name"].ToString();
-            affair_type = table.Rows[0]["affair_type"].ToString();
+            //type_id = (int)table.Rows[0]["type_id"];
 
+            if (department_id != 0)
+            {
+                SqlDataAdapter adapterD = new SqlDataAdapter($"SELECT department_name FROM Departments WHERE department_id = {department_id}; ", PoliceCardIndex.GetSqlConnection());
+                DataTable tableD = new DataTable();
+                adapterD.Fill(tableD);
+                department_name = tableD.Rows[0]["department_name"].ToString();
+            }
+
+            else
+            {
+                department_name = "";
+            }
+
+            if (type_id != 0)
+            {
+                SqlDataAdapter adapterT = new SqlDataAdapter($"SELECT affair_type FROM Affair_Types WHERE type_id = {type_id}; ", PoliceCardIndex.GetSqlConnection());
+                DataTable tableT = new DataTable();
+                adapterT.Fill(tableT);
+                affair_type = tableT.Rows[0]["affair_type"].ToString();
+            }
+
+            else
+            {
+                affair_type = "";
+            }
+
+            //department_name = table.Rows[0]["department_name"].ToString();
+            //affair_type = table.Rows[0]["affair_type"].ToString();
+
+        }
+
+        public static string GetDetSpeciality()
+        {
+            int type_id;
+            string affair_type;
+
+            SqlDataAdapter adapter = new SqlDataAdapter($"SELECT * FROM Detectives WHERE detective_id = {PoliceCardIndex.DetectiveID}; ", PoliceCardIndex.GetSqlConnection());
+            DataTable table = new DataTable();
+            adapter.Fill(table);
+
+            var dt = table.Rows[0]["type_id"];
+            try
+            {
+                type_id = (int)dt;
+            }
+            catch (Exception ex)
+            {
+                type_id = 0;
+            }
+
+            if (type_id != 0)
+            {
+                SqlDataAdapter adapterT = new SqlDataAdapter($"SELECT affair_type FROM Affair_Types WHERE type_id = {type_id}; ", PoliceCardIndex.GetSqlConnection());
+                DataTable tableT = new DataTable();
+                adapterT.Fill(tableT);
+                affair_type = tableT.Rows[0]["affair_type"].ToString();
+            }
+
+            else
+            {
+                affair_type = "";
+            }
+
+            return affair_type;
         }
 
         public static int FindIDbyBadge(int badge_num)

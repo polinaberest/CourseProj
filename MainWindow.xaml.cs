@@ -40,6 +40,7 @@ namespace CourseProj
                 ChooseButtonText.Visibility = Visibility.Hidden;
                 AddAffair.Background = Brushes.Gray;
                 PersonalInfo.Visibility = Visibility.Hidden;
+                StatInfo.Visibility = Visibility.Hidden;
             }
             PoliceCardIndex.SortByNames(PoliceCardIndex.Criminals);
             PoliceCardIndex.SortByNames(PoliceCardIndex.Archived);
@@ -91,7 +92,9 @@ namespace CourseProj
 
         private void StatInfo_Click(object sender, RoutedEventArgs e)
         {
-
+            Statistics stat = new Statistics();
+            stat.Show();
+            this.Close();
         }
     }
 }
