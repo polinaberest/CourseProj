@@ -270,17 +270,12 @@ namespace CourseProj
         {
             string query;
 
-            query = $"INSERT INTO Participants(criminal_id, crime_id, crime_role) VALUES({criminal_id}, {crime_id}, '{crime_role}';";
-
+            query = $"INSERT INTO Participants(criminal_id, crime_id, crime_role) VALUES({criminal_id}, {crime_id}, '{crime_role}')";
+            
             SqlCommand command = new SqlCommand(query, PoliceCardIndex.GetSqlConnection());
             PoliceCardIndex.OpenConnection();
             command.ExecuteNonQuery();
             PoliceCardIndex.CloseConnection();
-
-            SqlDataAdapter adapter = new SqlDataAdapter($"SELECT crime_id FROM Crimes WHERE type_id = {type_id} AND title = '{title}' AND commit_date = '{commit_date}';", PoliceCardIndex.GetSqlConnection());
-            DataTable table = new DataTable();
-            adapter.Fill(table);
-            crime_id = (int)table.Rows[0]["crime_id"];
         }
 
         //метод вибору детектива за ІD

@@ -30,7 +30,7 @@ namespace CourseProj
             checkBoxIsInBand.Checked += checkBox_Checked;
             checkBoxIsInBand.Unchecked += checkBox_Unchecked;
             comboBoxBandName.Visibility = Visibility.Hidden;
-            //AddCrime.Visibility = Visibility.Hidden;
+            AddCrime.Visibility = Visibility.Hidden;
             checkBoxAmResponsible.Visibility = Visibility.Hidden;
 
             //анімація кнопки додавання
