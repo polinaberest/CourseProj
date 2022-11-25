@@ -105,7 +105,7 @@
                         <CheckBox x:Name="checkBoxAmResponsible" Margin="0 10" Checked="checkBoxAmResponsible_Checked" Background="#FF0076D6" BorderBrush="#FF00457D" >Я буду нести відповідальність за розслідування цього злочину</CheckBox>
 
 
-                        <Button x:Name="AddCrimeBtn" Click="AddCrimeBtn_Click" Content="Внести анкету злочинця до картотеки" Margin="50,10,50,5" FontSize="20" MinHeight="40" BorderBrush="#FF00345E">
+                        <Button x:Name="AddCrimeBtn" Click="AddCrimeBtn_Click" Content="Додати відомості про злочин" Margin="50,10,50,5" FontSize="20" MinHeight="40" BorderBrush="#FF00345E">
                             <Button.Background>
                                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                                     <GradientStop Color="#FF0076D6"/>

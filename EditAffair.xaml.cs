@@ -11,6 +11,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Data;
+using System.Data.SqlClient;
 
 namespace CourseProj
 {
@@ -19,22 +21,46 @@ namespace CourseProj
     /// </summary>
     public partial class EditAffair : Window
     {
-        internal Criminal processed;
+        //internal Criminal processed;
+        int id = 0;
         private bool isEdited;
         private bool bandNameIsEdited;
 
+        DataTable tableCr = new DataTable();
+
+        string Name;
+        string Surname;
+        string Nickname;
+        int Height;
+        string AddDateS; // сдельть лейбл и дать ему текст
+        string EyeColor;
+        string HairColor;
+        string SpecialFeature;
+        string Citizenship;
+        string BirthDate;
+        string BirthPlace;
+        string LastAccomodation;
+        string CriminalJob;
+        bool IsInBand;
+        int BandID;
+        string BandName;
+
         // конструктор класу з параметром
-        public EditAffair(object criminal)
+        public EditAffair(int id)
         {
             InitializeComponent();
-            processed = (Criminal)criminal;
-            FillAllFields(processed);
+            this.id = id;
+
+            FillAllFields(id);
         }
 
-        private void Edit()
+       private void Edit()
         {
             if (textBoxBandName.Text == "")
                 textBoxBandName.Text = "НЕ є членом банди";
+
+            DateTime birth = (DateTime)birthPicker.SelectedDate;
+            string dateOfBirth = birth.ToString("yyyy-MM-dd");
 
             if (!isEdited)
             {
@@ -43,72 +69,46 @@ namespace CourseProj
             }
             if (IsReadyToBeEdited())
             {
-                if ((processed.IsInBand == false && !bandNameIsEdited)
-                   || (processed.IsInBand && !bandNameIsEdited))
+                if ((IsInBand == false && !bandNameIsEdited)
+                   || (IsInBand && !bandNameIsEdited)) //якщо в назві банди не відбулося змін
                 {
-                    processed.Name = textBoxName.Text.Trim();
-                    processed.Surname = textBoxSurname.Text.Trim();
-                    processed.Nickname = textBoxNickname.Text.Trim();
-                    processed.Height = int.Parse(textBoxHeight.Text.Trim());
-                    processed.HairColor = ComboBoxHairColor.Text.Trim();
-                    processed.EyeColor = ComboBoxEyeColor.Text.Trim();
-                    processed.SpecialFeatures = textBoxSpecialFeatures.Text.Trim();
-                    processed.Citizenship = textBoxCitizenship.Text.Trim();
-                    processed.DateOfBirth = textBoxBirthday.Text.Trim();
-                    processed.LastAccomodation = textBoxLastAccomodation.Text.Trim();
-                    processed.PlaceOfBirth = textBoxBirthPlace.Text.Trim();
-                    processed.Languages = textBoxLanguages.Text.Trim();
-                    processed.CriminalJob = textBoxJob.Text.Trim();
-                    processed.LastAffair = textBoxLastAffair.Text.Trim();
-                    processed.AffairType = ComboBoxTypeOfAffair.Text.Trim();
+                    
+                    //update всього крім банди 
+                    SqlCommand command = new SqlCommand($"UPDATE Criminals SET first_name = '{textBoxName.Text.Trim()}', surname = '{textBoxSurname.Text.Trim()}', nickname = '{textBoxNickname.Text.Trim()}', height = {int.Parse(textBoxHeight.Text.Trim())}, eye_color = '{ComboBoxEyeColor.Text.Trim()}', hair_color = '{ComboBoxHairColor.Text.Trim()}', special_feature = '{textBoxSpecialFeatures.Text.Trim()}', citizenship = '{textBoxCitizenship.Text.Trim()}', birth_date = '{dateOfBirth}', birth_place = '{textBoxBirthPlace.Text.Trim()}', last_accomodation = '{textBoxLastAccomodation.Text.Trim()}', criminal_job = '{textBoxJob.Text.Trim()}' WHERE criminal_id = {id};", PoliceCardIndex.GetSqlConnection());
+                    PoliceCardIndex.OpenConnection();
+                    command.ExecuteNonQuery();
+                    PoliceCardIndex.CloseConnection();
 
-                    PoliceCardIndex.SortByNames(PoliceCardIndex.Criminals);
                     MessageBox.Show("Зміни збережено! - без змін банди");
                 }
                 else
                 {
-                    if (bandNameIsEdited)
+                    if (bandNameIsEdited && textBoxBandName.Text.Trim() != "НЕ є членом банди")
                     {
-                        PoliceCardIndex.CriminalsFoundByRequest.Remove(processed);
-                        PoliceCardIndex.Criminals.Remove(processed);
-                        if (processed.IsInBand)
+                        if (textBoxBandName.Text.Trim() != "НЕ є членом банди" && textBoxBandName.Background != Brushes.Salmon && textBoxBandName.Text.Trim() != "")
                         {
-                            foreach (var band in PoliceCardIndex.AllBands)
-                            {
-                                if (band.BandName == processed.BandName)
-                                {
-                                    band.members.Remove(processed);
-                                }
-                            }
-                        }
-                        bool _isInBand = false;
-                        string _bandName = textBoxBandName.Text.Trim();
-                        if (_bandName != "НЕ є членом банди")
-                        {
-                            _isInBand = true;
+                            ExtensionsToCheckInput.InsertIfUnique(textBoxBandName, "Bands", "band_name");
                         }
 
-                        PoliceCardIndex.AddCriminal(new Criminal(textBoxName.Text.Trim(), 
-                                                                   textBoxSurname.Text.Trim(), 
-                                                                   textBoxNickname.Text.Trim(),
-                                                                   int.Parse(textBoxHeight.Text.Trim()), 
-                                                                   ComboBoxEyeColor.Text.Trim(), 
-                                                                   ComboBoxHairColor.Text.Trim(), 
-                                                                   textBoxSpecialFeatures.Text.Trim(),
-                                                                   textBoxCitizenship.Text.Trim(),
-                                                                   textBoxBirthday.Text.Trim(), 
-                                                                   textBoxBirthPlace.Text.Trim(), 
-                                                                   textBoxLastAccomodation.Text.Trim(), 
-                                                                   textBoxLanguages.Text.Trim(), 
-                                                                   textBoxJob.Text.Trim(), 
-                                                                   ComboBoxTypeOfAffair.Text.Trim(),
-                                                                   textBoxLastAffair.Text.Trim(), 
-                                                                   _isInBand, _bandName));
-                        PoliceCardIndex.SortByNames(PoliceCardIndex.Criminals);
+                        int b_id = ExtensionsToCheckInput.GetIdForTextItems("Bands", "band_id", "band_name", textBoxBandName.Text.Trim());
+
+                        SqlCommand command = new SqlCommand($"UPDATE Criminals SET first_name = '{textBoxName.Text.Trim()}', surname = '{textBoxSurname.Text.Trim()}', nickname = '{textBoxNickname.Text.Trim()}', height = {int.Parse(textBoxHeight.Text.Trim())}, eye_color = '{ComboBoxEyeColor.Text.Trim()}', hair_color = '{ComboBoxHairColor.Text.Trim()}', special_feature = '{textBoxSpecialFeatures.Text.Trim()}', citizenship = '{textBoxCitizenship.Text.Trim()}', birth_date = '{dateOfBirth}', birth_place = '{textBoxBirthPlace.Text.Trim()}', last_accomodation = '{textBoxLastAccomodation.Text.Trim()}', criminal_job = '{textBoxJob.Text.Trim()}', is_in_band = '{true}', band_id = {b_id} WHERE criminal_id = {id};", PoliceCardIndex.GetSqlConnection());
+                        PoliceCardIndex.OpenConnection();
+                        command.ExecuteNonQuery();
+                        PoliceCardIndex.CloseConnection();
+
                         MessageBox.Show("Зміни збережено! - зміна назви банди");
                     }
+                    else if (bandNameIsEdited && textBoxBandName.Text.Trim() == "НЕ є членом банди")
+                    {
+                        SqlCommand command = new SqlCommand($"UPDATE Criminals SET first_name = '{textBoxName.Text.Trim()}', surname = '{textBoxSurname.Text.Trim()}', nickname = '{textBoxNickname.Text.Trim()}', height = {int.Parse(textBoxHeight.Text.Trim())}, eye_color = '{ComboBoxEyeColor.Text.Trim()}', hair_color = '{ComboBoxHairColor.Text.Trim()}', special_feature = '{textBoxSpecialFeatures.Text.Trim()}', citizenship = '{textBoxCitizenship.Text.Trim()}', birth_date = '{dateOfBirth}', birth_place = '{textBoxBirthPlace.Text.Trim()}', last_accomodation = '{textBoxLastAccomodation.Text.Trim()}', criminal_job = '{textBoxJob.Text.Trim()}', is_in_band = '{false}', band_id = NULL WHERE criminal_id = {id};", PoliceCardIndex.GetSqlConnection());
+                        PoliceCardIndex.OpenConnection();
+                        command.ExecuteNonQuery();
+                        PoliceCardIndex.CloseConnection();
+                    }
                 }
-                BackInResultsForm_Click(null, null);
+                //BackInResultsForm_Click(null, null);
+                PoliceCardIndex.SelectCriminalProps(id, out Name, out Surname, out Nickname, out AddDateS, out Height, out EyeColor, out HairColor, out SpecialFeature, out Citizenship, out BirthDate, out BirthPlace, out LastAccomodation, out CriminalJob, out IsInBand, out BandID, out BandName);
             }
             else
             {
@@ -116,40 +116,42 @@ namespace CourseProj
             }
         }
 
-        private void Archive()
+       private void Archive()
         {
             if (isEdited)
             {
                 MessageBox.Show("Внесені зміни не буде збережено при архівуванні! Спершу збережіть зміни!");
                 return;
             }
-            PoliceCardIndex.ArchiveAffair(processed);
+            PoliceCardIndex.ArchiveAffair(id);
             MessageBox.Show("Справу архівовано");
         }
 
-        private void FillAllFields(Criminal criminal)
+        private void FillAllFields(int id)
         {
-            textBoxName.Text = criminal.Name;
-            textBoxSurname.Text = criminal.Surname;
-            textBoxNickname.Text = criminal.Nickname;
-            textBoxHeight.Text = criminal.Height.ToString();
-            ComboBoxEyeColor.Text = criminal.EyeColor;
-            ComboBoxHairColor.Text = criminal.HairColor;
-            textBoxSpecialFeatures.Text = criminal.SpecialFeatures;
-            textBoxCitizenship.Text = criminal.Citizenship;
-            textBoxBirthday.Text = criminal.DateOfBirth;
-            textBoxBirthPlace.Text = criminal.PlaceOfBirth;
-            textBoxLastAccomodation.Text = criminal.LastAccomodation;
-            textBoxLanguages.Text = criminal.Languages;
-            textBoxJob.Text = criminal.CriminalJob;
-            ComboBoxTypeOfAffair.Text = criminal.AffairType;
-            textBoxLastAffair.Text = criminal.LastAffair;
+            
+            PoliceCardIndex.SelectCriminalProps(id, out Name, out Surname, out Nickname, out AddDateS, out Height, out EyeColor, out HairColor,  out SpecialFeature, out Citizenship, out BirthDate, out BirthPlace, out LastAccomodation, out CriminalJob, out IsInBand, out BandID, out BandName);
 
-            if (criminal.IsInBand)
+            textBoxName.Text = Name;
+            textBoxSurname.Text = Surname;
+            textBoxNickname.Text = Nickname;
+            AddDate.Text += AddDateS.Substring(0,10);
+            textBoxHeight.Text = Height.ToString();
+            ComboBoxEyeColor.Text = EyeColor;
+            ComboBoxHairColor.Text = HairColor;
+            textBoxSpecialFeatures.Text = SpecialFeature;
+            textBoxCitizenship.Text = Citizenship;
+            birthPicker.SelectedDate = Convert.ToDateTime(BirthDate);
+            textBoxBirthPlace.Text = BirthPlace;
+            textBoxLastAccomodation.Text = LastAccomodation;
+            textBoxJob.Text = CriminalJob;
+
+            if (IsInBand)
             {
-                textBoxBandName.Text = criminal.BandName;
+                textBoxBandName.Text = BandName;
+                this.BandID = BandID;
             }
-            else if (!criminal.IsInBand)
+            else if (!IsInBand)
             {
                 textBoxBandName.Text = "НЕ є членом банди";
             }
@@ -181,7 +183,7 @@ namespace CourseProj
                 }
             }
 
-            if (count == 16)
+            if (count == 12)
                 return true;
             return false;
         }
@@ -243,12 +245,6 @@ namespace CourseProj
             isEdited = true;
         }
 
-        private void textBoxBirthday_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            ExtensionsToCheckInput.DateIsCorrect(textBoxBirthday);
-            isEdited = true;
-        }
-
         private void textBoxBirthPlace_TextChanged(object sender, TextChangedEventArgs e)
         {
             ExtensionsToCheckInput.CommonWarningWhenTextChanged(textBoxBirthPlace, true);
@@ -261,33 +257,12 @@ namespace CourseProj
             isEdited = true;
         }
 
-        private void textBoxLanguages_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            ExtensionsToCheckInput.CommonWarningWhenArrayTextChanged(textBoxLanguages);
-            isEdited = true;
-        }
-
         private void textBoxJob_TextChanged(object sender, TextChangedEventArgs e)
         {
             ExtensionsToCheckInput.CommonWarningWhenTextChanged(textBoxJob, true);
             isEdited = true;
         }
 
-        private void textBoxLastAffair_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            ExtensionsToCheckInput.CommonWarningWhenTextChanged(textBoxLastAffair, true);
-            isEdited = true;
-        }
-
-        private void ComboBoxTypeOfAffair_GotFocus(object sender, RoutedEventArgs e)
-        {
-            isEdited = true;
-        }
-
-        private void ComboBoxTypeOfAffair_LostFocus(object sender, RoutedEventArgs e)
-        {
-            ExtensionsToCheckInput.CommonWarningWhenTextChanged(ComboBoxTypeOfAffair, true);
-        }
 
         private void textBoxBandName_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -298,7 +273,7 @@ namespace CourseProj
 
         private void DeleteData_Click(object sender, RoutedEventArgs e)
         {
-            MessageBoxResult result = MessageBox.Show("Ви впевнені, що хочете видалити анкету ?\nНатискаючи ОК, Ви підтверджуєте, що злочинець мертвий", 
+/*            MessageBoxResult result = MessageBox.Show("Ви впевнені, що хочете видалити анкету ?\nНатискаючи ОК, Ви підтверджуєте, що злочинець мертвий",
                 "Підтвердження видалення",
                 MessageBoxButton.OKCancel);
 
@@ -307,12 +282,12 @@ namespace CourseProj
                 MessageBox.Show("Справу видалено з картотеки");
                 PoliceCardIndex.DeleteAffair(processed);
                 BackInResultsForm_Click(null, null);
-            }
+            }*/
         }
 
         private void EditData_Click(object sender, RoutedEventArgs e)
         {
-            Edit();
+           Edit();
         }
 
         private void ArchiveData_Click(object sender, RoutedEventArgs e)
@@ -330,8 +305,13 @@ namespace CourseProj
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            PoliceCardIndex.WriteToFile("criminals.txt");
-            PoliceCardIndex.WriteToFile("archived.txt");
+           /* PoliceCardIndex.WriteToFile("criminals.txt");
+            PoliceCardIndex.WriteToFile("archived.txt");*/
+        }
+
+        private void birthPicker_LostFocus(object sender, RoutedEventArgs e)
+        {
+            isEdited = true;
         }
     }
 }

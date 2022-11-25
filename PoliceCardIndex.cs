@@ -23,11 +23,17 @@ namespace CourseProj
         // перелік злочинців, знайдених за поточним запитом
         public static List<Criminal>? CriminalsFoundByRequest;
 
+        // перелік первинних ключів анкет злочинців, знайдених за запитом
+        public static List<int>? IdxsFoundByRequest;
+
+        // перелік первинних ключів анкет - справ злочинців в архіві
+        public static List<int>? IdxsArchived;
+
         // перелік злочинців, справи яких збережено в архіві
         public static List<Criminal>? Archived;
 
         // перелік злочинців, справи яких треба занести до файлу-витягу
-        public static List<Criminal>? FoundToWrite;
+        public static List<int>? FoundToWrite;
 
         public static bool IsDetective = false;
 
@@ -38,9 +44,11 @@ namespace CourseProj
         {
             AllBands = new List<CrimeBand>();
             Criminals = new List<Criminal>();
+            IdxsFoundByRequest = new List<int>();
             CriminalsFoundByRequest = new List<Criminal>();
             Archived = new List<Criminal>();
-            FoundToWrite = new List<Criminal>();
+            FoundToWrite = new List<int>();
+            IdxsArchived = new List<int>();
         }
 
         // метод додавання злочинця до переліку картотеки
@@ -345,6 +353,50 @@ namespace CourseProj
 
         }
 
+        public static void SelectCriminalProps(int id, out string name, out string surname, out string nickname, out string add_date, out int height, out string eye_color, out string hair_color, out string special_feature, out string citizenship, out string birth_date, out string birth_place, out string last_accomodation, out string criminal_job, out bool is_in_band, out int band_id, out string band_name)
+        {
+            SqlDataAdapter adapter = new SqlDataAdapter($"SELECT * FROM Criminals WHERE criminal_id = {id}; ", PoliceCardIndex.GetSqlConnection());
+            DataTable table = new DataTable();
+            adapter.Fill(table);
+
+            name = table.Rows[0]["first_name"].ToString();
+            surname = table.Rows[0]["surname"].ToString();
+            nickname = table.Rows[0]["nickname"].ToString();
+            add_date = table.Rows[0]["add_date"].ToString();
+            height = (int)table.Rows[0]["height"];
+            eye_color = table.Rows[0]["eye_color"].ToString();
+            hair_color = table.Rows[0]["hair_color"].ToString();
+            special_feature = table.Rows[0]["special_feature"].ToString();
+            citizenship = table.Rows[0]["citizenship"].ToString();
+            birth_date = table.Rows[0]["birth_date"].ToString();
+            birth_place = table.Rows[0]["birth_place"].ToString();
+            last_accomodation = table.Rows[0]["last_accomodation"].ToString();
+            criminal_job = table.Rows[0]["criminal_job"].ToString();
+            is_in_band = (bool)table.Rows[0]["is_in_band"];
+            var bi = table.Rows[0]["band_id"];
+            try
+            {
+                band_id = (int)bi;
+            }
+            catch (Exception ex)
+            {
+                band_id = 0;
+            }
+
+            if (band_id != 0)
+            {
+                SqlDataAdapter adapterB = new SqlDataAdapter($"SELECT band_name FROM Bands WHERE band_id = {band_id}; ", PoliceCardIndex.GetSqlConnection());
+                DataTable tableB = new DataTable();
+                adapterB.Fill(tableB);
+                band_name = tableB.Rows[0]["band_name"].ToString();
+            }
+
+            else
+            {
+                band_name = "";
+            }
+        }
+
         public static string GetDetSpeciality()
         {
             int type_id;
@@ -560,66 +612,44 @@ namespace CourseProj
         }
 
         // метод архівування анкети
-        public static void ArchiveAffair(Criminal processed)
+        public static void ArchiveAffair(int id)
         {
-            Archived.Add(processed);
-            CriminalsFoundByRequest.Remove(processed);
-            Criminals.Remove(processed);
-            if (processed.IsInBand)
-            {
-                foreach (var band in AllBands)
-                {
-                    if (band.BandName == processed.BandName)
-                    {
-                        band.members.Remove(processed);
-                    }
-                }
-            }
+            DateTime aDate = DateTime.Now;
+            string aDateSqlFormatted = aDate.ToString("yyyy-MM-dd");
+
+            SqlCommand command = new SqlCommand($"UPDATE Criminals SET is_archived='{true}', archivation_date='{aDateSqlFormatted}' WHERE criminal_id = {id};", PoliceCardIndex.GetSqlConnection());
+            PoliceCardIndex.OpenConnection();
+            command.ExecuteNonQuery();
+            PoliceCardIndex.CloseConnection();
         }
 
         // метод розархівування справи
-        public static void Unarchive(Criminal criminal)
+        public static void Unarchive(int id)
         {
-            PoliceCardIndex.AddCriminal(criminal);
-            if (criminal.IsInBand)
-            {
-                if (PoliceCardIndex.AllBands != null)
-                {
-                    foreach (CrimeBand band in PoliceCardIndex.AllBands)
-                    {
-                        if (band.BandName == criminal.BandName)
-                        {
-                            band.AddMember(criminal);
-                        }
-                    }
-                }
-
-                else
-                {
-                    CrimeBand newBand = new CrimeBand(criminal.BandName, new List<Criminal> { criminal });
-                }
-            }
-            PoliceCardIndex.Archived.Remove(criminal);
+            SqlCommand command = new SqlCommand($"UPDATE Criminals SET is_archived='{false}', archivation_date = NULL' WHERE criminal_id = {id};", PoliceCardIndex.GetSqlConnection());
+            PoliceCardIndex.OpenConnection();
+            command.ExecuteNonQuery();
+            PoliceCardIndex.CloseConnection();
         }
 
         // метод формування списку унікальних справ для подальшого збереження у файл
-        public static void FormListToPrint(Criminal criminal, out bool isIncluded)
+        public static void FormListToPrint(int id, out bool isIncluded)
         {
             isIncluded = false;
             if (FoundToWrite.Count == 0)
             {
-                FoundToWrite.Add(criminal);
+                FoundToWrite.Add(id);
                 isIncluded = true;
                 return;
             }
-            if (FoundToWrite.Contains(criminal))
+            if (FoundToWrite.Contains(id))
             {
-                FoundToWrite.Remove(criminal);
+                FoundToWrite.Remove(id);
                 return;
             }
             else {
-                FoundToWrite.Add(criminal);
-                SortByNames(FoundToWrite);
+                FoundToWrite.Add(id);
+               // SortByNames(FoundToWrite);
                 isIncluded = true;
                 return;
             }
@@ -628,6 +658,7 @@ namespace CourseProj
         // метод запису переліку справ у витяг з картотеки
         public static void WriteResults()
         {
+            int i = 1;
             string path = "";
             string header = "\n\t\t\t\t\tВитяг з картотеки Інтерполу\n\n";
             string str = "";
@@ -645,25 +676,60 @@ namespace CourseProj
             {
                 path = dialog.FileName;
             }
-            foreach (Criminal criminal in FoundToWrite)
+            foreach (int id in FoundToWrite)
             {
-                if (criminal.IsInBand)
+                SqlDataAdapter adapter = new SqlDataAdapter($"SELECT c.*, band_name, c.band_id, crime_role, cr.crime_id, cr.type_id, t.affair_type, title, commit_date, cr.detective_id, CONCAT(d.first_name, ' ', d.surname) as d_name FROM((((Criminals c LEFT JOIN Bands b ON(c.band_id = b.band_id)) LEFT JOIN Participants p ON(c.criminal_id = p.criminal_id)) LEFT JOIN Crimes cr ON(cr.crime_id = p.crime_id)) LEFT JOIN Affair_Types t ON(cr.type_id = t.type_id)) LEFT JOIN Detectives d ON(cr.detective_id = d.detective_id) WHERE c.criminal_id = {id }; ", PoliceCardIndex.GetSqlConnection());
+                DataTable tableCr = new DataTable();
+                adapter.Fill(tableCr);
+
+                if ((bool)tableCr.Rows[0]["is_in_band"])
                 {
-                    band = "\nЗлочинець є членом банди " + criminal.BandName;
+                    band = "\nЗлочинець є членом банди " + tableCr.Rows[0]["band_name"] ;
                 }
-                str += (FoundToWrite.IndexOf(criminal) + 1) + ". "
-                    + criminal.ToString() + "\nДата народження: " + criminal.DateOfBirth
-                    + "\nЗріст: " + criminal.Height
-                    + "\nКолір очей: " + criminal.EyeColor
-                    + "\tКолір волосся: " + criminal.HairColor
-                    + "\nОсобливі прикмети: " + criminal.SpecialFeatures
-                    + "\nГромадянство: " + criminal.Citizenship
-                    + "\nМісце народження: " + criminal.PlaceOfBirth
-                    + "\tМісце останнього проживання: " + criminal.LastAccomodation
-                    + "\nВолодіє мовами: " + criminal.Languages
-                    + "\nКримінальний фах: " + criminal.CriminalJob
-                    + "\nОстання справа: " + criminal.LastAffair
-                    + band + "\n\n";
+                str += "\n\n" + (i) + ". "
+                    + tableCr.Rows[0]["first_name"] + " " 
+                    + tableCr.Rows[0]["surname"] + " (" 
+                    + tableCr.Rows[0]["nickname"] + ") " 
+                    + "\n  -- Особисті дані --"
+                    + "\nДата народження: " + ((DateTime)tableCr.Rows[0]["birth_date"]).ToString("dd.MM.yyyy")
+                    + "\nЗріст: " + tableCr.Rows[0]["height"]
+                    + "\nКолір очей: " + tableCr.Rows[0]["eye_color"]
+                    + "\tКолір волосся: " + tableCr.Rows[0]["hair_color"]
+                    + "\nОсобливі прикмети: " + tableCr.Rows[0]["special_feature"]
+                    + "\nГромадянство: " + tableCr.Rows[0]["citizenship"]
+                    + "\nМісце народження: " + tableCr.Rows[0]["birth_place"]
+                    + "\tМісце останнього проживання: " + tableCr.Rows[0]["last_accomodation"]
+                    + "\nКримінальний фах: " + tableCr.Rows[0]["criminal_job"]
+                    + "\nДата внесення анкети до картотеки: " + ((DateTime)tableCr.Rows[0]["add_date"]).ToString("dd.MM.yyyy")
+                    + band + "\n"
+                    + "\n  -- Відомості про злочини --";
+                //тут додати перевірки на null!
+                foreach (DataRow dr in tableCr.Rows)
+                {
+                    if (Convert.ToString(dr["title"]) != "")
+                    {
+                        str += "\nНазва злочину: " + dr["title"];
+                    }
+                    if (Convert.ToString(dr["affair_type"]) != "")
+                    {
+                        str += "\nТип злочину: " + dr["affair_type"];
+                    }
+                    if (Convert.ToString(dr["crime_role"]) != "")
+                    {
+                        str += "\nРоль особи в злочині: " + dr["crime_role"];
+                    }
+                    if (Convert.ToString(dr["affair_type"]) != "")
+                    {
+                        str += "\nДата та час скоєння злочину: " + ((DateTime)dr["commit_date"]).ToString("dd.MM.yyyy  hh:mm");
+                    }
+                    string name = Convert.ToString(dr["d_name"]);
+                    if (name != " ")
+                    {
+                        str += "\nДетектив, відповідальний за розслідування: " + dr["d_name"] + "\n";
+                    }
+                }
+
+                i++;
             }
             using (StreamWriter writer = new StreamWriter(path, false))
             {

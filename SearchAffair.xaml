@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:CourseProj"
         mc:Ignorable="d"
        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        Title="Картотека Інтерполу - Пошук особової справи" Height="750" Width="950" WindowStyle="ThreeDBorderWindow" FontFamily="Verdana" Icon="/interpollogo.png" ResizeMode="CanResize" WindowStartupLocation="Manual" WindowState="Maximized">
+        Title="Картотека Інтерполу - Пошук особової справи" Height="750" Width="950" WindowStyle="ThreeDBorderWindow" FontFamily="Verdana" Icon="/interpollogo.png" ResizeMode="CanResize" WindowStartupLocation="Manual" WindowState="Maximized" Loaded="Window_Loaded">
     <ScrollViewer>
         <Grid x:Name="SearchMainRoot" Background="#FF8FCDFF" MinHeight="700" MinWidth="900" KeyDown="SearchMainRoot_KeyDown">
             <Border MinWidth="800" Background="White" VerticalAlignment="Center" Margin="20" Padding="20" CornerRadius="20" >
@@ -36,6 +36,15 @@
                     <TextBox materialDesign:HintAssist.Hint ="Ім'я злочинця" x:Name="textBoxName" Style = "{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:TextFieldAssist.UnderlineBrush="#FF00345E" materialDesign:HintAssist.Foreground="#FF00345E"></TextBox>
                     <TextBox materialDesign:HintAssist.Hint ="Прізвище злочинця" x:Name="textBoxSurname" Style = "{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:TextFieldAssist.UnderlineBrush="#FF00345E" materialDesign:HintAssist.Foreground="#FF00345E"></TextBox>
                     <TextBox materialDesign:HintAssist.Hint ="Прізвисько (позивний) злочинця" x:Name="textBoxNickname" Style = "{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:TextFieldAssist.UnderlineBrush="#FF00345E" materialDesign:HintAssist.Foreground="#FF00345E"></TextBox>
+
+                    <Label Margin="0 10">До картотеки анкету додано:</Label>
+                    <StackPanel x:Name="stackOptionsAddDate" Orientation="Horizontal">
+                        <RadioButton GroupName="add" Content="Невідомо" Checked="RadioButton_Checked_5" Background="#FF0076D6" BorderBrush="#FF00457D" Margin="0 0 15 0" IsChecked="True"/>
+                        <RadioButton GroupName="add" Content="Сьогодні" Checked="RadioButton_Checked_6"  Background="#FF0076D6" BorderBrush="#FF00457D" Margin="0 0 15 0"/>
+                        <RadioButton GroupName="add" Content="Цього місяця" Checked="RadioButton_Checked_7" Background="#FF0076D6" BorderBrush="#FF00457D" Margin="0 0 15 0"/>
+                        <RadioButton GroupName="add" Content="Раніше" Checked="RadioButton_Checked_8" Background="#FF0076D6" BorderBrush="#FF00457D" Margin="0 0 15 0"/>
+                    </StackPanel>
+
                     <Label Margin="0 10">Зріст злочинця (орієнтовний):</Label>
                     <StackPanel x:Name="stackOptions" Orientation="Horizontal">
                         <RadioButton GroupName="height" Content="Невідомо" Checked="RadioButton_Checked" Background="#FF0076D6" BorderBrush="#FF00457D" Margin="0 0 15 0" IsChecked="True"/>
@@ -70,16 +79,39 @@
                         <ComboBoxItem>Червоний</ComboBoxItem>
                         <ComboBoxItem>Шатен</ComboBoxItem>
                     </ComboBox>
-                    <TextBox materialDesign:HintAssist.Hint ="Особливі прикмети (характеристики) злочинця" x:Name="textBoxSpecialFeatures" Style = "{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:TextFieldAssist.UnderlineBrush="#FF00345E" materialDesign:HintAssist.Foreground="#FF00345E"></TextBox>
+                    <TextBox materialDesign:HintAssist.Hint ="Особлива прикмета (характеристика) злочинця" x:Name="textBoxSpecialFeatures" Style = "{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:TextFieldAssist.UnderlineBrush="#FF00345E" materialDesign:HintAssist.Foreground="#FF00345E"></TextBox>
                     <TextBox materialDesign:HintAssist.Hint ="Громадянство злочинця" x:Name="textBoxCitizenship" Style = "{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:TextFieldAssist.UnderlineBrush="#FF00345E" materialDesign:HintAssist.Foreground="#FF00345E"></TextBox>
-                    <TextBox materialDesign:HintAssist.Hint ="Дата народження злочинця (у форматі ДД.ММ.РРРР)" x:Name="textBoxBirthday" Style = "{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:TextFieldAssist.UnderlineBrush="#FF00345E" materialDesign:HintAssist.Foreground="#FF00345E" TextChanged="textBoxBirthday_TextChanged"  ></TextBox>
+
+                    <Label Margin="0 10">Вік злочинця (орієнтовний):</Label>
+                    <StackPanel x:Name="stackOptionsAge" Orientation="Horizontal">
+                        <RadioButton GroupName="age" Content="Невідомо" Checked="RadioButton_Checked_9" Background="#FF0076D6" BorderBrush="#FF00457D" Margin="0 0 15 0" IsChecked="True"/>
+                        <RadioButton GroupName="age" Content="до 18 років" Checked="RadioButton_Checked_10"  Background="#FF0076D6" BorderBrush="#FF00457D" Margin="0 0 15 0"/>
+                        <RadioButton GroupName="age" Content="від 18 до 30 років" Checked="RadioButton_Checked_11" Background="#FF0076D6" BorderBrush="#FF00457D" Margin="0 0 15 0"/>
+                        <RadioButton GroupName="age" Content="від 30 до 50 років" Checked="RadioButton_Checked_12" Background="#FF0076D6" BorderBrush="#FF00457D" Margin="0 0 15 0"/>
+                        <RadioButton GroupName="age" Content="50+" Checked="RadioButton_Checked_13" Background="#FF0076D6" BorderBrush="#FF00457D" Margin="0 0 15 0"/>
+                    </StackPanel>
+
                     <TextBox materialDesign:HintAssist.Hint ="Місце народження злочинця (назва міста/села)" x:Name="textBoxBirthPlace" Style = "{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:TextFieldAssist.UnderlineBrush="#FF00345E" materialDesign:HintAssist.Foreground="#FF00345E"></TextBox>
                     <TextBox materialDesign:HintAssist.Hint ="Останнє місце проживання злочинця (назва міста/села)" x:Name="textBoxLastAccomodation" Style = "{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:TextFieldAssist.UnderlineBrush="#FF00345E" materialDesign:HintAssist.Foreground="#FF00345E"></TextBox>
-                    <TextBox materialDesign:HintAssist.Hint ="Перелік мов, якими володіє злочинець (через коми)" x:Name="textBoxLanguages" Style = "{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:TextFieldAssist.UnderlineBrush="#FF00345E" materialDesign:HintAssist.Foreground="#FF00345E"></TextBox>
                     <TextBox materialDesign:HintAssist.Hint ="Злочинна професія" x:Name="textBoxJob" Style = "{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:TextFieldAssist.UnderlineBrush="#FF00345E" materialDesign:HintAssist.Foreground="#FF00345E"></TextBox>
-                    <TextBox materialDesign:HintAssist.Hint ="Остання справа злочинця" x:Name="textBoxLastAffair" Style = "{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:TextFieldAssist.UnderlineBrush="#FF00345E" materialDesign:HintAssist.Foreground="#FF00345E"></TextBox>
                     <CheckBox x:Name="checkBoxIsInBand" Margin="0 10" Checked="checkBoxIsInBand_Checked"  Background="#FF0076D6" BorderBrush="#FF00457D" >Злочинець є членом злочинного угрупування (банди)</CheckBox>
                     <TextBox materialDesign:HintAssist.Hint ="Назва банди, членом якої є злочинець" x:Name="textBoxBandName" Visibility="Hidden" Style = "{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:TextFieldAssist.UnderlineBrush="#FF00345E" materialDesign:HintAssist.Foreground="#FF00345E"></TextBox>
+
+                    <ComboBox IsEditable="True" x:Name="ComboBoxRole" Style = "{StaticResource MaterialDesignFloatingHintComboBox}" materialDesign:TextFieldAssist.UnderlineBrush="#FF00345E" materialDesign:HintAssist.Foreground="#FF00345E"  materialDesign:HintAssist.Hint ="Роль злочинця в злочині" SelectedValuePath="Content" LostFocus="ComboBoxRole_LostFocus">
+                        <ComboBoxItem>Ініціатор</ComboBoxItem>
+                        <ComboBoxItem>Спільник</ComboBoxItem>
+                        <ComboBoxItem>Мовчазний свідок</ComboBoxItem>
+                        <ComboBoxItem>Провокатор</ComboBoxItem>
+                        <ComboBoxItem>Постачальник</ComboBoxItem>
+                    </ComboBox>
+
+                    <ComboBox IsEditable="True" x:Name="ComboBoxSpeciality" Style = "{StaticResource MaterialDesignFloatingHintComboBox}" materialDesign:TextFieldAssist.UnderlineBrush="#FF00345E" materialDesign:HintAssist.Foreground="#FF00345E"  materialDesign:HintAssist.Hint ="Тип злочину" SelectedValuePath="Content" LostFocus="ComboBoxSpeciality_LostFocus" Padding="20 10">
+                    </ComboBox>
+
+                    <TextBox materialDesign:HintAssist.Hint ="Назва злочину, учасником якого був злочинець" x:Name="textBoxTitle" Visibility="Hidden" Style = "{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:TextFieldAssist.UnderlineBrush="#FF00345E" materialDesign:HintAssist.Foreground="#FF00345E"></TextBox>
+
+                    <DatePicker  Padding="8" x:Name="dateCrPicker" FirstDayOfWeek="Monday" IsTodayHighlighted="False"  DisplayDateStart="1900-01-01" DisplayDateEnd="2022-12-15" Foreground="#FF00345E" LostFocus="dateCrPicker_LostFocus" Text="Дата скоєння злочину" >
+                    </DatePicker>
 
                     <Button x:Name="SearchData" Click="SearchData_Click"  Content="Здійснити пошук в базі карного розшуку" Margin="50,10,50,5" FontSize="20" MinHeight="40" BorderBrush="#FF00345E">
                         <Button.Background>

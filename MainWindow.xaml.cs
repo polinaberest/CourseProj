@@ -39,6 +39,7 @@ namespace CourseProj
                 WarningTextBox.Visibility = Visibility.Visible;
                 ChooseButtonText.Visibility = Visibility.Hidden;
                 AddAffair.Background = Brushes.Gray;
+                SeeArchived.Background = Brushes.Gray;
                 PersonalInfo.Visibility = Visibility.Hidden;
                 StatInfo.Visibility = Visibility.Hidden;
             }
@@ -70,10 +71,16 @@ namespace CourseProj
 
         private void SeeArchived_Click(object sender, RoutedEventArgs e)
         {
-            PoliceCardIndex.SortByNames(PoliceCardIndex.Archived);
-            Archived archive = new Archived(); 
-            archive.Show();
-            this.Close();
+            if (PoliceCardIndex.IsDetective)
+            {
+                Archived archive = new Archived();
+                archive.Show();
+                this.Close();
+            }
+            else
+            {
+                MessageBox.Show("Авторизуйтеся або зареєструйтеся в додатку, щоб переглянути архів!");
+            }
         }
 
         private void BackInAuthorization_Click(object sender, RoutedEventArgs e)

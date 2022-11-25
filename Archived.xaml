@@ -33,6 +33,35 @@
                     </Button>
                     <TextBlock x:Name="TopText" Text="Архів особових справ злочинців, що виправилися"  HorizontalAlignment="Left" VerticalAlignment="Bottom" FontSize="24" Margin="0 0 0 10" FontWeight="Bold" OpacityMask="Black" Foreground="#FF00345E"/>
                     <TextBlock x:Name="HintText" Text="Натисніть на анкету, щоб розархівувати"  HorizontalAlignment="Left" VerticalAlignment="Bottom" FontSize="22" Margin="0 0 0 10" FontWeight="Bold" OpacityMask="Black" Foreground="#0076D6"/>
+                    
+                    
+                    <StackPanel x:Name="SortParams" Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
+
+                        <Button x:Name="byDate" Click="byDate_Click"  Content="За датою архівації" Margin="10" FontSize="20" MinHeight="40" BorderBrush="#FF767676" Width="250">
+                            <Button.Background>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                    <GradientStop Color="#FF898989"/>
+                                    <GradientStop Color="#FF454545" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Button.Background>
+                        </Button>
+                        <Button x:Name="byName" Click="byName_Click"  Content="За ім'ям" Margin="10" FontSize="20" MinHeight="40" BorderBrush="#FF767676" Width="250">
+                            <Button.Background>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                    <GradientStop Color="#FF898989"/>
+                                    <GradientStop Color="#FF454545" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Button.Background>
+                        </Button>
+                        <Button x:Name="bySpecialization" Click="bySpecialization_Click"  Content="Моя спеціалізація" Margin="10" FontSize="20" MinHeight="40" BorderBrush="#FF767676" Width="250">
+                            <Button.Background>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                    <GradientStop Color="#FF898989"/>
+                                    <GradientStop Color="#FF454545" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Button.Background>
+                        </Button>
+                    </StackPanel>
                     <StackPanel x:Name="ArchivedList">
                         <TextBlock x:Name="NothingFound" Text="Наразі архів пустий" Visibility="Hidden"  HorizontalAlignment="Center" VerticalAlignment="Bottom" FontSize="24" Margin="0 0 0 10" FontWeight="Bold" OpacityMask="Black" Foreground="#0076D6"/>
                     </StackPanel>
