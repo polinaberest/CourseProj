@@ -28,6 +28,8 @@ namespace CourseProj
 
         DataTable tableCr = new DataTable();
 
+        DataTable crimesTable = new DataTable();
+
         string Name;
         string Surname;
         string Nickname;
@@ -50,6 +52,8 @@ namespace CourseProj
         {
             InitializeComponent();
             this.id = id;
+
+            checkBoxAmResponsibleToNew.Visibility = Visibility.Hidden;
 
             FillAllFields(id);
         }
@@ -273,16 +277,16 @@ namespace CourseProj
 
         private void DeleteData_Click(object sender, RoutedEventArgs e)
         {
-/*            MessageBoxResult result = MessageBox.Show("Ви впевнені, що хочете видалити анкету ?\nНатискаючи ОК, Ви підтверджуєте, що злочинець мертвий",
+            MessageBoxResult result = MessageBox.Show("Ви впевнені, що хочете видалити анкету ?\nНатискаючи ОК, Ви підтверджуєте, що злочинець мертвий",
                 "Підтвердження видалення",
                 MessageBoxButton.OKCancel);
 
             if (result == MessageBoxResult.OK)
             {
                 MessageBox.Show("Справу видалено з картотеки");
-                PoliceCardIndex.DeleteAffair(processed);
+                PoliceCardIndex.DeleteAffair(id);
                 BackInResultsForm_Click(null, null);
-            }*/
+            }
         }
 
         private void EditData_Click(object sender, RoutedEventArgs e)
@@ -312,6 +316,355 @@ namespace CourseProj
         private void birthPicker_LostFocus(object sender, RoutedEventArgs e)
         {
             isEdited = true;
+        }
+
+        private void CrimesPerformed_LostFocus(object sender, RoutedEventArgs e)
+        {
+            
+        }
+
+        private void DeleteCrime_Click(object sender, RoutedEventArgs e)
+        {
+            var idx = CrimesPerformed.SelectedIndex;
+
+            int crime_id = (int)crimesTable.Rows[idx]["ID злочину"];
+
+            SqlCommand command = new SqlCommand($"DELETE FROM Participants WHERE crime_id = {crime_id} AND criminal_id = {id};", PoliceCardIndex.GetSqlConnection());
+            PoliceCardIndex.OpenConnection();
+            command.ExecuteNonQuery();
+            PoliceCardIndex.CloseConnection();
+
+            crimesTable.Rows[idx].Delete();
+            CrimesPerformed.ItemsSource = crimesTable.AsDataView();
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            SqlDataAdapter adapter = new SqlDataAdapter($"SELECT c.crime_id AS 'ID злочину', c.title AS 'Назва злочину', a.affair_type AS 'Тип злочину', p.crime_role AS 'Роль злочинця', c.commit_date AS 'Дата скоєння злочину', d.surname AS 'Прізвище відповідального детектива', d.badge_num AS 'Номер значка детектива' FROM Crimes c, Participants p, Detectives d, Affair_Types a WHERE p.crime_id = c.crime_id AND p.criminal_id = {id} AND c.detective_id = d.detective_id AND c.type_id = a.type_id UNION SELECT c.crime_id AS 'ID злочину', c.title AS 'Назва злочину', a.affair_type AS 'Тип злочину', p.crime_role AS 'Роль злочинця', c.commit_date AS 'Дата скоєння злочину', '' AS 'Прізвище відповідального детектива', 0 AS 'Номер значка детектива' FROM Crimes c, Participants p, Affair_Types a WHERE p.crime_id = c.crime_id AND p.criminal_id = {id} AND c.detective_id IS NULL AND c.type_id = a.type_id;", PoliceCardIndex.GetSqlConnection());
+
+            adapter.Fill(crimesTable);
+
+            CrimesPerformed.ItemsSource = crimesTable.AsDataView();
+            CrimesPerformed.AutoGenerateColumns = true;
+
+            CrimesPerformed.Columns[0].IsReadOnly = true;
+            CrimesPerformed.Columns[5].IsReadOnly = true;
+            CrimesPerformed.Columns[6].IsReadOnly = true;
+
+            CrimesPerformed.CanUserDeleteRows = true;
+
+            if (crimesTable.Rows.Count == 0)
+            {
+                CrimesPerformed.Visibility = Visibility.Collapsed;
+                DeleteCrime.Visibility = Visibility.Collapsed;
+                EditCrime.Visibility = Visibility.Collapsed;
+            }
+
+
+            //для додавання до існуючого злочину
+            ExtensionsToCheckInput.GetComboItems("title", "Crimes", ComboBoxExistingTitle);
+
+            //для додавання нового злочину
+            ExtensionsToCheckInput.GetComboItems("affair_type", "Affair_Types", ComboBoxSpecialityNew);
+        }
+
+        private void EditCrime_Click(object sender, RoutedEventArgs e)
+        {
+            var idx = CrimesPerformed.SelectedIndex;
+
+            DateTime date;
+            int type_id;
+
+            if (idx == -1 || idx > (int)crimesTable.Rows.Count - 1)
+                return;
+
+            DataRowView item = CrimesPerformed.Items[idx] as DataRowView;
+
+            if (item == null)
+                return;
+            try
+            {
+                int idC = (int)crimesTable.Rows[idx]["ID злочину"];
+
+                if (Convert.ToString(item.Row.ItemArray[1]) != "" && Convert.ToString(item.Row.ItemArray[0]) != ""
+                    && Convert.ToString(item.Row.ItemArray[2]) != ""
+                    && Convert.ToString(item.Row.ItemArray[4]) != ""
+                    && DateTime.TryParse((Convert.ToString(item.Row.ItemArray[4])), out date))
+                {
+                    ExtensionsToCheckInput.InsertIfUnique(Convert.ToString(item.Row.ItemArray[2]).Trim(), "Affair_Types", "affair_type");
+                    type_id = ExtensionsToCheckInput.GetIdForTextItems("Affair_Types", "type_id", "affair_type", Convert.ToString(item.Row.ItemArray[2]).Trim());
+
+                   string sqlFormattedDate = date.ToString("yyyy-MM-dd hh:mm:ss.fff");
+
+                    SqlCommand commandP = new SqlCommand($"UPDATE Participants SET crime_role = '{(string)item.Row.ItemArray[3]}' WHERE crime_id = {idC} AND criminal_id = {id};", PoliceCardIndex.GetSqlConnection());
+
+                    SqlCommand commandC = new SqlCommand($"UPDATE Crimes SET title = '{(string)item.Row.ItemArray[1]}', type_id = {type_id}, commit_date =  '{sqlFormattedDate}' WHERE crime_id = {idC};", PoliceCardIndex.GetSqlConnection());
+                    PoliceCardIndex.OpenConnection();
+                    commandP.ExecuteNonQuery();
+                    commandC.ExecuteNonQuery();
+                    PoliceCardIndex.CloseConnection();
+                    // MessageBox.Show("ok");
+                }
+            }
+            catch (Exception ex)
+            {
+                return;
+            }
+        }
+
+        private void AddToExistingCrimeBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (ComboBoxExistingTitle.Text != "" && ComboBoxRoleToExist.Text.Length > 3)
+            {
+                int crime_id = ExtensionsToCheckInput.GetIdForTextItems("Crimes", "crime_id", "title", ComboBoxExistingTitle.Text.Trim());
+                if (crime_id > 0)
+                {
+                    PoliceCardIndex.AddParticipant(id, crime_id, ComboBoxRoleToExist.Text.Trim());
+
+                    //оновлюємо таблицю злочинів
+                    SqlDataAdapter adapter = new SqlDataAdapter($"SELECT c.crime_id AS 'ID злочину', c.title AS 'Назва злочину', a.affair_type AS 'Тип злочину', p.crime_role AS 'Роль злочинця', c.commit_date AS 'Дата скоєння злочину', d.surname AS 'Прізвище відповідального детектива', d.badge_num AS 'Номер значка детектива' FROM Crimes c, Participants p, Detectives d, Affair_Types a WHERE p.crime_id = c.crime_id AND p.criminal_id = {id} AND c.detective_id = d.detective_id AND c.type_id = a.type_id UNION SELECT c.crime_id AS 'ID злочину', c.title AS 'Назва злочину', a.affair_type AS 'Тип злочину', p.crime_role AS 'Роль злочинця', c.commit_date AS 'Дата скоєння злочину', '' AS 'Прізвище відповідального детектива', 0 AS 'Номер значка детектива' FROM Crimes c, Participants p, Affair_Types a WHERE p.crime_id = c.crime_id AND p.criminal_id = {id} AND c.detective_id IS NULL AND c.type_id = a.type_id;", PoliceCardIndex.GetSqlConnection());
+
+                    crimesTable.Clear();
+                    adapter.Fill(crimesTable);
+
+                    CrimesPerformed.ItemsSource = crimesTable.AsDataView();
+                    CrimesPerformed.Visibility = Visibility.Visible;
+                    DeleteCrime.Visibility = Visibility.Visible;
+                    EditCrime.Visibility = Visibility.Visible;
+
+                    ComboBoxRoleToExist.Text = "";
+                    ComboBoxExistingTitle.Text = "";
+                }
+            }
+            else {
+                MessageBox.Show("Введена інформація не є коректною!");
+            }
+        }
+
+        private void ComboBoxExistingTitle_LostFocus(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void ComboBoxExistingTitle_GotFocus(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void ComboBoxRoleToExist_LostFocus(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void textBoxCrimeNameNew_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            ExtensionsToCheckInput.CommonWarningWhenArrayTextChanged(textBoxCrimeNameNew);
+        }
+
+        private void ComboBoxSpecialityNew_LostFocus(object sender, RoutedEventArgs e)
+        {
+            ExtensionsToCheckInput.CommonWarningWhenTextChanged(ComboBoxSpecialityNew, true);
+            if (PoliceCardIndex.GetDetSpeciality() == ComboBoxSpecialityNew.Text.Trim())
+                checkBoxAmResponsibleToNew.Visibility = Visibility.Visible;
+            else
+            {
+                checkBoxAmResponsibleToNew.Visibility = Visibility.Hidden;
+            }
+        }
+
+        private void ComboBoxSpecialityNew_GotFocus(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void dateCrPickerNew_LostFocus(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void textBoxTimeNew_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            ExtensionsToCheckInput.CheckTime(textBoxTimeNew);
+        }
+
+        private void ComboBoxRoleNew_LostFocus(object sender, RoutedEventArgs e)
+        {
+            ExtensionsToCheckInput.CommonWarningWhenTextChanged(ComboBoxRoleNew, true);
+        }
+
+        private void checkBoxAmResponsibleToNew_Checked(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void AddCrimeNewBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (ComboBoxSpecialityNew.Background != Brushes.Salmon && ComboBoxSpecialityNew.Text.Trim() != "")
+            {
+                ExtensionsToCheckInput.InsertIfUnique(ComboBoxSpecialityNew, "Affair_Types", "affair_type");
+            }
+            int c_id;
+            string title;
+            int type_id;
+            string time;
+            string cRole;
+
+            if (IsReadyToBeAdded(textBoxCrimeNameNew, out title) &&
+                IsReadyToBeAdded(textBoxTimeNew, out time) &&
+                IsReadyToBeAdded(ComboBoxRoleNew, out cRole) &&
+                IsReadyToBeAdded(ComboBoxSpecialityNew, out type_id, "Affair_Types", "type_id", "affair_type"))
+            {
+                DateTime d = (DateTime)dateCrPickerNew.SelectedDate;
+                time += ":00.00";
+                TimeSpan t = TimeSpan.Parse(time);
+                d += t;
+                string date = d.ToString("yyyy-MM-dd HH:mm:ss.fff");
+
+                if ((bool)checkBoxAmResponsibleToNew.IsChecked && checkBoxAmResponsibleToNew.IsVisible)
+                {
+                    PoliceCardIndex.AddCrime(out c_id, type_id, title, date, PoliceCardIndex.DetectiveID);
+                }
+                else
+                {
+                    PoliceCardIndex.AddCrime(out c_id, type_id, title, date);
+                }
+
+                PoliceCardIndex.AddParticipant(id, c_id, cRole);
+
+                foreach (object el in AddNewCrime.Children)
+                {
+                    if (el is TextBox)
+                    {
+                        Clean((TextBox)el);
+                    }
+                    else if (el is ComboBox)
+                    {
+                        Clean((ComboBox)el);
+                    }
+                }
+
+                SqlDataAdapter adapter = new SqlDataAdapter($"SELECT c.crime_id AS 'ID злочину', c.title AS 'Назва злочину', a.affair_type AS 'Тип злочину', p.crime_role AS 'Роль злочинця', c.commit_date AS 'Дата скоєння злочину', d.surname AS 'Прізвище відповідального детектива', d.badge_num AS 'Номер значка детектива' FROM Crimes c, Participants p, Detectives d, Affair_Types a WHERE p.crime_id = c.crime_id AND p.criminal_id = {id} AND c.detective_id = d.detective_id AND c.type_id = a.type_id UNION SELECT c.crime_id AS 'ID злочину', c.title AS 'Назва злочину', a.affair_type AS 'Тип злочину', p.crime_role AS 'Роль злочинця', c.commit_date AS 'Дата скоєння злочину', '' AS 'Прізвище відповідального детектива', 0 AS 'Номер значка детектива' FROM Crimes c, Participants p, Affair_Types a WHERE p.crime_id = c.crime_id AND p.criminal_id = {id} AND c.detective_id IS NULL AND c.type_id = a.type_id;", PoliceCardIndex.GetSqlConnection());
+
+                crimesTable.Clear();
+                adapter.Fill(crimesTable);
+
+                CrimesPerformed.ItemsSource = crimesTable.AsDataView();
+                CrimesPerformed.Visibility = Visibility.Visible;
+                DeleteCrime.Visibility = Visibility.Visible;
+                EditCrime.Visibility = Visibility.Visible;
+            }
+
+            else
+            {
+                MessageBox.Show("Заповніть усі поля!");
+            }
+        }
+
+        //метод очистки всіх полів
+        private void Clean(ComboBox inputbox)
+        {
+            inputbox.Text = String.Empty;
+            inputbox.Background = Brushes.Transparent;
+            inputbox.ToolTip = null;
+        }
+
+        private void Clean(TextBox inputbox)
+        {
+            inputbox.Text = String.Empty;
+            inputbox.Background = Brushes.Transparent;
+            inputbox.ToolTip = null;
+        }
+
+        private bool IsReadyToBeAdded(TextBox textBox, out string value)
+        {
+            if (textBox.Background == Brushes.Transparent && textBox.Text != null && textBox.Text != "")
+            {
+                value = textBox.Text.Trim();
+                return true;
+            }
+
+            value = null;
+            return false;
+        }
+
+        private bool IsReadyToBeAdded(ComboBox comboBox, out string value)
+        {
+            if (comboBox.Background == Brushes.Transparent && comboBox.Text != null && comboBox.Text != "")
+            {
+                value = comboBox.Text.Trim();
+                return true;
+            }
+
+            value = null;
+            return false;
+        }
+
+        private bool IsReadyToBeAdded(ComboBox comboBox, out int value, string tableN, string id, string cColumn)
+        {
+            if (comboBox.Background == Brushes.Transparent && comboBox.Text != null && comboBox.Text != "")
+            {
+                //(string tableN, string tableID, string tableC, string value)
+                value = ExtensionsToCheckInput.GetIdForTextItems(tableN, id, cColumn, comboBox.Text.Trim());
+                return true;
+            }
+
+            value = 0;
+            return false;
+        }
+
+        private void AssignBtn_Click(object sender, RoutedEventArgs e)
+        {
+            int crime_num;
+            string affair_type_name;
+
+            if (textBoxAffairNumber.Text.Trim() != "" && int.TryParse(textBoxAffairNumber.Text.Trim(), out crime_num))
+            {
+                SqlDataAdapter adapter = new SqlDataAdapter($"SELECT c.crime_id, c.type_id, title, a.affair_type FROM Crimes c, Participants p, Affair_Types a WHERE detective_id IS NULL AND c.crime_id = p.crime_id AND p.criminal_id = {id} AND c.crime_id = {crime_num} AND c.type_id = a.type_id", PoliceCardIndex.GetSqlConnection());
+                DataTable crimeTable = new DataTable();
+                adapter.Fill(crimeTable);
+
+                if (crimeTable.Rows.Count > 0)
+                {
+                    affair_type_name = PoliceCardIndex.GetDetSpeciality();
+
+                    if (crimeTable.Rows[0]["affair_type"].ToString() == affair_type_name)
+                    {
+                        //оновлення детектив_айді в злочині
+                        SqlCommand commandAddDet = new SqlCommand($"UPDATE Crimes SET detective_id = {PoliceCardIndex.DetectiveID} WHERE crime_id = {crime_num};", PoliceCardIndex.GetSqlConnection());
+
+                        PoliceCardIndex.OpenConnection();
+                        commandAddDet.ExecuteNonQuery();
+                        PoliceCardIndex.CloseConnection();
+
+                        //оновлення виводу таблиці злочинів злочинця тут
+                        SqlDataAdapter adapterDet = new SqlDataAdapter($"SELECT c.crime_id AS 'ID злочину', c.title AS 'Назва злочину', a.affair_type AS 'Тип злочину', p.crime_role AS 'Роль злочинця', c.commit_date AS 'Дата скоєння злочину', d.surname AS 'Прізвище відповідального детектива', d.badge_num AS 'Номер значка детектива' FROM Crimes c, Participants p, Detectives d, Affair_Types a WHERE p.crime_id = c.crime_id AND p.criminal_id = {id} AND c.detective_id = d.detective_id AND c.type_id = a.type_id UNION SELECT c.crime_id AS 'ID злочину', c.title AS 'Назва злочину', a.affair_type AS 'Тип злочину', p.crime_role AS 'Роль злочинця', c.commit_date AS 'Дата скоєння злочину', '' AS 'Прізвище відповідального детектива', 0 AS 'Номер значка детектива' FROM Crimes c, Participants p, Affair_Types a WHERE p.crime_id = c.crime_id AND p.criminal_id = {id} AND c.detective_id IS NULL AND c.type_id = a.type_id;", PoliceCardIndex.GetSqlConnection());
+
+                        crimesTable.Clear();
+                        adapterDet.Fill(crimesTable);
+
+
+                        MessageBox.Show("Ви упішно взяли розслідування злочину `" + crimeTable.Rows[0]["title"].ToString() + "` під свою відповідальність!");
+                    }
+                    else
+                    {
+                        MessageBox.Show("Неможливо доручити вам розслідування, оскільки " + crimeTable.Rows[0]["affair_type"].ToString() + " не є вашою спеціалізацією");
+                    }
+                }
+                else {
+                    MessageBox.Show("Неможливо взяти відповідальність за цю справу\n - справу вже курує детектив\n або справи з цим номером не існує");
+                    
+                }
+
+                textBoxAffairNumber.Text = "";
+            }
+            else {
+                MessageBox.Show("Введіть номер справи!");
+            }
+        }
+
+        private void textBoxAffairNumber_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
         }
     }
 }

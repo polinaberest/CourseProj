@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:CourseProj"
         mc:Ignorable="d"
  xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        Title="Картотека Інтерполу - Перегляд та редагування особової справи" Height="750" Width="950" WindowStyle="ThreeDBorderWindow" FontFamily="Verdana" Icon="/interpollogo.png" ResizeMode="CanResize" WindowStartupLocation="Manual" WindowState="Maximized" Closing="Window_Closing">
+        Title="Картотека Інтерполу - Перегляд та редагування особової справи" Height="750" Width="950" WindowStyle="ThreeDBorderWindow" FontFamily="Verdana" Icon="/interpollogo.png" ResizeMode="CanResize" WindowStartupLocation="Manual" WindowState="Maximized" Closing="Window_Closing" Loaded="Window_Loaded">
     <ScrollViewer>
         <Grid x:Name="EditMainRoot" Background="#FF8FCDFF" MinHeight="700" MinWidth="900">
             <Border MinWidth="800" Background="White" VerticalAlignment="Center" Margin="20" Padding="20" CornerRadius="20" >
@@ -101,6 +101,103 @@
                                 </LinearGradientBrush>
                             </Button.Background>
                         </Button>
+                    </StackPanel>
+                    <StackPanel>
+                        <TextBlock x:Name="TextAffairs" Text="Інформація про cправи злочинця:"  HorizontalAlignment="Left" VerticalAlignment="Bottom" FontSize="24" Margin="0 30 0 40" FontWeight="Bold" OpacityMask="Black" Foreground="#FF00345E" />
+
+                        <DataGrid x:Name ="CrimesPerformed"  CanUserAddRows="False" Height="300" LostFocus="CrimesPerformed_LostFocus"  />
+
+                        <Button x:Name="DeleteCrime"  Click="DeleteCrime_Click" Content="Видалити злочинця з учасників" FontSize="25" MinHeight="45" MinWidth="480" MaxWidth="430" BorderBrush="#FF290000" Margin="0 20 0 0">
+                            <Button.Background>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                    <GradientStop Color="Red"/>
+                                    <GradientStop Color="#FF290000" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Button.Background>
+                        </Button>
+
+                        <Button x:Name="EditCrime"  Click="EditCrime_Click" Content="Зберегти зміни в злочині" FontSize="25" MinHeight="45" MinWidth="480" MaxWidth="430" BorderBrush="#FF31D600" Margin="0 20 0 0">
+                            <Button.Background>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                    <GradientStop Color="#FF31D600"/>
+                                    <GradientStop Color="#FF1B7800" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Button.Background>
+                        </Button>
+                        
+                        
+                        <StackPanel x:Name="AddExistingCrime" Margin="0 30">
+                            <TextBlock Text="Додати учасником в існуючий злочин:"  HorizontalAlignment="Left" VerticalAlignment="Bottom" FontSize="24" Margin="0 0 0 10" FontWeight="Bold" OpacityMask="Black" Foreground="#FF00345E"/>
+                            
+                            <ComboBox IsEditable="False" x:Name="ComboBoxExistingTitle" Style = "{StaticResource MaterialDesignFloatingHintComboBox}" materialDesign:TextFieldAssist.UnderlineBrush="#FF00345E" materialDesign:HintAssist.Foreground="#FF00345E"  materialDesign:HintAssist.Hint ="Злочин" SelectedValuePath="Content" LostFocus="ComboBoxExistingTitle_LostFocus" GotFocus="ComboBoxExistingTitle_GotFocus" Padding="20 10">
+                            </ComboBox>
+
+                            <ComboBox IsEditable="True" x:Name="ComboBoxRoleToExist" Style = "{StaticResource MaterialDesignFloatingHintComboBox}" materialDesign:TextFieldAssist.UnderlineBrush="#FF00345E" materialDesign:HintAssist.Foreground="#FF00345E"  materialDesign:HintAssist.Hint ="Роль злочинця в злочині" SelectedValuePath="Content" LostFocus="ComboBoxRoleToExist_LostFocus">
+                                <ComboBoxItem>Ініціатор</ComboBoxItem>
+                                <ComboBoxItem>Спільник</ComboBoxItem>
+                                <ComboBoxItem>Мовчазний свідок</ComboBoxItem>
+                                <ComboBoxItem>Провокатор</ComboBoxItem>
+                                <ComboBoxItem>Постачальник</ComboBoxItem>
+                            </ComboBox>
+
+                            <Button x:Name="AddToExistingCrimeBtn" Click="AddToExistingCrimeBtn_Click" Content="Додати учасником до злочину" Margin="50,10,50,5" FontSize="20" MinHeight="40" BorderBrush="#FF00345E">
+                                <Button.Background>
+                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                        <GradientStop Color="#FF0076D6"/>
+                                        <GradientStop Color="#FF0061AF" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Button.Background>
+                            </Button>
+
+                        </StackPanel>
+
+                        <StackPanel x:Name="AddNewCrime" Margin="0 30">
+                            <TextBlock Text="Додати новий злочин та злочинця учасником:"  HorizontalAlignment="Left" VerticalAlignment="Bottom" FontSize="24" Margin="0 0 0 10" FontWeight="Bold" OpacityMask="Black" Foreground="#FF00345E"/>
+                            <TextBox materialDesign:HintAssist.Hint ="Назва злочину" x:Name="textBoxCrimeNameNew" Style = "{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:TextFieldAssist.UnderlineBrush="#FF00345E" materialDesign:HintAssist.Foreground="#FF00345E" TextChanged="textBoxCrimeNameNew_TextChanged" ></TextBox>
+                            <ComboBox IsEditable="True" x:Name="ComboBoxSpecialityNew" Style = "{StaticResource MaterialDesignFloatingHintComboBox}" materialDesign:TextFieldAssist.UnderlineBrush="#FF00345E" materialDesign:HintAssist.Foreground="#FF00345E"  materialDesign:HintAssist.Hint ="Тип злочину" SelectedValuePath="Content" LostFocus="ComboBoxSpecialityNew_LostFocus" GotFocus="ComboBoxSpecialityNew_GotFocus" Padding="20 10">
+                            </ComboBox>
+                            <DatePicker  Padding="8" x:Name="dateCrPickerNew" FirstDayOfWeek="Monday" IsTodayHighlighted="False" SelectedDate="2022-01-01" DisplayDateStart="1900-01-01" DisplayDateEnd="2022-12-15" Foreground="#FF00345E" LostFocus="dateCrPickerNew_LostFocus" >
+                            </DatePicker>
+                            <TextBox materialDesign:HintAssist.Hint ="Час скоєння злочину (у форматі ГГ:ХХ)" x:Name="textBoxTimeNew" Style = "{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:TextFieldAssist.UnderlineBrush="#FF00345E" materialDesign:HintAssist.Foreground="#FF00345E" TextChanged="textBoxTimeNew_TextChanged" ></TextBox>
+                            <ComboBox IsEditable="True" x:Name="ComboBoxRoleNew" Style = "{StaticResource MaterialDesignFloatingHintComboBox}" materialDesign:TextFieldAssist.UnderlineBrush="#FF00345E" materialDesign:HintAssist.Foreground="#FF00345E"  materialDesign:HintAssist.Hint ="Роль злочинця в злочині" SelectedValuePath="Content" LostFocus="ComboBoxRoleNew_LostFocus">
+                                <ComboBoxItem>Ініціатор</ComboBoxItem>
+                                <ComboBoxItem>Спільник</ComboBoxItem>
+                                <ComboBoxItem>Мовчазний свідок</ComboBoxItem>
+                                <ComboBoxItem>Провокатор</ComboBoxItem>
+                                <ComboBoxItem>Постачальник</ComboBoxItem>
+                            </ComboBox>
+
+                            <CheckBox x:Name="checkBoxAmResponsibleToNew" Margin="0 10" Checked="checkBoxAmResponsibleToNew_Checked" Background="#FF0076D6" BorderBrush="#FF00457D" >Я буду нести відповідальність за розслідування цього злочину</CheckBox>
+
+
+                            <Button x:Name="AddCrimeNewBtn" Click="AddCrimeNewBtn_Click" Content="Додати відомості про новий злочин" Margin="50,10,50,5" FontSize="20" MinHeight="40" BorderBrush="#FF00345E">
+                                <Button.Background>
+                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                        <GradientStop Color="#FF0076D6"/>
+                                        <GradientStop Color="#FF0061AF" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Button.Background>
+                            </Button>
+
+                        </StackPanel>
+
+                        <StackPanel x:Name="AssignAffair" Margin="0 30" Orientation="Horizontal">
+                            <TextBlock Text="Хочу стати відповідальним за розслідування злочину:"  HorizontalAlignment="Left" VerticalAlignment="Bottom" FontSize="24" Margin="0 0 0 10" FontWeight="Bold" OpacityMask="Black" Foreground="#FF00345E"/>
+                            <TextBox materialDesign:HintAssist.Hint ="Номер злочину"  x:Name="textBoxAffairNumber" Style = "{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:TextFieldAssist.UnderlineBrush="#FF00345E"  materialDesign:HintAssist.Foreground="#FF00345E" TextChanged="textBoxAffairNumber_TextChanged" Margin="0,0,8,0" ></TextBox>
+
+                            <Button x:Name="AssignBtn" Click="AssignBtn_Click" Content="Стати відповідальним" Margin="50,10,50,5" FontSize="20" MinHeight="40" BorderBrush="#FF00345E">
+                                <Button.Background>
+                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                        <GradientStop Color="#FF0076D6"/>
+                                        <GradientStop Color="#FF0061AF" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Button.Background>
+                            </Button>
+
+                        </StackPanel>
+
+
+
                     </StackPanel>
                 </StackPanel>
             </Border>

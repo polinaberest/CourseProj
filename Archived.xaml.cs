@@ -151,6 +151,104 @@ namespace CourseProj
             return description;
         }
 
+        private void ShowDetSpecializations()
+        {
+            List<int> crIDs = new List<int>();
+            int type_id = 0;
+            SqlDataAdapter adapterA = new SqlDataAdapter($"SELECT type_id FROM Detectives WHERE detective_id = {PoliceCardIndex.DetectiveID};", PoliceCardIndex.GetSqlConnection());
+            DataTable tableAffairID = new DataTable();
+            adapterA.Fill(tableAffairID);
+            var di = tableAffairID.Rows[0]["type_id"];
+            try
+            {
+                type_id = (int)di;
+            }
+            catch (Exception ex)
+            {
+                type_id = 0;
+                MessageBox.Show("Неможливо визначити вашу спеціалізацію");
+            }
+
+            SqlDataAdapter adapter = new SqlDataAdapter($"SELECT criminal_id FROM Archive WHERE type_id = {type_id};", PoliceCardIndex.GetSqlConnection());
+            DataTable tableID = new DataTable();
+            adapter.Fill(tableID);
+
+            for (int f = 0; f < tableID.Rows.Count; f++)
+            {
+                crIDs.Add((int)tableID.Rows[f]["criminal_id"]);
+            }
+
+            crIDs = crIDs.Distinct().ToList();
+
+            if (crIDs.Count < 1)
+                return;
+
+            string iQuery;
+            string idss = "";
+
+            foreach (int k in crIDs)
+                {
+                    if (k == crIDs.Last())
+                    {
+                        idss += k.ToString();
+                        break;
+                    }
+                    idss += k.ToString() + ", ";
+                }
+
+             iQuery = $"SELECT c.criminal_id, CONCAT(first_name, ' ', surname, ' (', nickname, ')  ', ' Злочинів: ') as description, COUNT(p.criminal_id) as count ,  ' Архівовано: ' as date_text,  c.archivation_date as date INTO FoundA  FROM Criminals c, Participants p WHERE c.criminal_id = p.criminal_id AND c.criminal_id IN ({idss}) GROUP BY c.criminal_id, first_name, surname, nickname, c.archivation_date UNION SELECT c.criminal_id, CONCAT(first_name, ' ', surname, ' (', nickname, ')  ', '  Злочинів: ') as description, 0 as count , '   Архівовано: ' as date_text,  c.archivation_date as date FROM Criminals c  WHERE c.criminal_id NOT IN (SELECT DISTINCT criminal_id FROM Participants) AND c.criminal_id IN ({idss});";
+            
+
+            int i = 1;
+
+            //зачистка з попереднього разу
+            foreach (object el in ArchivedList.Children)
+            {
+                if (el is Button)
+                {
+                    ((Button)el).Visibility = Visibility.Collapsed;
+                }
+            }
+
+            SqlCommand command = new SqlCommand(iQuery, PoliceCardIndex.GetSqlConnection());
+            SqlCommand delCommand = new SqlCommand("DROP TABLE FoundA;", PoliceCardIndex.GetSqlConnection());
+
+
+            PoliceCardIndex.OpenConnection();
+            delCommand.ExecuteNonQuery();
+            command.ExecuteNonQuery();
+            PoliceCardIndex.CloseConnection();
+
+            SqlDataAdapter adapterF = new SqlDataAdapter($"SELECT * FROM FoundA;", PoliceCardIndex.GetSqlConnection());
+            DataTable table = new DataTable();
+            adapterF.Fill(table);
+
+            List<int> idsSorted = new List<int>();
+
+            for (int k = 0; k < table.Rows.Count; k++)
+            {
+                idsSorted.Add((int)table.Rows[k]["criminal_id"]);
+            }
+
+
+            foreach (int idx in idsSorted)
+            {
+                Button button = new Button();
+                button.Content = i + ". " + ShowDetails(idx);
+                button.FontSize = 20;
+                button.HorizontalContentAlignment = HorizontalAlignment.Left;
+                button.Margin = new Thickness(3);
+                Color color = Color.FromRgb(255, 165, 0);
+                button.Background = new SolidColorBrush(color);
+                button.MaxWidth = 1100;
+                button.Tag = idx;
+                button.ToolTip = "Переглянути, редагувати, архівувати, видалити анкету - натисніть ліву клавішу миші.";
+                button.Click += Button_Click;
+                ArchivedList.Children.Add(button);
+                i++;
+            }
+        }
+
         // обробники подій
         private void BackInMain_Click(object sender, RoutedEventArgs e)
         {
@@ -161,17 +259,15 @@ namespace CourseProj
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            int count = (int)((Control)sender).Tag;
+            int id = (int)((Control)sender).Tag;
             MessageBoxResult result = MessageBox.Show(
-                "Ви впевнені, що хочете перемістити анкету з архіву до основної картотеки ?\n" +
-                "Натискаючи ОК, Ви підтверджуєте, що злочинець більше не належить до тих, хто виправився", 
+                "Ви впевнені, що хочете перемістити анкету з архіву до основної картотеки ?\n",
                 "Підтверждення деархівації", MessageBoxButton.OKCancel);
             
             if (result == MessageBoxResult.OK)
             {
-               // PoliceCardIndex.Unarchive(id);
+                PoliceCardIndex.Unarchive(id);
                 MessageBox.Show("Справу деархівовано");
-                PoliceCardIndex.SortByNames(PoliceCardIndex.Archived);
                 Archived arch = new Archived();
                 arch.Show();
                 this.Close();
@@ -186,7 +282,22 @@ namespace CourseProj
 
         private void bySpecialization_Click(object sender, RoutedEventArgs e)
         {
-
+            
+            specClick += 1;
+            if (specClick % 2 == 1)
+            {
+                byDate.Visibility = Visibility.Hidden;
+                byName.Visibility = Visibility.Hidden;
+                bySpecialization.Content = "Усі";
+                ShowDetSpecializations();
+            }
+            else
+            {
+                byName.Visibility = Visibility.Visible;
+                byDate.Visibility = Visibility.Visible;
+                bySpecialization.Content = "Моя спеціалізація";
+                DisplayArchive("description");
+            }
         }
 
         private void byName_Click(object sender, RoutedEventArgs e)

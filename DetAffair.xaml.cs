@@ -31,6 +31,7 @@ namespace CourseProj
         string department_name;
         string affair_type;
 
+
         public DetAffair()
         {
             InitializeComponent();
@@ -171,6 +172,16 @@ namespace CourseProj
 
             value = null;
             return false;
+        }
+
+        private void PrintPersonalInfo_Click(object sender, RoutedEventArgs e)
+        {
+            PoliceCardIndex.PrintDetectiveInfo();
+        }
+
+        private void CrimesInfo_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

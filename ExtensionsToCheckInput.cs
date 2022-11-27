@@ -482,6 +482,30 @@ namespace CourseProj
             }
         }
 
+        public static void InsertIfUnique(string text, string tableN, string tableC)
+        {
+            bool isUnique = true;
+            SqlDataAdapter adapter = new SqlDataAdapter($"SELECT {tableC} FROM {tableN};", PoliceCardIndex.GetSqlConnection());
+            DataTable table = new DataTable();
+            adapter.Fill(table);
+            for (int i = 0; i < table.Rows.Count; i++)
+            {
+                if (table.Rows[i][tableC].ToString() == text.Trim())
+                {
+                    isUnique = false;
+                    break;
+                }
+            }
+
+            if (isUnique)
+            {
+                SqlCommand command = new SqlCommand($"INSERT INTO {tableN}({tableC}) VALUES('" + text + "');", PoliceCardIndex.GetSqlConnection());
+                PoliceCardIndex.OpenConnection();
+                command.ExecuteNonQuery();
+                PoliceCardIndex.CloseConnection();
+            }
+        }
+
         public static int GetIdForTextItems(string tableN, string tableID, string tableC, string value)
         {
             SqlDataAdapter adapter = new SqlDataAdapter($"SELECT {tableID} FROM {tableN} WHERE {tableC} = '{value}';", PoliceCardIndex.GetSqlConnection());

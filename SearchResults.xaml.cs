@@ -48,7 +48,7 @@ namespace CourseProj
                 ids += i.ToString() + ", ";
             }
 
-            initQuery = $"SELECT c.criminal_id, CONCAT(first_name, ' ', surname, ' (', nickname, ')  ', ' Злочинів: ') as description, COUNT(p.criminal_id) as count ,  ' Анкету додано: ' as date_text,  c.add_date as date INTO Found  FROM Criminals c, Participants p WHERE c.criminal_id = p.criminal_id AND c.criminal_id IN ({ids}) GROUP BY c.criminal_id, first_name, surname, nickname, c.add_date UNION SELECT c.criminal_id, CONCAT(first_name, ' ', surname, ' (', nickname, ')  ', '  Злочинів: ') as description, 0 as count , '   Анкету додано: ' as date_text,  c.add_date as date FROM Criminals c  WHERE c.criminal_id NOT IN (SELECT DISTINCT criminal_id FROM Participants) AND c.criminal_id IN ({ids});";
+             initQuery = $"SELECT c.criminal_id, CONCAT(first_name, ' ', surname, ' (', nickname, ')  ', ' Злочинів: ') as description, COUNT(p.criminal_id) as count ,  ' Анкету додано: ' as date_text,  c.add_date as date INTO Found  FROM Criminals c, Participants p WHERE c.criminal_id = p.criminal_id AND c.criminal_id IN ({ids}) GROUP BY c.criminal_id, first_name, surname, nickname, c.add_date UNION SELECT c.criminal_id, CONCAT(first_name, ' ', surname, ' (', nickname, ')  ', '  Злочинів: ') as description, 0 as count , '   Анкету додано: ' as date_text,  c.add_date as date FROM Criminals c  WHERE c.criminal_id NOT IN (SELECT DISTINCT criminal_id FROM Participants) AND c.criminal_id IN ({ids});";
 
             DisplayFound("description"); 
         }

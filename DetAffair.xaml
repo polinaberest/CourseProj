@@ -100,6 +100,24 @@
                         </Button.Background>
                     </Button>
 
+
+                    <TextBlock x:Name="HintText3" Text="Відомості ведених справ:"  HorizontalAlignment="Center" VerticalAlignment="Bottom" FontSize="20" Margin="0 20 0 20" FontWeight="Bold" OpacityMask="Black" Foreground="#0076D6"/>
+                    <Button x:Name="CrimesInfo"  Content="Відомості ведених справ" Margin="20,5,20,15" FontSize="20" MinHeight="40" BorderBrush="#FF1B7800" Click="CrimesInfo_Click" Width="400" Cursor="Hand" >
+                        <Button.Background>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="#FF3AFF00"/>
+                                <GradientStop Color="#FF27AE00" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Button.Background>
+                    </Button>
+                    <Button x:Name="PrintPersonalInfo"  Content="Роздрукувати особові відомості" Margin="20,5,20,15" FontSize="20" MinHeight="40" BorderBrush="#FF1B7800" Click="PrintPersonalInfo_Click" Width="400" Cursor="Hand" >
+                        <Button.Background>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="#FF31D600"/>
+                                <GradientStop Color="#FF1B7800" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Button.Background>
+                    </Button>
                 </StackPanel>
             </Border>
         </Grid>

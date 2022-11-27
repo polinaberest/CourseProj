@@ -295,7 +295,7 @@ namespace CourseProj
 
         private bool IsReadyToBeAdded(ComboBox comboBox, out int value, string tableN, string id, string cColumn)
         {
-            if ((bool)checkBoxIsInBand.IsChecked == false)
+            if ((bool)checkBoxIsInBand.IsChecked == false && tableN == "Bands")
             {
                 value = -1;
                 return true;

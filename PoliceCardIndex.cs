@@ -594,21 +594,17 @@ namespace CourseProj
         }
 
         // метод видалення анкети
-        public static void DeleteAffair(Criminal processed)
+        public static void DeleteAffair(int id)
         {
-            CriminalsFoundByRequest.Remove(processed);
-            Criminals.Remove(processed);
+            IdxsFoundByRequest.Remove(id);
 
-            if (processed.IsInBand)
-            {
-                foreach (var band in AllBands)
-                {
-                    if (band.BandName == processed.BandName)
-                    {
-                        band.members.Remove(processed);
-                    }
-                }
-            }
+            SqlCommand commandDelP = new SqlCommand($"DELETE FROM Participants WHERE criminal_id = {id};", PoliceCardIndex.GetSqlConnection());
+            SqlCommand commandDelC = new SqlCommand($"DELETE FROM Criminals WHERE criminal_id = {id};", PoliceCardIndex.GetSqlConnection());
+
+            PoliceCardIndex.OpenConnection();
+            commandDelP.ExecuteNonQuery();
+            commandDelC.ExecuteNonQuery();
+            PoliceCardIndex.CloseConnection();
         }
 
         // метод архівування анкети
@@ -626,7 +622,7 @@ namespace CourseProj
         // метод розархівування справи
         public static void Unarchive(int id)
         {
-            SqlCommand command = new SqlCommand($"UPDATE Criminals SET is_archived='{false}', archivation_date = NULL' WHERE criminal_id = {id};", PoliceCardIndex.GetSqlConnection());
+            SqlCommand command = new SqlCommand($"UPDATE Criminals SET is_archived='{false}', archivation_date = NULL WHERE criminal_id = {id};", PoliceCardIndex.GetSqlConnection());
             PoliceCardIndex.OpenConnection();
             command.ExecuteNonQuery();
             PoliceCardIndex.CloseConnection();
@@ -736,6 +732,140 @@ namespace CourseProj
                 writer.Write(header + str + footer);
                 writer.Close();
             }
+        }
+
+        public static void PrintDetectiveInfo()
+        {
+            
+            string path = "";
+            string header = "\n\t\t\t\t\tОСОБОВА СПРАВА ДЕТЕКТИВА ІНТЕРПОЛУ\n\n";
+            string str = "";
+            string crimes = "";
+            string dep = "";
+            string footer = "\n\n\t\t\t\tВідомості актуальні на  " + DateTime.Now;
+            var dialog = new Microsoft.Win32.SaveFileDialog();
+
+            dialog.FileName = "detective_pers_affair";
+            dialog.DefaultExt = ".pdf";
+            dialog.Filter = "Text documents (.txt)|*.txt";
+
+            bool? result = dialog.ShowDialog();
+
+            if (result == true)
+            {
+                path = dialog.FileName;
+            }
+
+            SqlDataAdapter adapter = new SqlDataAdapter($"SELECT d.*, dep.department_name, a.affair_type, dep.post_index FROM Detectives d, Departments dep, Affair_Types a WHERE detective_id = {PoliceCardIndex.DetectiveID} AND d.department_id = dep.department_id AND d.type_id = a.type_id; ", PoliceCardIndex.GetSqlConnection());
+            DataTable tableDet = new DataTable();
+            adapter.Fill(tableDet);
+
+            int department_id;
+            int type_id;
+            string department_name = "";
+            string affair_type = "";
+            int p_idx;
+            string post_index = "-";
+
+            var di = tableDet.Rows[0]["department_id"];
+            try
+            {
+                department_id = (int)di;
+            }
+            catch (Exception ex)
+            {
+                department_id = 0;
+            }
+
+            var dt = tableDet.Rows[0]["type_id"];
+            try
+            {
+                type_id = (int)dt;
+            }
+            catch (Exception ex)
+            {
+                type_id = 0;
+            }
+
+            var pi = tableDet.Rows[0]["post_index"];
+            try
+            {
+                p_idx = (int)pi;
+            }
+            catch (Exception ex)
+            {
+                p_idx = 0;
+            }
+
+
+            if (department_id != 0)
+            {
+                department_name = tableDet.Rows[0]["department_name"].ToString();
+            }
+
+            if (department_name.Length < 1 || department_id == 0)
+                department_name = "-";
+
+
+            if (type_id != 0)
+            {
+                affair_type = tableDet.Rows[0]["affair_type"].ToString();
+            }
+
+            if (affair_type.Length < 1 || type_id == 0)
+                affair_type = "-";
+
+            if (p_idx != 0)
+            {
+                post_index = tableDet.Rows[0]["post_index"].ToString();
+            }
+
+            if (post_index.Length < 1 || p_idx == 0)
+                post_index = "-";
+
+
+            str += "\n\n\tДетектив "
+                + tableDet.Rows[0]["first_name"] + " "
+                + tableDet.Rows[0]["surname"] 
+                + "\n  -- Особисті дані --" 
+                + "\nНомер поліцейського значка: " + tableDet.Rows[0]["badge_num"].ToString()
+                + "\nВідділ Інтерполу: " + department_name
+                + "\tПоштовий індекс відділу: " + post_index
+                + "\nСпеціалізація детектива: " + affair_type
+                + "\n\nДата реєстрації в системі Інтерполу: " + ((DateTime)tableDet.Rows[0]["reg_date"]).ToString("dd.MM.yyyy")
+                + "\nОстанній вхід до системи: " + ((DateTime)tableDet.Rows[0]["last_visit_date"]).ToString("dd.MM.yyyy hh:mm:ss")
+                + "\n\n\n  -- Відомості про злочини --";
+
+
+            SqlDataAdapter adapterCr = new SqlDataAdapter($"SELECT c.*, COUNT(p.participant_id) as p_count FROM Crimes c, Participants p WHERE detective_id = {PoliceCardIndex.DetectiveID} AND c.crime_id = p.crime_id GROUP BY c.crime_id, type_id, title, commit_date, detective_id, is_unseen; ", PoliceCardIndex.GetSqlConnection());
+            DataTable tableCr = new DataTable();
+            adapterCr.Fill(tableCr);
+
+            foreach (DataRow dr in tableCr.Rows)
+            {
+                if (Convert.ToString(dr["title"]) != "")
+                {
+                    crimes += "\nНазва злочину: " + dr["title"];
+                }
+
+                crimes += "\nТип злочину: " + affair_type;
+                
+                if (Convert.ToString(dr["p_count"]) != "")
+                {
+                    crimes += "\nКількість виявлених учасників: " + dr["p_count"];
+                }
+                if (Convert.ToString(dr["commit_date"]) != "")
+                {
+                    crimes += "\nДата та час скоєння злочину: " + ((DateTime)dr["commit_date"]).ToString("dd.MM.yyyy  hh:mm") + "\n\n";
+                }
+            }
+
+            using (StreamWriter writer = new StreamWriter(path, false))
+            {
+                writer.Write(header + str + crimes + footer);
+                writer.Close();
+            }
+
         }
 
     }
