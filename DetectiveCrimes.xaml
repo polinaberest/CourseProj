@@ -1,0 +1,72 @@
+﻿<Window x:Class="CourseProj.DetectiveCrimes"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CourseProj"
+        mc:Ignorable="d"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        Title="Картотека Інтерполу - Розслідувані мною злочини" Height="750" Width="950" WindowStyle="ThreeDBorderWindow" FontFamily="Verdana" Icon="/interpollogo.png" ResizeMode="CanResize" WindowStartupLocation="Manual" WindowState="Maximized"  Loaded="Window_Loaded">
+    <ScrollViewer>
+        <Grid x:Name="MainRoot" Background="#FF40AAFF" MinHeight="700" MinWidth="900">
+            <Border MinWidth="800" Background="White" VerticalAlignment="Center" Margin="20" Padding="20" CornerRadius="20" >
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="30" Color="#FF00355F" ShadowDepth="0"></DropShadowEffect>
+                </Border.Effect>
+                <StackPanel x:Name="Form">
+
+                    <Button x:Name="BackInDetAffair" Width="30" Height="20" Click="BackInDetAffair_Click" Cursor="Hand">
+                        <Button.Template>
+                            <ControlTemplate>
+                                <Grid>
+                                    <Grid.Background>
+                                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                            <GradientStop Color="#FF00345E"/>
+                                            <GradientStop Color="White" Offset="1"/>
+                                        </LinearGradientBrush>
+                                    </Grid.Background>
+                                    <Line Stroke="White" StrokeThickness="2" X1="2" Y1="10" X2="28" Y2="10"/>
+                                    <Line Stroke="White" StrokeThickness="2" X1="2" Y1="10" X2="11" Y2="5"/>
+                                    <Line Stroke="White" StrokeThickness="2" X1="2" Y1="10" X2="11" Y2="15"/>
+                                </Grid>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+
+                    <TextBlock x:Name="TopText" Text="Розслідувані мною злочини:"  HorizontalAlignment="Left" VerticalAlignment="Bottom" FontSize="24" Margin="0 10 0 40" FontWeight="Bold" OpacityMask="Black" Foreground="#FF00345E" />
+
+                    <TextBlock x:Name="NothingText" Text="Наразі ви не відповідаєте за розслідування злочинів."  HorizontalAlignment="Left" VerticalAlignment="Bottom" FontSize="24" Margin="0 10 0 40" FontWeight="Bold" OpacityMask="Black" Foreground="#FF00345E" />
+
+                    <DataGrid x:Name ="Crimes"  Height="250" LostFocus="Crimes_LostFocus" />
+
+                    <Button x:Name="Delete" Click="Delete_Click" Content="Видалити обраний злочин" FontSize="25" MinHeight="45" MinWidth="430" MaxWidth="430" BorderBrush="#FF290000" Margin="0 20 0 0">
+                        <Button.Background>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="Red"/>
+                                <GradientStop Color="#FF290000" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Button.Background>
+                    </Button>
+
+                    <Button x:Name="Dismiss" Click="Dismiss_Click" Content="Відмовитись від ведення" FontSize="25" MinHeight="45" MinWidth="430" MaxWidth="430" BorderBrush="#FF290000" Margin="0 20 0 0">
+                        <Button.Background>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="#FFFF9300"/>
+                                <GradientStop Color="#FF874900" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Button.Background>
+                    </Button>
+                    
+                    <Button x:Name="Save" Click="Save_Click" Content="Зберегти зміни в злочині" FontSize="25" MinHeight="45" MinWidth="430" MaxWidth="430" BorderBrush="#FF045100" Margin="0 20 0 0">
+                        <Button.Background>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="#FF09B200"/>
+                                <GradientStop Color="#FF045100" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Button.Background>
+                    </Button>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </ScrollViewer>
+</Window>

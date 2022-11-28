@@ -181,7 +181,9 @@ namespace CourseProj
 
         private void CrimesInfo_Click(object sender, RoutedEventArgs e)
         {
-
+            DetectiveCrimes dCr = new DetectiveCrimes();
+            dCr.Show();
+            this.Close();
         }
     }
 }
