@@ -17,7 +17,7 @@ namespace CourseProj
         {
             BandName = bandName;
             this.members = members;
-            PoliceCardIndex.AddBand(this);
+            //PoliceCardIndex.AddBand(this);
         }
 
         // назва угруповання

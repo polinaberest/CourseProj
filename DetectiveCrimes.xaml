@@ -39,6 +39,17 @@
 
                     <DataGrid x:Name ="Crimes"  Height="250" LostFocus="Crimes_LostFocus" />
 
+                    <Button x:Name="See" Click="See_Click" Content="Переглянути учасників" FontSize="25" MinHeight="45" MinWidth="430" MaxWidth="430" BorderBrush="#FFEFFF3C" Margin="0 20 0 20">
+                        <Button.Background>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="#FFE3FF15"/> 
+                                <GradientStop Color="#FF045100" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Button.Background>
+                    </Button>
+
+                    <DataGrid x:Name ="participantsGrid"  Height="250" IsReadOnly="True"/>
+
                     <Button x:Name="Delete" Click="Delete_Click" Content="Видалити обраний злочин" FontSize="25" MinHeight="45" MinWidth="430" MaxWidth="430" BorderBrush="#FF290000" Margin="0 20 0 0">
                         <Button.Background>
                             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">

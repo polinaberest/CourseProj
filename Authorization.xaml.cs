@@ -49,7 +49,7 @@ namespace CourseProj
                 command.ExecuteNonQuery();
                 PoliceCardIndex.CloseConnection();
 
-                MessageBox.Show(PoliceCardIndex.DetectiveID.ToString());
+               // MessageBox.Show(PoliceCardIndex.DetectiveID.ToString());
                 MainWindow main = new MainWindow();
                 main.Show();
                 this.Close();

@@ -44,6 +44,7 @@ namespace CourseProj
             RegDate.Text += reg_date.ToString();
             LastDate.Text += last_visit_date.ToString();
 
+            PoliceCardIndex.AlertAboutNewAssignments(); 
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -74,6 +75,13 @@ namespace CourseProj
         private void ChangeSpecialities_Click(object sender, RoutedEventArgs e)
         {
             EditTables editTables = new EditTables("spec");
+            editTables.Show();
+            this.Close();
+        }
+
+        private void ChangeBands_Click(object sender, RoutedEventArgs e)
+        {
+            EditTables editTables = new EditTables("bands");
             editTables.Show();
             this.Close();
         }
@@ -185,5 +193,14 @@ namespace CourseProj
             dCr.Show();
             this.Close();
         }
+
+        private void DoSQL_Click(object sender, RoutedEventArgs e)
+        {
+            SQLquery q = new SQLquery();
+            q.Show();
+            this.Close();
+        }
+
+
     }
 }

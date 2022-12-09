@@ -29,11 +29,6 @@ namespace CourseProj
             initializer += 1;
 
             InitializeComponent();
-            if (initializer == 1)
-            {
-                //PoliceCardIndex.ReadFromFile("criminals.txt");
-                //PoliceCardIndex.ReadFromFile("archived.txt");
-            }
             if (!PoliceCardIndex.IsDetective)
             {
                 WarningTextBox.Visibility = Visibility.Visible;
@@ -43,8 +38,6 @@ namespace CourseProj
                 PersonalInfo.Visibility = Visibility.Hidden;
                 StatInfo.Visibility = Visibility.Hidden;
             }
-            PoliceCardIndex.SortByNames(PoliceCardIndex.Criminals);
-            PoliceCardIndex.SortByNames(PoliceCardIndex.Archived);
         }
 
         private void EditAffair_Click(object sender, RoutedEventArgs e)

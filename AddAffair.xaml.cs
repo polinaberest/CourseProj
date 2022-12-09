@@ -384,6 +384,7 @@ namespace CourseProj
                 else
                 {
                     PoliceCardIndex.AddCrime(out crime_id, type_id, title, date);
+                    PoliceCardIndex.AutoAssign(crime_id);
                 }
 
                 PoliceCardIndex.AddParticipant(id, crime_id, crimeRole);

@@ -181,7 +181,16 @@ namespace CourseProj
             crIDs = crIDs.Distinct().ToList();
 
             if (crIDs.Count < 1)
+            {
+                foreach (object el in ArchivedList.Children)
+                {
+                    if (el is Button)
+                    {
+                        ((Button)el).Visibility = Visibility.Collapsed;
+                    }
+                }
                 return;
+            }
 
             string iQuery;
             string idss = "";

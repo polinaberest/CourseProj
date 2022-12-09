@@ -514,6 +514,7 @@ namespace CourseProj
                 IsReadyToBeAdded(ComboBoxRoleNew, out cRole) &&
                 IsReadyToBeAdded(ComboBoxSpecialityNew, out type_id, "Affair_Types", "type_id", "affair_type"))
             {
+                title = title.Replace("'", "''");
                 DateTime d = (DateTime)dateCrPickerNew.SelectedDate;
                 time += ":00.00";
                 TimeSpan t = TimeSpan.Parse(time);
@@ -527,6 +528,7 @@ namespace CourseProj
                 else
                 {
                     PoliceCardIndex.AddCrime(out c_id, type_id, title, date);
+                    PoliceCardIndex.AutoAssign(c_id);
                 }
 
                 PoliceCardIndex.AddParticipant(id, c_id, cRole);

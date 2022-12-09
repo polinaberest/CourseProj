@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CourseProj"
+        xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         mc:Ignorable="d"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         Title="Картотека Інтерполу - Статистика картотеки" Height="750" Width="980" WindowStyle="ThreeDBorderWindow" FontFamily="Verdana" Icon="/interpollogo.png" ResizeMode="CanResize" WindowStartupLocation="Manual" WindowState="Maximized"  Loaded="Window_Loaded">
@@ -45,6 +46,22 @@
                             </LinearGradientBrush>
                         </Button.Background>
                     </Button>
+
+                    <TextBlock x:Name="TopTextTop3Dets" Text="Топ-3 відділи за кількістю детективів та розслідуваних злочинів:"  HorizontalAlignment="Left" VerticalAlignment="Bottom" FontSize="24" Margin="0 50 0 40" FontWeight="Bold" OpacityMask="Black" Foreground="#FF00345E" />
+
+                    <DataGrid x:Name ="Det_Top3"  Height="220" IsReadOnly="True" HorizontalAlignment="Center" MinWidth="900" Width="950"/>
+
+                    <TextBlock x:Name="TopTextDiagram" Text="Діаграма розподілу скоєних злочинів за типами:"  HorizontalAlignment="Left" VerticalAlignment="Bottom" FontSize="24" Margin="0 50 0 40" FontWeight="Bold" OpacityMask="Black" Foreground="#FF00345E" />
+
+
+                    <lvc:PieChart x:Name="chartAffairTypes" LegendLocation="Bottom" DataClick="Chart_OnDataClick"  Width ="600" Height="600" Hoverable="False" DataTooltip="{x:Null}" FontSize="18" Series="{Binding Series}">
+
+                    </lvc:PieChart>
+
+
+                    <TextBlock x:Name="TopTextArchiveStats" Text="Продуктивність роботи Інтерполу (упіймані за місяць злочинці):"  HorizontalAlignment="Left" VerticalAlignment="Bottom" FontSize="24" Margin="0 50 0 40" FontWeight="Bold" OpacityMask="Black" Foreground="#FF00345E" />
+
+                    <DataGrid x:Name ="Archive_Stats"  Height="220" IsReadOnly="True" HorizontalAlignment="Center" MinWidth="900" Width="1100"/>
 
                 </StackPanel>
             </Border>

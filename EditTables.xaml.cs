@@ -45,11 +45,11 @@ namespace CourseProj
                 
                 adapter.Fill(table);
                 
-                Departments.ItemsSource = table.AsDataView();
+               /* Departments.ItemsSource = table.AsDataView();
                 Departments.AutoGenerateColumns = true;
 
                 Departments.Columns[0].IsReadOnly = true;
-                Departments.CanUserDeleteRows = true;
+                Departments.CanUserDeleteRows = true;*/
             }
             else if (t == "spec")
             {
@@ -57,12 +57,24 @@ namespace CourseProj
                 SqlDataAdapter adapter = new SqlDataAdapter($"SELECT type_id AS 'ID', affair_type AS 'Тип злочину-звинувачення' FROM Affair_Types", PoliceCardIndex.GetSqlConnection());
                 adapter.Fill(table);
 
-                Departments.ItemsSource = table.AsDataView();
+                /*Departments.ItemsSource = table.AsDataView();
                 Departments.AutoGenerateColumns = true;
+
                 Departments.Columns[0].IsReadOnly = true;
-                Departments.CanUserDeleteRows = true;
+                Departments.CanUserDeleteRows = true;*/
+            }
+            if (t == "bands")
+            {
+                SqlDataAdapter adapter = new SqlDataAdapter($"SELECT band_id AS 'ID', band_name AS 'Назва злочинного угруповання' FROM Bands", PoliceCardIndex.GetSqlConnection());
+
+                adapter.Fill(table);
             }
 
+            Departments.ItemsSource = table.AsDataView();
+            Departments.AutoGenerateColumns = true;
+
+            Departments.Columns[0].IsReadOnly = true;
+            Departments.CanUserDeleteRows = true;
         }
 
         private void Save_Click(object sender, RoutedEventArgs e) //add
@@ -134,13 +146,46 @@ namespace CourseProj
                     Departments.ItemsSource = table.AsDataView();
                 }
             }
+            else if (t == "bands")
+            {
+                string query = "INSERT INTO Bands(band_name) VALUES ";
+
+                for (int i = 0; i < Departments.Items.Count; i++)
+                {
+                    DataRowView item = Departments.Items[i] as DataRowView;
+                    if (item == null)
+                    {
+                        query = query.Remove(query.Length - 2);
+                        break;
+                    }
+
+                    if ((item.Row.ItemArray[0] == null || Convert.ToString(item.Row.ItemArray[0]) == "") && Convert.ToString(item.Row.ItemArray[1]) != "")
+                    {
+                        count = count + 1;
+                        query += $"('{(string)item.Row.ItemArray[1]}'), ";
+                    }
+
+                }
+                if (count > 0)
+                {
+                    SqlCommand command = new SqlCommand(query, PoliceCardIndex.GetSqlConnection());
+                    PoliceCardIndex.OpenConnection();
+                    command.ExecuteNonQuery();
+                    PoliceCardIndex.CloseConnection();
+
+                    table.Clear();
+                    SqlDataAdapter adapter = new SqlDataAdapter($"SELECT band_id AS 'ID', band_name AS 'Назва злочинного угруповання' FROM Bands", PoliceCardIndex.GetSqlConnection());
+                    adapter.Fill(table);
+                    Departments.ItemsSource = table.AsDataView();
+                }
+            }
 
         }
 
         private void Delete_Click(object sender, RoutedEventArgs e)
         {
             var idx = Departments.SelectedIndex;
-
+           
            int id = (int)table.Rows[idx]["ID"];
             if (t == "dep")
             {
@@ -168,7 +213,21 @@ namespace CourseProj
                 table.Rows[idx].Delete();
                 Departments.ItemsSource = table.AsDataView();
             }
+            else if (t == "bands")
+            {
+                SqlCommand command = new SqlCommand($"UPDATE Criminals SET is_in_band = '{false}' WHERE band_id = {id};", PoliceCardIndex.GetSqlConnection());
+                SqlCommand commandID = new SqlCommand($"UPDATE Criminals SET band_id = NULL WHERE band_id = {id};", PoliceCardIndex.GetSqlConnection());
+                PoliceCardIndex.OpenConnection();
+                command.ExecuteNonQuery();
+                commandID.ExecuteNonQuery();
 
+                command = new SqlCommand($"DELETE FROM Bands WHERE band_id = {id};", PoliceCardIndex.GetSqlConnection());
+                command.ExecuteNonQuery();
+                PoliceCardIndex.CloseConnection();
+
+                table.Rows[idx].Delete();
+                Departments.ItemsSource = table.AsDataView();
+            }
         }
 
 
@@ -223,6 +282,37 @@ namespace CourseProj
                     if (Convert.ToString(item.Row.ItemArray[1]) != "" && Convert.ToString(item.Row.ItemArray[0]) != "")
                     {
                         SqlCommand command = new SqlCommand($"UPDATE Affair_Types SET affair_type = '{(string)item.Row.ItemArray[1]}' WHERE type_id = {id};", PoliceCardIndex.GetSqlConnection());
+                        PoliceCardIndex.OpenConnection();
+                        command.ExecuteNonQuery();
+                        PoliceCardIndex.CloseConnection();
+                        // MessageBox.Show("ok");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return;
+                }
+
+            }
+
+            else if (t == "bands")
+            {
+                var idx = Departments.SelectedIndex;
+
+                if (idx == -1 || idx == 0 || idx > (int)table.Rows.Count - 1)
+                    return;
+
+                DataRowView item = Departments.Items[idx] as DataRowView;
+
+                if (item == null)
+                    return;
+                try
+                {
+                    int id = (int)table.Rows[idx]["ID"];
+
+                    if (Convert.ToString(item.Row.ItemArray[1]) != "" && Convert.ToString(item.Row.ItemArray[0]) != "")
+                    {
+                        SqlCommand command = new SqlCommand($"UPDATE Bands SET band_name = '{(string)item.Row.ItemArray[1]}' WHERE band_id = {id};", PoliceCardIndex.GetSqlConnection());
                         PoliceCardIndex.OpenConnection();
                         command.ExecuteNonQuery();
                         PoliceCardIndex.CloseConnection();

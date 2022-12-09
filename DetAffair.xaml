@@ -72,14 +72,7 @@
                             </Button.Background>
                         </Button>
 
-                        <Button Content="ффффф" Margin="20,5,20,5" FontSize="20" MinHeight="40" BorderBrush="#FFA09000"  Width="225" Cursor="Hand" >
-                            <Button.Background>
-                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                    <GradientStop Color="#FFD66500"/>
-                                    <GradientStop Color="#FFE3CD00" Offset="1"/>
-                                </LinearGradientBrush>
-                            </Button.Background>
-                        </Button>
+                        
                     </StackPanel>
 
                     <TextBlock x:Name="HintText2" Text="Система Інтерполу:"  HorizontalAlignment="Center" VerticalAlignment="Bottom" FontSize="20" Margin="0 0 0 20" FontWeight="Bold" OpacityMask="Black" Foreground="#0076D6"/>
@@ -91,7 +84,15 @@
                             </LinearGradientBrush>
                         </Button.Background>
                     </Button>
-                    <Button x:Name="ChangeSpecialities"  Content="Переглянути спеціалізації" Margin="20,5,20,5" FontSize="20" MinHeight="40" BorderBrush="#FFA09000" Click="ChangeSpecialities_Click" Width="400" Cursor="Hand" >
+                    <Button x:Name="ChangeSpecialities"  Content="Переглянути спеціалізації" Margin="20,5,20,15" FontSize="20" MinHeight="40" BorderBrush="#FFA09000" Click="ChangeSpecialities_Click" Width="400" Cursor="Hand" >
+                        <Button.Background>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="#FFD66500"/>
+                                <GradientStop Color="#FFE3CD00" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Button.Background>
+                    </Button>
+                    <Button x:Name="ChangeBands"  Content="Зареєстровані угруповання" Margin="20,5,20,5" FontSize="20" MinHeight="40" BorderBrush="#FFA09000" Click="ChangeBands_Click" Width="400" Cursor="Hand" >
                         <Button.Background>
                             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                                 <GradientStop Color="#FFD66500"/>
@@ -110,6 +111,17 @@
                             </LinearGradientBrush>
                         </Button.Background>
                     </Button>
+
+                    <TextBlock x:Name="HintText4" Text="Сформувати запит до бази даних Інтерполу:"  HorizontalAlignment="Center" VerticalAlignment="Bottom" FontSize="20" Margin="0 20 0 20" FontWeight="Bold" OpacityMask="Black" Foreground="#0076D6"/>
+                    <Button x:Name="DoSQL"  Content="Зробити запит" Margin="20,5,20,15" FontSize="20" MinHeight="40" BorderBrush="#FF000D8C" Click="DoSQL_Click" Width="400" Cursor="Hand" >
+                        <Button.Background>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="#FF0920FF"/>
+                                <GradientStop Color="#FF000D8C" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Button.Background>
+                    </Button>
+
                     <Button x:Name="PrintPersonalInfo"  Content="Роздрукувати особові відомості" Margin="20,5,20,15" FontSize="20" MinHeight="40" BorderBrush="#FF1B7800" Click="PrintPersonalInfo_Click" Width="400" Cursor="Hand" >
                         <Button.Background>
                             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">

@@ -76,7 +76,7 @@ namespace CourseProj
                 IsInBand = true;
 
                 BandName = CrimeBand.AdoptBandName(bandName);
-                band = SearchBand(BandName);
+                //band = SearchBand(BandName);
             }
             
         }
@@ -233,7 +233,7 @@ namespace CourseProj
         }
 
         // логіка визначення банди (за назвою), членом якої є злочинець
-        private CrimeBand SearchBand(string bandName)
+        /*private CrimeBand SearchBand(string bandName)
         {
             if(PoliceCardIndex.AllBands != null)
             { 
@@ -249,6 +249,6 @@ namespace CourseProj
 
             CrimeBand newBand = new CrimeBand(bandName, new List<Criminal> { this });
             return newBand;
-        }    
+        }    */
     }
 }

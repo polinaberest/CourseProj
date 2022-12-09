@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Windows;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
 using System.Data;
@@ -12,25 +13,13 @@ namespace CourseProj
     // клас картотеки
     internal static class PoliceCardIndex
     {
-        // перелік усіх банд, що зареєстровані в базі
-        public static List<CrimeBand>? AllBands;
-
         private static SqlConnection sqlConnection = new SqlConnection(@"Data Source=DESKTOP-SH7CLGN\SQLEXPRESS;Initial Catalog=Interpol;Integrated Security=True");
-
-        // перелік усіх злочинців, анкети яких зберігаються в основній базі
-        public static List<Criminal>? Criminals;
-
-        // перелік злочинців, знайдених за поточним запитом
-        public static List<Criminal>? CriminalsFoundByRequest;
 
         // перелік первинних ключів анкет злочинців, знайдених за запитом
         public static List<int>? IdxsFoundByRequest;
 
         // перелік первинних ключів анкет - справ злочинців в архіві
         public static List<int>? IdxsArchived;
-
-        // перелік злочинців, справи яких збережено в архіві
-        public static List<Criminal>? Archived;
 
         // перелік злочинців, справи яких треба занести до файлу-витягу
         public static List<int>? FoundToWrite;
@@ -42,26 +31,9 @@ namespace CourseProj
         // конструктор без параметрів
         static PoliceCardIndex()
         {
-            AllBands = new List<CrimeBand>();
-            Criminals = new List<Criminal>();
             IdxsFoundByRequest = new List<int>();
-            CriminalsFoundByRequest = new List<Criminal>();
-            Archived = new List<Criminal>();
             FoundToWrite = new List<int>();
             IdxsArchived = new List<int>();
-        }
-
-        // метод додавання злочинця до переліку картотеки
-        public static void AddCriminal(Criminal criminal)
-        {
-            Criminals.Add(criminal);
-            SortByNames(Criminals);
-        }
-
-        // метод додавання банди до переліку картотеки
-        public static void AddBand(CrimeBand band)
-        {
-            AllBands.Add(band);
         }
 
         public static void OpenConnection()
@@ -86,7 +58,7 @@ namespace CourseProj
         }
 
         // метод запису переліку картотеки в файл для збереження
-        public static void WriteToFile(string p)
+        /*public static void WriteToFile(string p)
         {
             string path = p;
             string str = "";
@@ -131,7 +103,7 @@ namespace CourseProj
                 }
             }
         }
-
+*/
         // метод зчитування даних картотеки, збережених у текстовому файлі
         /*public static void ReadFromFile(string p)
         {
@@ -191,7 +163,7 @@ namespace CourseProj
         }*/
 
         // метод пошуку справи в картотеці (за запитом незрозуміло, чи злочинець є членом банди)
-        public static void SearchNotinBand(Criminal prototype, int[] hRange) 
+/*        public static void SearchNotinBand(Criminal prototype, int[] hRange) 
         {
             if (Criminals.Count==0)
             {
@@ -207,7 +179,7 @@ namespace CourseProj
                         CriminalsFoundByRequest.Add(criminal);
                     }
             }
-        }
+        }*/
 
         //метод додавання детектива до картотеки
         public static void AddDetective(string name, string surname, int badge_num, int department_id, string reg_date, string last_visit_date, string pass, int type_id, out int id) 
@@ -441,9 +413,86 @@ namespace CourseProj
             return id;
         }
 
+        public static void AutoAssign(int crime_id)
+        {
+            //обираємо з представлення інформацію про стан зайнятості детективів потрібної спеціалізації
+            SqlDataAdapter adapter = new SqlDataAdapter($"SELECT * FROM Automatization WHERE type_id = (SELECT type_id from Crimes WHERE crime_id = {crime_id}); ", PoliceCardIndex.GetSqlConnection());
+            DataTable table = new DataTable();
+            string assignQuery = "";
+            int d_id;
+
+            adapter.Fill(table);
+
+            if (table.Rows.Count > 0)
+            {
+                if (table.Rows.Count == 1)
+                {
+                    d_id = (int)table.Rows[0]["detective_id"];
+                }
+                else
+                {
+                    table.Clear();
+                    adapter = new SqlDataAdapter($"SELECT * FROM Automatization WHERE type_id = (SELECT type_id from Crimes WHERE crime_id = {crime_id}) AND count = (SELECT MIN(count) FROM (SELECT count FROM Automatization WHERE type_id = (SELECT type_id from Crimes WHERE crime_id = {crime_id})) AS C); ", PoliceCardIndex.GetSqlConnection());
+                    adapter.Fill(table);
+                    d_id = (int)table.Rows[0]["detective_id"];
+                }
+            }
+
+            //якщо нема детективів такої спеціалізації - обираємо просто найбільш незайнятого детектива з більшим стажем
+            else
+            {
+                table.Clear();
+                adapter = new SqlDataAdapter($"SELECT a.*, reg_date FROM Automatization a, Detectives d WHERE count = (SELECT MIN(count) FROM Automatization) AND a.detective_id = d.detective_id ORDER BY reg_date; ", PoliceCardIndex.GetSqlConnection());
+                adapter.Fill(table);
+                d_id = (int)table.Rows[0]["detective_id"];
+            }
+
+            assignQuery = $"UPDATE Crimes SET detective_id = {d_id}, is_unseen = '{true}' WHERE crime_id = {crime_id}";
+
+            SqlCommand command = new SqlCommand(assignQuery, PoliceCardIndex.GetSqlConnection());
+            PoliceCardIndex.OpenConnection();
+            command.ExecuteNonQuery();
+            PoliceCardIndex.CloseConnection();
+
+        }
+
+        public static void AlertAboutNewAssignments()
+        { 
+            string unseenQuery = $"SELECT c.*, a.affair_type FROM Crimes c, Affair_Types a WHERE detective_id = {PoliceCardIndex.DetectiveID} AND is_unseen = '{true}' AND c.type_id = a.type_id;";
+            string str = "";
+            DataTable table = new DataTable();  
+            SqlDataAdapter adapter = new SqlDataAdapter(unseenQuery, PoliceCardIndex.GetSqlConnection());
+            adapter.Fill(table);
+
+            if (table.Rows.Count == 0)
+            {
+                MessageBox.Show("Нові призначення справ до розслідування наразі відсутні!");
+                return;
+            }
+            else if (table.Rows.Count > 0)
+            {
+                //msgbox
+                foreach (DataRow row in table.Rows)
+                {
+                    str += row["title"] + " (" + row["affair_type"] + "), ";
+                }
+
+                str = str.Substring(0, str.Length - 2);
+
+                MessageBox.Show($"Наявні нові призначення справ до розслідування: {str}.");
+
+                string query = $"UPDATE Crimes SET is_unseen = '{false}' WHERE detective_id = {PoliceCardIndex.DetectiveID}";
+
+                SqlCommand command = new SqlCommand(query, PoliceCardIndex.GetSqlConnection());
+                PoliceCardIndex.OpenConnection();
+                command.ExecuteNonQuery();
+                PoliceCardIndex.CloseConnection();
+
+            }          
+        }
 
         // метод пошуку справи в картотеці (злочинець є членом банди)
-        public static void SearchInBand(Criminal prototype, int[] hRange)
+/*        public static void SearchInBand(Criminal prototype, int[] hRange)
         {
             if (Criminals.Count == 0 || AllBands.Count == 0)
             {
@@ -484,10 +533,10 @@ namespace CourseProj
                     }
                 }
             }
-        }
+        }*/
 
         // метод підготовки прототипу для пошуку справи в картотеці
-        public static void MakeNullsEquivalent(Criminal prototype, Criminal criminal)
+/*        public static void MakeNullsEquivalent(Criminal prototype, Criminal criminal)
         { 
             var protoProps = prototype.GetType().GetProperties();
             var crimProps = criminal.GetType().GetProperties();
@@ -503,7 +552,7 @@ namespace CourseProj
                 i++;
             }
 
-        }
+        }*/
 
         // метод порівняння справ (прототипу та н-ного злочинця з картотеки)
         public static bool CompareCriminals(Criminal prototype, Criminal criminal, int[] hRange)
@@ -579,18 +628,6 @@ namespace CourseProj
             }
 
             return isIn;
-        }
-
-        // метод сортування переліку злочинців за ім'ям та прізвищем
-        public static void SortByNames(List<Criminal> list)
-        {
-            list.Sort(delegate (Criminal x, Criminal y)
-            {
-                if (x.Name + x.Surname == null && y.Name + y.Surname == null) return 0;
-                else if (x.Name + x.Surname == null) return -1;
-                else if (y.Name + y.Surname == null) return 1;
-                else return (x.Name + x.Surname).CompareTo(y.Name + y.Surname);
-            });
         }
 
         // метод видалення анкети
@@ -867,6 +904,8 @@ namespace CourseProj
             }
 
         }
+
+        public static string Statsquery = "(SELECT CONCAT(c.first_name, ' ', c.surname, ' (', c.nickname,')') AS 'Злочинець', archivation_date AS 'Дата затримання / знешкодження',  stuff(( select concat('. ', title, ' (', crime_role, ', ', a.affair_type, ', розслідував(-ла) ', d.surname, ') ') from Crimes cr, Participants p, Detectives d, Affair_Types a where cr.crime_id = p.crime_id AND p.criminal_id = c.criminal_id  AND cr.detective_id = d.detective_id AND cr.type_id = a.type_id for XML path('')),1,1,'') AS 'Деталі затримання'from Criminals c WHERE is_archived = 1 AND archivation_date BETWEEN GETDATE()-30 AND GETDATE() AND stuff(( select concat('. ', title, ' (', crime_role, ', ', a.affair_type, ', розслідував(-ла) ', d.surname, ') ') from Crimes cr, Participants p, Detectives d, Affair_Types a where cr.crime_id = p.crime_id AND p.criminal_id = c.criminal_id  AND cr.detective_id = d.detective_id AND cr.type_id = a.type_id for XML path('') ),1,1,'') IS NOT NULL UNION select CONCAT(c.first_name, ' ', c.surname, ' (', c.nickname,')') AS 'Злочинець', archivation_date AS 'Дата затримання / знешкодження', stuff(( select concat('. ', title, ' (', crime_role, ', ', a.affair_type, ') ') from Crimes cr, Participants p, Affair_Types a where cr.crime_id = p.crime_id AND p.criminal_id = c.criminal_id AND cr.type_id = a.type_id for XML path('') ),1,1,'') AS 'Деталі затримання' from Criminals c WHERE is_archived = 1 AND archivation_date BETWEEN GETDATE()-30 AND GETDATE() AND stuff((select concat('. ', title, ' (', crime_role, ', ', a.affair_type, ', розслідував(-ла) ', d.surname, ') ') from Crimes cr, Participants p, Detectives d, Affair_Types a where cr.crime_id = p.crime_id AND p.criminal_id = c.criminal_id  AND cr.detective_id = d.detective_id AND cr.type_id = a.type_id for XML path('')),1,1,'') IS NULL)";
 
     }
 }

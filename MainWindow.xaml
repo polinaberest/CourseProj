@@ -23,7 +23,7 @@
             <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
         
-        <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" x:Name="HelloText" Text="Вас вітає База Карного Розшуку"  HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="40,10,40,15" FontSize="38" FontWeight="Bold" OpacityMask="Black" Foreground="#FF00345E"/>
+        <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" x:Name="HelloText" Text="Вас вітає База карного розшуку"  HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="40,10,40,15" FontSize="38" FontWeight="Bold" OpacityMask="Black" Foreground="#FF00345E"/>
         
         <Button x:Name="BackInAuthorization" Width="30" Height="20" Click="BackInAuthorization_Click" Grid.Row="1" Grid.Column="1" Margin="210,22,210,72" RenderTransformOrigin="0.413,-0.178">
             <Button.Template>
